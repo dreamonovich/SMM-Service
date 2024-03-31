@@ -53,4 +53,4 @@ jobs:
             cd /home/ubuntu
             sudo docker compose pull
             sudo docker compose up -d
-	    sudo docker image prune -f
+            sudo docker image prune -f
