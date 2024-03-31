@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     "post",
     "telegram",
     'drf_yasg',
+    "corsheaders"
 ]
 
 MIDDLEWARE = [
@@ -56,6 +57,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
 ]
 
 ROOT_URLCONF = "application.urls"
@@ -170,3 +172,5 @@ CELERY_TASK_SERIALIZER = "json"
 # CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TIMEZONE = "Europe/Moscow"
 CELERY_BROKER_CONNECTION_RETRY = True
+
+CORS_ORIGIN_ALLOW_ALL = True
