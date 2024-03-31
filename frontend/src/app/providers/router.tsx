@@ -15,10 +15,10 @@ export const router = createBrowserRouter([
         Component: generateLayout(false),
         children: [
           {
-            path: "",
-            element: <Dashboard />
-          }
-        ]
+            path: "/",
+            element: <Dashboard />,
+          },
+        ],
       },
       {
         path: "/workspaces/create",
@@ -46,9 +46,9 @@ export const router = createBrowserRouter([
         children: [
           {
             path: "",
-            element: <Workspace />
-          }
-        ]
+            element: <Workspace />,
+          },
+        ],
       },
     ],
   },

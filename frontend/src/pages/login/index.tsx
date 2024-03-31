@@ -64,8 +64,8 @@ export function AuthenticationPage() {
                 className="underline underline-offset-4 hover:text-primary"
               >
                 Terms of Service
-              </Link>{" "}
-              and{" "}
+              </Link>
+              and
               <Link
                 to="/privacy"
                 className="underline underline-offset-4 hover:text-primary"

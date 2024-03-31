@@ -1,26 +1,14 @@
-import { PostList } from "@/entities/post";
-import { Header } from "@/widgets/header";
-import { Sidebar } from "@/widgets/sidebar";
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 export const Dashboard = () => {
-  return (
-    <main className="flex-col flex">
-      <Header />
-      <div className="flex">
-        <Sidebar />
-        <div className="p-2 w-full">
-          <PostList
-            items={[
-              {
-                id: 1,
-                name: "123",
-                subject: "123",
-                text: "123",
-              },
-            ]}
-          />
-        </div>
-      </div>
-    </main>
-  );
+  const navigate = useNavigate()
+  useEffect(() => {
+    const lastOpenWorkflow = localStorage.getItem('last_open_workflow_id')
+
+    if (lastOpenWorkflow) {
+      navigate(`/workflows/${lastOpenWorkflow}`)
+    }
+  })
+  return <></>;
 };

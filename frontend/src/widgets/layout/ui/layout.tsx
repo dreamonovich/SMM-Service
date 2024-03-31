@@ -19,6 +19,7 @@ export const Layout: FC<LayoutProps> = ({ withSidebar }) => {
           </div>
         </div>
       )}
+      {!withSidebar && <Outlet />}
     </main>
   );
 };
