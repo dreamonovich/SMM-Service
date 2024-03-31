@@ -11,12 +11,18 @@ services:
 
   backend:
     image: zethange/cmm-backend:latest
+    depends_on: postgres
     restart: always
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.backend.rule=Host(`prodanocontest.ru`) && PathPrefix(`/api`)"
       - "traefik.http.routers.backend.entrypoints=web"
       - "traefik.http.services.backend.loadbalancer.server.port=8000"
+    environment:
+      - POSTGRES_USERNAME=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=smm_service_db
+      - POSTGRES_HOST=postgres
 
   frontend:
     image: zethange/cmm-frontend:latest
