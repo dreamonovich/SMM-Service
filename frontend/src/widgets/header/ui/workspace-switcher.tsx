@@ -20,24 +20,15 @@ import {
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { useWorkspaceStore } from "@/entities/workspace/store";
 
 type Workspace = {
   label: string;
   id: string;
 };
 
-const workspaces: Workspace[] = [
-  {
-    label: "string",
-    id: "1",
-  },
-  {
-    label: "string2",
-    id: "2",
-  },
-];
-
 export const WorkspaceSwitcher = () => {
+  const {workspaces} = useWorkspaceStore();
   const [open, setOpen] = useState(false);
   const [showNewTeamDialog, setShowNewTeamDialog] = useState(false);
   const [selectedWorkspace, setSelectedWorkspace] = useState<Workspace | null>(

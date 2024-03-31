@@ -3,17 +3,30 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
 export const WorkspacePage = () => {
-  const [workspace, setWorkspace] = useState(null)
+  const [loading, setLoading] = useState(true);
+  const [workspace, setWorkspace] = useState(null);
+
   const { id } = useParams();
   const getData = async () => {
-    const response = await fetch(API_URL + "/workflows/" + id)
-    const data = await response.json()
+    const response = await fetch(API_URL + "/workspaces/" + id);
+    const data = await response.json();
     setWorkspace(data);
-    console.log(data)
+    setLoading(false);
   };
   useEffect(() => {
+    setLoading(true);
     getData();
   }, []);
-
-  return <div>Workspace {id} {JSON.stringify(workspace)}</div>;
+// добавить красивый лоадер
+  return (
+    <>
+      {loading ? (
+        <div>loading</div>
+      ) : (
+        <div>
+          Workspace {id} {JSON.stringify(workspace)}
+        </div>
+      )}
+    </>
+  );
 };
