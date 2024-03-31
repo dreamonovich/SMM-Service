@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     "core",
     "workspace",
     "post",
+    "telegram",
     'drf_yasg',
 ]
 
