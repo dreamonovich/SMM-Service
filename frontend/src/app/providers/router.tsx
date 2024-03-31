@@ -22,23 +22,13 @@ export const router = createBrowserRouter([
       },
       {
         path: "/workspaces/create",
-        Component: generateLayout(true),
+        Component: generateLayout(false),
         children: [
           {
             path: "",
-            element: <CreateWorkflowPage/>
-          }
-        ]
-      },
-      {
-        path: "/workspaces/create",
-        Component: generateLayout(true),
-        children: [
-          {
-            path: "",
-            element: <CreateWorkflowPage/>
-          }
-        ]
+            element: <CreateWorkflowPage />,
+          },
+        ],
       },
       {
         path: "/workspaces/:id",
