@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     "core",
     "workspace",
     "post",
+    'drf_yasg',
 ]
 
 MIDDLEWARE = [
