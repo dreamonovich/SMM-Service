@@ -2,12 +2,10 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework_simplejwt.tokens import AccessToken
-from drf_yasg.utils import swagger_auto_schema
 from user.models import User
 from user.serializers import RLUserSerializer, UserSerializer
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.generics import RetrieveUpdateDestroyAPIView
-from drf_yasg import openapi
 
 
 @api_view(['POST'])
@@ -46,18 +44,6 @@ class RetrieveUpdateDestroyUser(RetrieveUpdateDestroyAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
     permission_classes = (IsAuthenticated,)
-
-    @api_view(['GET'])
-    def get(self, request, *args, **kwargs):
-        return super().get(request, *args, **kwargs)
-
-    @api_view(['PUT'])
-    def put(self, request, *args, **kwargs):
-        return super().put(request, *args, **kwargs)
-
-    @api_view(['DELETE'])
-    def delete(self, request, *args, **kwargs):
-        return super().delete(request, *args, **kwargs)
 
     def get_queryset(self):
         return self.request.user
