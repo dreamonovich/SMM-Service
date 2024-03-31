@@ -6,7 +6,7 @@ dsl = {
     'user': 'postgres',
     'password': 'postgres',
     'host': 'localhost',
-    'port': '5432',
+    'port': '5438',
     }
 
 connection = psycopg2.connect(**dsl)
@@ -25,4 +25,40 @@ def is_bot_added(chat_id):
         name = cursor.fetchone()
         return name is None
 
-#new_channel_request(19381881, 12121)
+
+def approve(telegram_id, post_id):
+    with connection.cursor() as cursor:
+        cursor.execute("SELECT id FROM public.telegram_telegramapproval WHERE telegram_id = %s and post_id = %s",
+                       (telegram_id, post_id))
+        approval_id = cursor.fetchone()
+        if approval_id is None:
+            cursor.execute("INSERT INTO public.telegram_telegramapproval(telegram_id, post_id) VALUES (%s, %s)",
+                           (telegram_id, post_id))
+            cursor.execute("DELETE FROM public.telegram_telegramdisapproval WHERE telegram_id = %s and post_id = %s",
+                           (telegram_id, post_id))
+            connection.commit()
+
+
+def disapprove(telegram_id, post_id):
+    with connection.cursor() as cursor:
+        cursor.execute("SELECT id FROM public.telegram_telegramdisapproval WHERE telegram_id = %s and post_id = %s",
+                       (telegram_id, post_id))
+        approval_id = cursor.fetchone()
+        if approval_id is None:
+            cursor.execute("INSERT INTO public.telegram_telegramdisapproval(telegram_id, post_id) VALUES (%s, %s)",
+                           (telegram_id, post_id))
+            cursor.execute("DELETE FROM public.telegram_telegramapproval WHERE telegram_id = %s and post_id = %s",
+                           (telegram_id, post_id))
+            connection.commit()
+
+
+def get_approves(post_id):
+    with connection.cursor() as cursor:
+        cursor.execute("SELECT count(id) FROM public.telegram_telegramapproval == %s", (post_id,))
+        approval = cursor.fetchone()[0]
+        cursor.execute("SELECT count(id) FROM public.telegram_telegramdisapproval == %s", (post_id,))
+        disapproval = cursor.fetchone()[0]
+        cursor.execute('SELECT number_of_people FROM public.post_post WHERE id = %s', (post_id,))
+        number_of_people = cursor.fetchone()[0]
+
+    return approval, disapproval, number_of_people

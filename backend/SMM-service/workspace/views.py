@@ -26,6 +26,9 @@ class WorkSpaceListCreate(ListCreateAPIView):
     def post(self, request, *args, **kwargs):
         return super().post(request, *args, **kwargs)
 
+    def get_queryset(self):
+        return Workspace.objects.filter(creator_user=self.request.user).all()
+
 
 class WorkSpaceRetrieveView(RetrieveDestroyAPIView):
     queryset = Workspace.objects.all()

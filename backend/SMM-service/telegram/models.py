@@ -10,3 +10,17 @@ class TelegramPost(models.Model):
 
     modified_at = models.DateTimeField(auto_now=True)
     created_at = models.DateTimeField(auto_now_add=True)
+
+
+class TelegramApproval(models.Model):
+    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+    telegram_id = models.BigIntegerField()
+
+    created_at = models.DateTimeField(auto_now_add=True)
+
+
+class TelegramDisapproval(models.Model):
+    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+    telegram_id = models.BigIntegerField()
+
+    created_at = models.DateTimeField(auto_now_add=True)
