@@ -13,7 +13,7 @@ export const Dashboard = () => {
     }
 
     (async () => {
-      const res = await fetch(API_URL + "/workspaces");
+      const res = await fetch(API_URL + "/workspace");
       await res.json();
     })();
   });
