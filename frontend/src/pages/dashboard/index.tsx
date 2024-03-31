@@ -1,4 +1,4 @@
-import { CreateWorkflow } from "@/features/workspace/create";
+import { CreateWorkspace } from "@/features/workspace/create";
 import { API_URL } from "@/shared/lib/constants";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
@@ -6,10 +6,10 @@ import { useNavigate } from "react-router-dom";
 export const Dashboard = () => {
   const navigate = useNavigate()
   useEffect(() => {
-    const lastOpenWorkflow = localStorage.getItem('last_open_workspace_id')
+    const lastOpenWorkspace = localStorage.getItem('last_open_workspace_id')
 
-    if (lastOpenWorkflow) {
-      navigate(`/workspaces/${lastOpenWorkflow}`)
+    if (lastOpenWorkspace) {
+      navigate(`/workspaces/${lastOpenWorkspace}`)
     }
 
     (async () => {
@@ -17,5 +17,5 @@ export const Dashboard = () => {
       const data = await res.json(); 
     })()
   })
-  return <div className="w-full h-full flex justify-center pt-4"><CreateWorkflow /></div>;
+  return <div className="w-full h-full flex justify-center pt-4"><CreateWorkspace /></div>;
 };

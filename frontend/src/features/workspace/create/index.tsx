@@ -5,7 +5,6 @@ import {
   Card,
   CardHeader,
   CardTitle,
-  CardDescription,
   CardContent,
   CardFooter,
 } from "@/shared/ui/card";
@@ -14,7 +13,7 @@ import { Label } from "@radix-ui/react-dropdown-menu";
 import { useToast } from "@/shared/ui/use-toast";
 import { useNavigate } from "react-router-dom";
 
-export function CreateWorkflow() {
+export function CreateWorkspace() {
   const navigate = useNavigate();
   const [title, setTitle] = useState("");
   const { toast } = useToast();
@@ -27,7 +26,7 @@ export function CreateWorkflow() {
     if (res.ok) {
       const data = await res.json();
       toast({
-        title: "Workflow успешно создан",
+        title: "Workspace успешно создан",
       });
       navigate(`/workspaces/${data.id}`);
     } else {
@@ -40,7 +39,7 @@ export function CreateWorkflow() {
   return (
     <Card className="min-w-[350px]">
       <CardHeader className="space-y-1">
-        <CardTitle className="text-2xl">Создать workflow</CardTitle>
+        <CardTitle className="text-2xl">Создать workspace</CardTitle>
       </CardHeader>
       <CardContent className="grid gap-4">
         <div className="relative">

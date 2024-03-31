@@ -4,7 +4,7 @@ import { createBrowserRouter } from "react-router-dom";
 import { AuthProvider } from "./auth";
 import { generateLayout } from "@/widgets/layout";
 import { Workspace } from "@/pages/workspace";
-import { CreateWorkflowPage } from "@/pages/workspace/create";
+import { CreateWorkspacePage } from "@/pages/workspace/create";
 
 export const router = createBrowserRouter([
   {
@@ -26,7 +26,7 @@ export const router = createBrowserRouter([
         children: [
           {
             path: "",
-            element: <CreateWorkflowPage />,
+            element: <CreateWorkspacePage />,
           },
         ],
       },
