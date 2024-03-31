@@ -51,7 +51,7 @@ export const User = () => {
             <DropdownMenuItem>{t("new-workspace")}</DropdownMenuItem>
             <DropdownMenuItem
               onClick={() => {
-                i18n.changeLanguage("en");
+                i18n.changeLanguage(i18n.language === 'en' ? 'ru' : "en");
               }}
             >
               {t("language")}

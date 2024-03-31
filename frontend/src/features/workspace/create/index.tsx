@@ -38,12 +38,9 @@ export function CreateWorkflow() {
     }
   };
   return (
-    <Card className="max-w-md">
+    <Card className="min-w-[350px]">
       <CardHeader className="space-y-1">
         <CardTitle className="text-2xl">Создать workflow</CardTitle>
-        <CardDescription>
-          Enter your email below to create your account
-        </CardDescription>
       </CardHeader>
       <CardContent className="grid gap-4">
         <div className="relative">
@@ -52,7 +49,7 @@ export function CreateWorkflow() {
           </div>
         </div>
         <div className="grid gap-2">
-          <Label {...{"for": "title"}}>Название</Label>
+          <Label {...{ for: "title" }}>Название</Label>
           <Input
             onChange={(e) => setTitle(e.target.value)}
             id="title"
@@ -62,7 +59,7 @@ export function CreateWorkflow() {
         </div>
       </CardContent>
       <CardFooter>
-        <Button onClick={() => onClickAdd()} className="w-full">
+        <Button onClick={onClickAdd} className="w-full">
           Создать
         </Button>
       </CardFooter>
