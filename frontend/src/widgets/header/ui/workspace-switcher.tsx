@@ -81,18 +81,18 @@ export const WorkspaceSwitcher = () => {
             <CommandList>
               <CommandInput placeholder="Поиск..." />
               <CommandEmpty>Ничего не найдено.</CommandEmpty>
-              <CommandGroup>
+              <div className="flex flex-col gap-1 px-2 py-1">
                 {workspaces.map((workspace) => (
-                  <CommandItem
+                  <div
                     key={workspace.id}
                     onClick={(value) => {
                       console.log(value);
                       setSelectedWorkspace(workspace);
                       setOpen(false);
                     }}
-                    className="text-sm z-50"
+                    className="text-sm flex items-center rounded-lg pt-2 hover:bg-gray-100"
                   >
-                    <Avatar className="mr-2 h-5 w-5">
+                    <Avatar className="mr-2 h-5 w-5 mb-2">
                       <AvatarImage
                         src={``}
                         alt={workspace.label}
@@ -100,18 +100,18 @@ export const WorkspaceSwitcher = () => {
                       />
                       <AvatarFallback>asd</AvatarFallback>
                     </Avatar>
-                    {workspace.label}
+                    <span className="pb-2 ">{workspace.label}</span>
                     <CheckIcon
                       className={cn(
-                        "ml-auto h-4 w-4",
+                        "ml-auto h-4 w-4 mb-2",
                         selectedWorkspace?.id === workspace.id
                           ? "opacity-100"
                           : "opacity-0"
                       )}
                     />
-                  </CommandItem>
+                  </div>
                 ))}
-              </CommandGroup>
+              </div>
             </CommandList>
             <CommandSeparator />
             <CommandList>
