@@ -3,7 +3,7 @@ import { AuthenticationPage } from "@/pages/login";
 import { createBrowserRouter } from "react-router-dom";
 import { AuthProvider } from "./auth";
 import { generateLayout } from "@/widgets/layout";
-import { ComponentType } from "react";
+import { Workspace } from "@/pages/workspace";
 import { CreateWorkflowPage } from "@/pages/workspace/create";
 
 export const router = createBrowserRouter([
@@ -12,7 +12,23 @@ export const router = createBrowserRouter([
     children: [
       {
         path: "/",
-        element: <Dashboard />,
+        Component: generateLayout(false),
+        children: [
+          {
+            path: "",
+            element: <Dashboard />
+          }
+        ]
+      },
+      {
+        path: "/workspaces/create",
+        Component: generateLayout(true) as unknown as ComponentType,
+        children: [
+          {
+            path: "",
+            element: <CreateWorkflowPage/>
+          }
+        ]
       },
       {
         path: "/workspaces/create",
@@ -26,11 +42,11 @@ export const router = createBrowserRouter([
       },
       {
         path: "/workspaces/:id",
-        Component: generateLayout(true) as unknown as ComponentType,
+        Component: generateLayout(true),
         children: [
           {
             path: "",
-            element: <div></div>
+            element: <Workspace />
           }
         ]
       },
