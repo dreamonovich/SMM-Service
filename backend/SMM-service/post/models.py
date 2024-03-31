@@ -3,6 +3,14 @@ from django.db import models
 from user.models import User
 from workspace.models import Workspace
 
+STATUS_CHOICES = [
+    ('CREATED', 'Created'),
+    ('PENDING', 'Pending Publication'),
+    ('UNDER_REVIEW', 'Under Review'),
+    ('APPROVED', 'Approved'),
+    ('REJECTED', 'Rejected'),
+]
+
 
 class Post(models.Model):
     name = models.CharField(max_length=64)
@@ -14,6 +22,9 @@ class Post(models.Model):
     photos = fields.ArrayField(models.FilePathField())
     files = fields.ArrayField(models.FilePathField())
     send_planned_at = models.DateTimeField()
+
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='CREATED')
+    number_of_people = models.IntegerField()
 
     modified_at = models.DateTimeField(auto_now=True)
     created_at = models.DateTimeField(auto_now_add=True)
