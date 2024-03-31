@@ -3,7 +3,7 @@ version: '3.8'
 name: smm-service
 services:
   traefik:
-    image: traefik:v3
+    image: traefik:v3.0
     ports:
       - "80:80"
     volumes:
