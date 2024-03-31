@@ -69,10 +69,7 @@ class PostMediaDeleteView(DestroyAPIView):
         return Response({})
 
 class CreateTaskView(APIView):
-    def post(self, request):
-        if not (post_id := request.POST.get('post_id')):
-            raise ValidationError("post_id required")
-
+    def post(self, request, post_id):
         try:
             post = Post.objects.get(pk=post_id)
             send_planned_at = post.send_planned_at
