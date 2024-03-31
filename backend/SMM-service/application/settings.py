@@ -26,7 +26,7 @@ SECRET_KEY = "django-insecure-&)b$0xqyoz@1#zuue=7+!p)(a#og#7t7hio5wq)xj2btr1@@p2
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["0.0.0.0", "127.0.0.1", "localhost"]
+ALLOWED_HOSTS = ["0.0.0.0", "127.0.0.1", "localhost", "158.160.32.163", "prodanocontest.ru"]
 
 
 # Application definition
@@ -39,18 +39,21 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "rest_framework",
+    "corsheaders",
     "user",
     "channel",
     "core",
     "workspace",
     "post",
+    "telegram",
     'drf_yasg',
 ]
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
-    "django.middleware.common.CommonMiddleware",
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
@@ -82,21 +85,13 @@ WSGI_APPLICATION = "application.wsgi.application"
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
 DATABASES = {
-    # "default": {
-    #     "ENGINE": "django.db.backends.postgresql",
-    #     "NAME": os.getenv("POSTGRES_DB", "smm_service_db"),
-    #     "USER": os.getenv("POSTGRES_USER", "postgres"),
-    #     "PASSWORD": os.getenv("POSTGRES_PASSWORD", "postgres"),
-    #     "HOST": os.getenv("POSTGRES_HOST", "127.0.0.1"),
-    #     "PORT": os.getenv("POSTGRES_PORT", "5438"),
-    # }
-'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'postgres',
-        'USER': 'postgres',
-        'PASSWORD': '123',
-        'HOST': 'localhost',
-        'PORT': '5432',
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": os.getenv("POSTGRES_DB", "smm_service_db"),
+        "USER": os.getenv("POSTGRES_USER", "postgres"),
+        "PASSWORD": os.getenv("POSTGRES_PASSWORD", "postgres"),
+        "HOST": os.getenv("POSTGRES_HOST", "127.0.0.1"),
+        "PORT": os.getenv("POSTGRES_PORT", "5438"),
     }
 }
 
@@ -158,7 +153,7 @@ STATICFILES_DIRS = [BASE_DIR / "static"]
 
 DEFAULT_FILE_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
 
-AWS_S3_ENDPOINT_URL = "http://localhost:9011/"
+AWS_S3_ENDPOINT_URL = "http://minio:9001/" # поменять на "http://localhost:9011/"
 AWS_S3_USE_SSL = False
 AWS_ACCESS_KEY_ID = "smm_service_key"
 AWS_SECRET_ACCESS_KEY = "smm_service_secret_key"
@@ -170,10 +165,12 @@ AWS_STORAGE_BUCKET_NAME = "smm_service"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # Celery Configuration
-CELERY_BROKER_URL = "amqp://localhost:5681"
+CELERY_BROKER_URL = "amqp://rabbitmq:5672"  # поменять на "amqp://localhost:5681"
 # CELERY_RESULT_BACKEND = 'django-db'
 CELERY_ACCEPT_CONTENT = ("json",)
 CELERY_TASK_SERIALIZER = "json"
 # CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TIMEZONE = "Europe/Moscow"
 CELERY_BROKER_CONNECTION_RETRY = True
+
+CORS_ORIGIN_ALLOW_ALL = True

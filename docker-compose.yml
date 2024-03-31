@@ -3,20 +3,29 @@ version: '3.8'
 name: smm-service
 services:
   traefik:
-    image: traefik:v3.0
+    image: traefik:v2.11
     ports:
       - "80:80"
+    command:
+#      - "--log.level=DEBUG"
+      - "--api.insecure=true"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.web.address=:80"
     volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
 
   backend:
     image: zethange/cmm-backend:latest
     depends_on: 
       - postgres
+      - rabbitmq
     restart: always
+    ports:
+      - 8002:8000
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.backend.rule=Host(`prodanocontest.ru`) && PathPrefix(`/api`)"
+      - "traefik.http.routers.backend.rule=Host(`prodanocontest.ru`) && (PathPrefix(`/api`) || PathPrefix(`/static`))"
       - "traefik.http.routers.backend.entrypoints=web"
       - "traefik.http.services.backend.loadbalancer.server.port=8000"
     environment:
@@ -24,9 +33,12 @@ services:
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_DB=smm_service_db
       - POSTGRES_HOST=postgres
-
+      - POSTGRES_PORT=5432
+  
   frontend:
     image: zethange/cmm-frontend:latest
+    ports:
+      - 8003:80
     restart: always
     labels:
       - "traefik.enable=true"
@@ -60,6 +72,17 @@ services:
       - rabbitmq-data:/var/lib/rabbitmq
     restart: always
 
+  celery:
+    image: zethange/cmm-backend:latest
+    depends_on:
+      - postgres
+      - rabbitmq
+    restart: always
+    volumes:
+      - ./backend:/app
+    working_dir: /app/SMM-service
+    command: "python3 -m celery -A application worker -l INFO"
+
   minio:
     image: minio/minio
     command: server /data --console-address ":9001"
@@ -85,6 +108,19 @@ services:
       [[ ! -z "`mc ls s3 | grep smm_service`" ]] || mc mb s3/smm-service;
       exit 0;
       '
+
+#  bot:
+#    image: zethange/cmm-bot:latest
+#    environment:
+#      - POSTGRES_USERNAME=postgres
+#      - POSTGRES_PASSWORD=postgres
+#      - POSTGRES_DB=smm_service_db
+#      - POSTGRES_HOST=postgres
+#      - POSTGRES_PORT=5432
+#    ports:
+#      - "8080:8080"
+#    volumes:
+#      - ./data:/app/data
 
 volumes:
   postgres-data:
