@@ -76,8 +76,7 @@ export const WorkspaceSwitcher = () => {
                 {workspaces.map((workspace) => (
                   <div
                     key={workspace.id}
-                    onClick={(value) => {
-                      console.log(value);
+                    onClick={() => {
                       setSelectedWorkspace(workspace);
                       setOpen(false);
                     }}
