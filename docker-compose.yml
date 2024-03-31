@@ -11,7 +11,8 @@ services:
 
   backend:
     image: zethange/cmm-backend:latest
-    depends_on: postgres
+    depends_on: 
+      - postgres
     restart: always
     labels:
       - "traefik.enable=true"
