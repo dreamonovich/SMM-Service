@@ -1,5 +1,6 @@
 version: '3.8'
 
+name: smm-service
 services:
   postgres:
     image: postgres:16.2
@@ -7,7 +8,7 @@ services:
     ports:
       - "5438:5432"
     volumes:
-      - db-data:/var/lib/postgresql/data
+      - postgres-data:/var/lib/postgresql/data
     environment:
       - POSTGRES_USERNAME=postgres
       - POSTGRES_PASSWORD=postgres
@@ -54,6 +55,6 @@ services:
       '
 
 volumes:
-  db-data:
+  postgres-data:
   rabbitmq-data:
   minio-data:
