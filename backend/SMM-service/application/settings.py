@@ -174,3 +174,11 @@ CELERY_TIMEZONE = "Europe/Moscow"
 CELERY_BROKER_CONNECTION_RETRY = True
 
 CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOW_METHODS = (
+    "DELETE",
+    "GET",
+    "OPTIONS",
+    "PATCH",
+    "POST",
+    "PUT",
+)
