@@ -22,7 +22,7 @@ export const router = createBrowserRouter([
       },
       {
         path: "/workspaces/create",
-        Component: generateLayout(true) as unknown as ComponentType,
+        Component: generateLayout(true),
         children: [
           {
             path: "",
@@ -32,7 +32,7 @@ export const router = createBrowserRouter([
       },
       {
         path: "/workspaces/create",
-        Component: generateLayout(true) as unknown as ComponentType,
+        Component: generateLayout(true),
         children: [
           {
             path: "",
