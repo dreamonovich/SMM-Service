@@ -1,8 +1,8 @@
-name: Build & deploy frontend
+name: Build & deploy backend
 
 on:
   push:
-    paths: frontend/**/*
+    paths: backend/**/*
 
 jobs:
   build:
@@ -21,20 +21,17 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: ${{ secrets.DOCKER_USERNAME }}/cmm-frontend
+          images: ${{ secrets.DOCKER_USERNAME }}/cmm-backend
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
         with:
-          context: ./frontend
-          file: ./frontend/Dockerfile
+          context: ./backend
+          file: ./backend/Dockerfile
           push: true
   deploy:
     name: Deploy
     runs-on: ubuntu-latest
     steps:
-      - name: Check out the repo
-        uses: actions/checkout@v4
-
       - name: Upload docker-compose.yml
         uses: appleboy/scp-action@v0.1.7
         with:

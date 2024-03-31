@@ -4,18 +4,22 @@ import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 export const Dashboard = () => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   useEffect(() => {
-    const lastOpenWorkspace = localStorage.getItem('last_open_workspace_id')
+    const lastOpenWorkspace = localStorage.getItem("last_open_workspace_id");
 
     if (lastOpenWorkspace) {
-      navigate(`/workspaces/${lastOpenWorkspace}`)
+      navigate(`/workspaces/${lastOpenWorkspace}`);
     }
 
     (async () => {
-      const res = await fetch(API_URL + '/workspaces')
-      const data = await res.json(); 
-    })()
-  })
-  return <div className="w-full h-full flex justify-center pt-4"><CreateWorkspace /></div>;
+      const res = await fetch(API_URL + "/workspaces");
+      await res.json();
+    })();
+  });
+  return (
+    <div className="w-full h-full flex justify-center pt-4">
+      <CreateWorkspace />
+    </div>
+  );
 };
