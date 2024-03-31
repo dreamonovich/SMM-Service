@@ -1,12 +1,13 @@
 import psycopg2
 from datetime import datetime
+import os
 
 dsl = {
-    'dbname': 'smm_service_db',
-    'user': 'postgres',
-    'password': 'postgres',
-    'host': 'localhost',
-    'port': '5438',
+    'dbname': os.getenv("POSTGRES_DB", "smm_service_db"),
+    'user': os.getenv("POSTGRES_USER", "postgres"),
+    'password': os.getenv("POSTGRES_PASSWORD", "postgres"),
+    'host': os.getenv("POSTGRES_HOST", "127.0.0.1"),
+    'port': os.getenv("POSTGRES_PORT", "5438"),
     }
 
 connection = psycopg2.connect(**dsl)
