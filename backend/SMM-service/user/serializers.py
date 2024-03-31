@@ -10,4 +10,4 @@ class RLUserSerializer(serializers.ModelSerializer):
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['name', 'telegram_id', 'telegram_username','avatar_path']
+        fields = ['id','name', 'telegram_id', 'telegram_username','avatar_path']
