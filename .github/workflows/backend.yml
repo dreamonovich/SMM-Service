@@ -3,6 +3,7 @@ name: Build & deploy backend
 on:
   push:
     paths: backend/**/*
+  workflow_dispatch: 
 
 jobs:
   build:
