@@ -1,23 +1,53 @@
-import { cn } from "@/shared/lib"
-import { Button } from "@/shared/ui/button"
-import { Icons } from "@/shared/ui/icons"
-import { Input } from "@/shared/ui/input"
-import { Label } from "@radix-ui/react-label"
-import { useState } from "react"
+import { cn } from "@/shared/lib";
+import { Button } from "@/shared/ui/button";
+import { Icons } from "@/shared/ui/icons";
+import { Input } from "@/shared/ui/input";
+import { Label } from "@radix-ui/react-label";
+import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 
 export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
-  const [isLoading, setIsLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(false);
+  const [showTelegram, setShowTelegram] = useState(false);
   const { t } = useTranslation();
   async function onSubmit(event: React.SyntheticEvent) {
-    event.preventDefault()
-    setIsLoading(true)
+    event.preventDefault();
+    setIsLoading(true);
 
     setTimeout(() => {
-      setIsLoading(false)
-    }, 3000)
+      setIsLoading(false);
+      setShowTelegram(true);
+    }, 1000);
   }
+  const scriptRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    /*
+<script async src="https://telegram.org/js/telegram-widget.js?22" data-telegram-login="samplebot" data-size="large" data-onauth="onTelegramAuth(user)" data-request-access="write"></script>
+<script type="text/javascript">
+  function onTelegramAuth(user) {
+    alert('Logged in as ' + user.first_name + ' ' + user.last_name + ' (' + user.id + (user.username ? ', @' + user.username : '') + ')');
+  }
+</script>
+ */
+
+    if (!showTelegram || !scriptRef.current) return;
+    console.log(showTelegram, scriptRef);
+
+    const script = document.createElement('script');
+    script.src = "https://telegram.org/js/telegram-widget.js?22";
+    script.setAttribute(
+      "data-telegram-login",
+      "prodsmm_service_bot"
+    );
+    script.setAttribute("data-size", "large");
+    script.setAttribute("data-onauth", "onTelegramAuth(user)");
+    script.setAttribute("data-request-access", "write");
+
+    script.async = true;
+    scriptRef.current.appendChild(script)
+  }, [showTelegram, scriptRef]);
 
   return (
     <div className={cn("grid gap-6", className)} {...props}>
@@ -29,7 +59,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
             </Label>
             <Input
               id="email"
-              placeholder={t('username')}
+              placeholder={t("username")}
               autoCapitalize="none"
               autoComplete="email"
               autoCorrect="off"
@@ -40,10 +70,11 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
             {isLoading && (
               <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
             )}
-             {t('sign-in')}
+            {t("sign-in")}
           </Button>
         </div>
       </form>
+      {showTelegram && <div ref={scriptRef}></div>}
       {/* <div className="relative">
         <div className="absolute inset-0 flex items-center">
           <span className="w-full border-t" />
@@ -64,5 +95,5 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
         GitHub
       </Button> */}
     </div>
-  )
+  );
 }
