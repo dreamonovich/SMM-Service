@@ -13,9 +13,10 @@ import {
 } from "@/shared/ui/form";
 import { useForm } from "react-hook-form";
 import { Label } from "@/shared/ui/label";
+import { toast } from "@/shared/ui/use-toast";
 export const Profile = () => {
   const form = useForm();
-  function onSubmit(data: z.infer<typeof FormSchema>) {
+  function onSubmit(data: any) {
     toast({
       title: "You submitted the following values:",
       description: (
@@ -41,7 +42,7 @@ export const Profile = () => {
           </div>
           <Avatar className="w-20 h-20">
             <AvatarImage src="https://github.com/shadcn.png" />
-            <AvatarFallback>Username</AvatarFallback>
+            <AvatarFallback>Loading</AvatarFallback>
           </Avatar>
         </div>
       </div>

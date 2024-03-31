@@ -13,6 +13,7 @@ import {
   DropdownMenuShortcut,
 } from "@/shared/ui/dropdown-menu";
 import { useTranslation } from "react-i18next";
+import { Link } from "react-router-dom";
 
 export const User = () => {
   const { t } = useTranslation();
@@ -40,10 +41,10 @@ export const User = () => {
           </DropdownMenuLabel>
           <DropdownMenuSeparator />
           <DropdownMenuGroup>
-            <DropdownMenuItem>
+            <Link to={"/profile"}><DropdownMenuItem>
               {t("profile")}
               <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
-            </DropdownMenuItem>
+            </DropdownMenuItem></Link>
             <DropdownMenuItem>
               {t("settings")}
               <DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
