@@ -26,7 +26,7 @@ SECRET_KEY = "django-insecure-&)b$0xqyoz@1#zuue=7+!p)(a#og#7t7hio5wq)xj2btr1@@p2
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["0.0.0.0", "127.0.0.1", "localhost"]
+ALLOWED_HOSTS = ["0.0.0.0", "127.0.0.1", "localhost", "158.160.32.163", "prodanocontest.ru"]
 
 
 # Application definition
@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     "core",
     "workspace",
     "post",
+    "telegram",
     'drf_yasg',
 ]
 
@@ -150,7 +151,7 @@ STATICFILES_DIRS = [BASE_DIR / "static"]
 
 DEFAULT_FILE_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
 
-AWS_S3_ENDPOINT_URL = "http://localhost:9011/"
+AWS_S3_ENDPOINT_URL = "http://minio:9001/" # поменять на "http://localhost:9011/"
 AWS_S3_USE_SSL = False
 AWS_ACCESS_KEY_ID = "smm_service_key"
 AWS_SECRET_ACCESS_KEY = "smm_service_secret_key"
@@ -162,7 +163,7 @@ AWS_STORAGE_BUCKET_NAME = "smm_service"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # Celery Configuration
-CELERY_BROKER_URL = "amqp://localhost:5681"
+CELERY_BROKER_URL = "amqp://rabbitmq:15672"  # поменять на "amqp://localhost:5681"
 # CELERY_RESULT_BACKEND = 'django-db'
 CELERY_ACCEPT_CONTENT = ("json",)
 CELERY_TASK_SERIALIZER = "json"
