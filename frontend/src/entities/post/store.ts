@@ -5,11 +5,13 @@ export interface IPostStore {
   setPosts: (posts: any[]) => void;
   selectedPost: any | null;
   setSelectedPost: (post: any) => void;
+  updateSelected: (post: Partial<any>) => void;
 }
 
-export const usePostStore = create<IPostStore>((set) => ({
+export const usePostStore = create<IPostStore>((set, get) => ({
   posts: [],
   setPosts: (posts) => set({ posts }),
   selectedPost: null,
   setSelectedPost: (post) => set({ selectedPost: post }),
+  updateSelected: (post) => set({ ...get().selectedPost, ...post })
 }));

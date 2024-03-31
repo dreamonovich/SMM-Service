@@ -8,6 +8,7 @@ import { CreateWorkspacePage } from "@/pages/workspace/create";
 import { Calendar } from "@/pages/calendar";
 import { Channels } from "@/pages/channels";
 import { Stats } from "@/pages/stats";
+import { Profile } from "@/pages/profile";
 export const router = createBrowserRouter([
   {
     Component: AuthProvider,
@@ -19,6 +20,16 @@ export const router = createBrowserRouter([
           {
             path: "/",
             element: <Dashboard />,
+          },
+        ],
+      },
+      {
+        path: "/profile",
+        Component: generateLayout(false),
+        children: [
+          {
+            path: "/profile",
+            element: <Profile />,
           },
         ],
       },

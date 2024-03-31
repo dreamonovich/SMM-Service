@@ -7,7 +7,7 @@ export const PostList: FC<{ items: any[] }> = ({ items }) => {
   const { selectedPost, setSelectedPost } = usePostStore();
   return (
     <ScrollArea className="h-full w-full">
-      <div className="flex flex-col gap-2 pt-0">
+      <div className="flex flex-col gap-2 pt-0 pr-2">
         {items.map((item) => (
           <button
             key={item.id}

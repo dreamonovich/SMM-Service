@@ -17,4 +17,5 @@ export const useWorkspaceStore = create<IWorkspaceStore>((set) => ({
     const res  = await fetch(API_URL)
     set({ workspaces: await res.json() })
   }
+  
 }));
