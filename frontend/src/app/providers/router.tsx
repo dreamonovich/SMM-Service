@@ -4,6 +4,7 @@ import { createBrowserRouter } from "react-router-dom";
 import { AuthProvider } from "./auth";
 import { generateLayout } from "@/widgets/layout";
 import { ComponentType } from "react";
+import { CreateWorkflowPage } from "@/pages/workspace/create";
 
 export const router = createBrowserRouter([
   {
@@ -12,6 +13,16 @@ export const router = createBrowserRouter([
       {
         path: "/",
         element: <Dashboard />,
+      },
+      {
+        path: "/workspaces/create",
+        Component: generateLayout(true) as unknown as ComponentType,
+        children: [
+          {
+            path: "",
+            element: <CreateWorkflowPage/>
+          }
+        ]
       },
       {
         path: "/workspaces/:id",
