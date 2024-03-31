@@ -25,12 +25,11 @@ def get_keyboard(post_id):
     return keyboard
 
 
-def send_post(channels, text, photos, files):
-    for channel_id in channels:
-        photo_group = [InputMediaPhoto(photo, caption=text) for photo in photos]
-        if photos:
-            bot.send_media_group(channel_id, photo_group)
-        else:
-            bot.send_message(channel_id, text, parse_mode="Markdown")
-        for file in files:
-            bot.send_document(channel_id, InputFile(file))
+def send_post(channel_id, text, photos, files):
+    photo_group = [InputMediaPhoto(photo, caption=text) for photo in photos]
+    if photos:
+        bot.send_media_group(channel_id, photo_group)
+    else:
+        bot.send_message(channel_id, text, parse_mode="Markdown")
+    for file in files:
+        bot.send_document(channel_id, InputFile(file))

@@ -9,5 +9,5 @@ class Workspace(models.Model):
     creator_user = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name="created_workspaces"
     )
-    channels = models.ManyToManyField(Channel)
+    channels = models.ManyToManyField(Channel, related_name="channels")
     created_at = models.DateTimeField(auto_now_add=True)

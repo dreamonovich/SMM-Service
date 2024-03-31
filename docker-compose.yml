@@ -16,10 +16,8 @@ services:
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
 
   backend:
-    image: backend_base_image
-    build:
-      context: ./backend
-    depends_on:
+    image: zethange/cmm-backend:latest
+    depends_on: 
       - postgres
       - rabbitmq
     restart: always
@@ -27,36 +25,16 @@ services:
       - 8002:8000
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.backend.rule=Host(`prodanocontest.ru`) && PathPrefix(`/api`)"
+      - "traefik.http.routers.backend.rule=Host(`prodanocontest.ru`) && (PathPrefix(`/api`) || PathPrefix(`/static`))"
+      - "traefik.http.routers.backend.entrypoints=web"
       - "traefik.http.services.backend.loadbalancer.server.port=8000"
-      - "traefik.http.routers.whoami.entrypoints=web"
-    volumes:
-      - ./backend:/app
-    command: "python3 /app/SMM-service/manage.py runserver 0.0.0.0:8000"
     environment:
       - POSTGRES_USERNAME=postgres
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_DB=smm_service_db
       - POSTGRES_HOST=postgres
       - POSTGRES_PORT=5432
-
-  celery:
-    image: backend_base_image
-    depends_on:
-      - postgres
-      - rabbitmq
-    restart: always
-    volumes:
-      - ./backend:/app
-    working_dir: /app/SMM-service
-    command: "python3 -m celery -A application worker -l INFO"
-    environment:
-      - POSTGRES_USERNAME=postgres
-      - POSTGRES_PASSWORD=postgres
-      - POSTGRES_DB=smm_service_db
-      - POSTGRES_HOST=postgres
-      - POSTGRES_PORT=5432
-
+  
   frontend:
     image: zethange/cmm-frontend:latest
     ports:
@@ -94,6 +72,17 @@ services:
       - rabbitmq-data:/var/lib/rabbitmq
     restart: always
 
+  celery:
+    image: zethange/cmm-backend:latest
+    depends_on:
+      - postgres
+      - rabbitmq
+    restart: always
+    volumes:
+      - ./backend:/app
+    working_dir: /app/SMM-service
+    command: "python3 -m celery -A application worker -l INFO"
+
   minio:
     image: minio/minio
     command: server /data --console-address ":9001"
@@ -119,6 +108,19 @@ services:
       [[ ! -z "`mc ls s3 | grep smm_service`" ]] || mc mb s3/smm-service;
       exit 0;
       '
+
+#  bot:
+#    image: zethange/cmm-bot:latest
+#    environment:
+#      - POSTGRES_USERNAME=postgres
+#      - POSTGRES_PASSWORD=postgres
+#      - POSTGRES_DB=smm_service_db
+#      - POSTGRES_HOST=postgres
+#      - POSTGRES_PORT=5432
+#    ports:
+#      - "8080:8080"
+#    volumes:
+#      - ./data:/app/data
 
 volumes:
   postgres-data:
