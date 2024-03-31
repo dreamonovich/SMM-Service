@@ -108,7 +108,7 @@ export const WorkspaceSwitcher = () => {
             <CommandList>
               <CommandGroup>
                 <DialogTrigger asChild>
-                  <Link to="/workspace/create">
+                  <Link to="/workspaces/create">
                     <CommandItem>
                       <PlusCircledIcon className="mr-2 h-5 w-5" />
                       {t("new-workspace")}
