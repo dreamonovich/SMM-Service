@@ -7,7 +7,7 @@ dsl = {
     'user': os.getenv("POSTGRES_USER", "postgres"),
     'password': os.getenv("POSTGRES_PASSWORD", "postgres"),
     'host': os.getenv("POSTGRES_HOST", "127.0.0.1"),
-    'port': os.getenv("POSTGRES_PORT", "5438"),
+    'port': os.getenv("POSTGRES_PORT", "5432"),
     }
 
 connection = psycopg2.connect(**dsl)
