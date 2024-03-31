@@ -3,8 +3,6 @@ from rest_framework.permissions import IsAuthenticated
 from .models import Workspace
 from .serializers import WorkspaceSerializer
 
-from drf_yasg import openapi
-from drf_yasg.utils import swagger_auto_schema
 
 
 # Create your views here.
