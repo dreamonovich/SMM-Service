@@ -5,6 +5,7 @@ import { AuthProvider } from "./auth";
 import { generateLayout } from "@/widgets/layout";
 import { WorkspacePage } from "@/pages/workspace";
 import { CreateWorkspacePage } from "@/pages/workspace/create";
+import { Calendar } from "@/pages/calendar";
 
 export const router = createBrowserRouter([
   {
@@ -37,6 +38,16 @@ export const router = createBrowserRouter([
           {
             path: "",
             element: <WorkspacePage />,
+          },
+        ],
+      },
+      {
+        path: "/workspaces/:id/calendar",
+        Component: generateLayout(true),
+        children: [
+          {
+            path: "",
+            element: <Calendar />,
           },
         ],
       },
