@@ -163,7 +163,7 @@ AWS_STORAGE_BUCKET_NAME = "smm_service"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # Celery Configuration
-CELERY_BROKER_URL = "amqp://rabbitmq:15672"  # поменять на "amqp://localhost:5681"
+CELERY_BROKER_URL = "amqp://rabbitmq:5672"  # поменять на "amqp://localhost:5681"
 # CELERY_RESULT_BACKEND = 'django-db'
 CELERY_ACCEPT_CONTENT = ("json",)
 CELERY_TASK_SERIALIZER = "json"
