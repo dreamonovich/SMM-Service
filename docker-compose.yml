@@ -96,6 +96,11 @@ services:
       MINIO_ROOT_PASSWORD: smm_service_pass
       MINIO_ACCESS_KEY: smm_service_key
       MINIO_SECRET_KEY: smm_service_secret_key
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.minio.rule=Host(`prodanocontest.ru`) && PathPrefix(`/smm-service`)"
+      - "traefik.http.routers.minio.entrypoints=web"
+      - "traefik.http.services.minio.loadbalancer.server.port=9000"
     restart: always
 
   create_minio_buckets:
