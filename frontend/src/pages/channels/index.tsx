@@ -1,35 +1,68 @@
-import { API_URL } from "@/shared/lib/constants";
-import { useState } from "react";
-import { useEffect } from "react";
+import { ChannelsList } from "@/entities/channels/ui/channels-list";
+import { PostList, usePostStore } from "@/entities/post";
+import {} from "@/entities/workspace";
+import { PostEditor } from "@/features/post";
+import { TOKEN_HEADER, API_URL } from "@/shared/lib/constants";
+import {
+  ResizablePanelGroup,
+  ResizablePanel,
+  ResizableHandle,
+} from "@/shared/ui/resizable";
+import { Channel } from "diagnostics_channel";
+import { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
 
 export const Channels = () => {
-  const options = {
-    method: 'GET',
-    headers: {
-      token: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzEyMzUwMzg4LCJpYXQiOjE3MTE5MTgzODgsImp0aSI6IjI1YzFjYmQ4YjQzMDQwYjk4YmUxZWJlZDczYjEzOWY0IiwidXNlcl9pZCI6MX0.Dzin-obC7zu0GFTZoyXb1R-l6aPBz43Rb7YchCBwA78"
-    },
+  const [loading, setLoading] = useState(true);
+  const { selectedPost } = usePostStore();
+  const [channels, setChannels] = useState<Channel[]>([]);
+
+  const { id } = useParams();
+  const getData = async () => {
+    const response = await fetch(API_URL + "/workspace/" + id + "/channels", {
+      method: "GET",
+      headers: {
+        Authorization: TOKEN_HEADER,
+      },
+    });
+    const data = await response.json();
+    setChannels(data);
+    setLoading(false);
   };
-  const [channels, setChannels] = useState()
   useEffect(() => {
-    (async () => {
-      const res = await fetch(API_URL + "/workspace/1/channels", options);
-      setChannels((await res.json()));
-      console.log(channels)
-    })();
+    setLoading(true);
+    getData();
   }, []);
-  
   return (
     <div className="w-full h-full flex flex-col items-center">
-      <div className="w-full p-4 flex items-center justify-between">
-        <div>
-          <h1 className="text-4xl font-semibold">Ваши каналы</h1>
-          <h2 className="text-l text-gray-500">
-            Здесь будут отображаться каналы текущего рабочего пространства
-          </h2>
-        </div>
-        
-      </div>
-      
+      <>
+        {!loading && (
+          <div className="h-[100%] w-full">
+            <ResizablePanelGroup direction="horizontal" className="h-[100%]">
+              <ResizablePanel>
+                <div className="w-full p-4 flex items-center justify-between">
+                  <div>
+                    <h1 className="text-4xl font-semibold">Ваши каналы</h1>
+                    <h2 className="text-l text-gray-500">
+                      Здесь будут отображаться каналы текущего рабочего
+                      пространства
+                    </h2>
+                  </div>
+                </div>
+                <ChannelsList items={channels || []} />
+              </ResizablePanel>
+              {selectedPost ? (
+                <>
+                  <ResizableHandle />
+                  <ResizablePanel>
+                    <PostEditor />
+                  </ResizablePanel>
+                </>
+              ) : null}
+            </ResizablePanelGroup>
+          </div>
+        )}
+      </>
     </div>
   );
 };

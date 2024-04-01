@@ -19,7 +19,7 @@ def send_telegram_post(telegram_post_id: int):
         send_post(telegram_post.telegram_channel.chat_id, text=telegram_post.post.text, photos=telegram_post.post.photos, files=telegram_post.post.files)
         # все должно быть по МСК(к часу -3)
 
-        telegram_post.status = "c"
+        telegram_post.status = "s"
         telegram_post.save(update_fields=("status",))
 
     except Exception as e:

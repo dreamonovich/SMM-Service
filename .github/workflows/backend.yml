@@ -8,11 +8,11 @@ on:
 jobs:
   build:
     name: Build
-    runs-on: tomato
+    runs-on: [self-hosted]
     steps:
       - name: Check out the repo
         uses: actions/checkout@v4
-
+      - run: sudo su
       - name: Log in to Docker Hub
         uses: docker/login-action@v3
         with:
