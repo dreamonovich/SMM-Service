@@ -5,6 +5,7 @@ from celery import shared_task
 
 from telegram.models import TelegramPost
 
+from utils import send_post
 
 @shared_task
 def send_telegram_post(telegram_post_id: int):
@@ -13,8 +14,10 @@ def send_telegram_post(telegram_post_id: int):
     try:
         telegram_post.status = "r"  # running
         telegram_post.save(update_fields=("status",))
-        # send_post(telegram_post.telegram_channel.chat_id, text=telegram_post.post.text, photos=telegram_post.post.photos, files=telegram_post.post.files)
+
+        send_post(telegram_post.telegram_channel.chat_id, text=telegram_post.post.text, photos=telegram_post.post.photos, files=telegram_post.post.files)
         # все должно быть по МСК(к часу -3)
+
         telegram_post.status = "c"
         telegram_post.save(
             update_fields=(
