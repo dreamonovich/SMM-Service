@@ -9,4 +9,6 @@ urlpatterns = [
    path("workspace/<int:workspace_id>/channels", ChannelListCreate.as_view()),
    path("workspace/<int:workspace_id>/posts", WorkspacePostListCreateView.as_view()),
    path("workspace/<int:pk>/members", WorkSpaceMembers.as_view()),
+   path("workspace/<int:workspace_id>/invitelink", get_invite_link),
+   path("workspace/join/<str:token>", join_workspace),
 ]
