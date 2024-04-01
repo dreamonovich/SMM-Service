@@ -66,14 +66,16 @@ def get_invite_link(request, workspace_id):
 @permission_classes([IsAuthenticated])
 @api_view(["POST"])
 def join_workspace(request, token):
-    invite = WorkSpaceInviteLink.objects.filter(id=token).first()
-    if invite is None:
-        raise ValidationError("The link is not working")
-    invite.workspace.members.add(request.user)
-    invite.workspace.save()
-    invite.delete()
-    return Response({"response": "success"})
-
+    try:
+        invite = WorkSpaceInviteLink.objects.filter(id=token).first()
+        if invite is None:
+            raise ValidationError("The link is not working")
+        invite.workspace.members.add(request.user)
+        invite.workspace.save()
+        invite.delete()
+        return Response({"response": "success"})
+    except:
+        return ValidationError("The token is invalid")
 
 class WorkSpaceLeave(APIView):
     permission_classes = (IsAuthenticated,)
