@@ -1,4 +1,4 @@
-import { API_URL } from "@/shared/lib/constants";
+import { API_URL, TOKEN_HEADER } from "@/shared/lib/constants";
 import { Button } from "@/shared/ui/button";
 import {
   Card,
@@ -20,7 +20,7 @@ export function CreateWorkspace() {
     method: "POST",
     headers: {
       Authorization:
-        "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzEyMzUyNTU1LCJpYXQiOjE3MTE5MjA1NTUsImp0aSI6IjRiZjNjN2ZhY2I1ZDQzNWQ4ZjNkYjhhNWZmMTViYmI5IiwidXNlcl9pZCI6Mn0.w0GA_IoUw7yjZ3kz7pvz0YaDdx1rbaxsLl5MsmriIoo",
+        TOKEN_HEADER,
         "Content-Type": 'application/json',
     },
     body: JSON.stringify({
