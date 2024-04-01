@@ -8,5 +8,5 @@ urlpatterns = [
    path("workspace/<int:pk>", WorkSpaceRetrieveView.as_view()),
    path("workspace/<int:workspace_id>/channels", ChannelListCreate.as_view()),
    path("workspace/<int:workspace_id>/posts", PostListCreate.as_view()),
-   path("workspace/<int:workspace_id>/members", WorkSpaceMembers.as_view()),
+   path("workspace/<int:pk>/members", WorkSpaceMembers.as_view()),
 ]
