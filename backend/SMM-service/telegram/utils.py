@@ -13,3 +13,7 @@ def send_post(channel_id, text, photos=None, files=None):
         bot.send_message(channel_id, text, parse_mode="Markdown")
     for file in files:
         bot.send_document(channel_id, InputFile(file))
+
+
+def delete_message(chat_id, message_id):
+    bot.delete_message(chat_id, message_id)
