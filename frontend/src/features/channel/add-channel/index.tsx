@@ -1,3 +1,4 @@
+import { useWorkspaceStore } from "@/entities/workspace/store";
 import { API_URL, TOKEN_HEADER } from "@/shared/lib/constants";
 import { Button } from "@/shared/ui/button";
 import {
@@ -17,6 +18,7 @@ export interface AddChannelProps {
 
 export const AddChannel: FC<AddChannelProps> = ({}) => {
     const navigate = useNavigate()
+const [isOpen, setIsOpen] = useState(false)
     const {id} = useParams()
     const [title, setTitle] = useState("");
     const [code, setCode] = useState("");
@@ -34,8 +36,8 @@ export const AddChannel: FC<AddChannelProps> = ({}) => {
 
         }),
       };
-
-
+      const ws = useWorkspaceStore()
+     const workspaceId = useParams().id
   const [step, setStep] = useState(0);
   const handleClick = async () => {
     if (title && step === 0) {
@@ -50,12 +52,15 @@ export const AddChannel: FC<AddChannelProps> = ({}) => {
         //display error message
         setStep(1)
       }
-      else{navigate(`/workspaces/${id}`);}
+      else{
+        ws.fetchChannels(workspaceId)
+        setIsOpen(false)
+      }
     }
   };
 
   return (
-    <Dialog onOpenChange={() => setStep(0)}>
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger>Добавить</DialogTrigger>
       <DialogContent>
         <DialogHeader>
