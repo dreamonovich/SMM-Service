@@ -70,12 +70,14 @@ def join_workspace(request, token):
         invite = WorkSpaceInviteLink.objects.filter(id=token).first()
         if invite is None:
             raise ValidationError("The link is not working")
+        if request.user in invite.workspace.members.all():
+            raise ValidationError("The user is already member")
         invite.workspace.members.add(request.user)
         invite.workspace.save()
-        invite.delete()
+        #invite.delete()
         return Response({"response": "success"})
     except:
-        return ValidationError("The token is invalid")
+        raise ValidationError("The token is invalid")
 
 class WorkSpaceLeave(APIView):
     permission_classes = (IsAuthenticated,)
