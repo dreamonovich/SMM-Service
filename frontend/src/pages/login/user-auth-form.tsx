@@ -54,16 +54,15 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
       <form onSubmit={onSubmit}>
         <div className="grid gap-2">
           <div className="grid gap-1">
-            <Label className="sr-only" htmlFor="email">
-              Email
-            </Label>
             <Input
-              id="email"
+              id="username"
               placeholder={t("username")}
               autoCapitalize="none"
-              autoComplete="email"
               autoCorrect="off"
               disabled={isLoading}
+              onChange={(e) => {
+                localStorage.setItem('name', e.target.value)
+              }}
             />
           </div>
           <Button disabled={isLoading}>
