@@ -59,7 +59,7 @@ def get_approves(post_id):
         approval = cursor.fetchone()[0]
         cursor.execute("SELECT count(id) FROM public.telegram_telegramdisapproval == %s", (post_id,))
         disapproval = cursor.fetchone()[0]
-        cursor.execute('SELECT number_of_people FROM public.post_post WHERE id = %s', (post_id,))
-        number_of_people = cursor.fetchone()[0]
+        cursor.execute('SELECT number_of_confirmations FROM public.post_post WHERE id = %s', (post_id,))
+        number_of_confirmations = cursor.fetchone()[0]
 
-    return approval, disapproval, number_of_people
+    return approval, disapproval, number_of_confirmations
