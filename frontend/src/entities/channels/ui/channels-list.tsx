@@ -9,7 +9,7 @@ export type Channel = {
   is_group: boolean;
 };
 
-export const ChannelsList: FC<{ items: Channel[] }> = ({ items }) => {
+export const ChannelsList = ({ items }: { items: Channel[] }) => {
   const [selectedChannel, setSelectedChannel] = useState<Channel | null>(null);
   return (
     <ScrollArea className="h-full w-full">
