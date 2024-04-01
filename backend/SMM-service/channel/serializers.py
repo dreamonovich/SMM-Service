@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Channel, ChannelRequest
+from .models import Channel
 
 
 class ChannelSerializer(serializers.ModelSerializer):

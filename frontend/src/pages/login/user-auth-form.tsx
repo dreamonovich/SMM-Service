@@ -2,7 +2,6 @@ import { cn } from "@/shared/lib";
 import { Button } from "@/shared/ui/button";
 import { Icons } from "@/shared/ui/icons";
 import { Input } from "@/shared/ui/input";
-import { Label } from "@radix-ui/react-label";
 import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {}
@@ -54,16 +53,15 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
       <form onSubmit={onSubmit}>
         <div className="grid gap-2">
           <div className="grid gap-1">
-            <Label className="sr-only" htmlFor="email">
-              Email
-            </Label>
             <Input
-              id="email"
+              id="username"
               placeholder={t("username")}
               autoCapitalize="none"
-              autoComplete="email"
               autoCorrect="off"
               disabled={isLoading}
+              onChange={(e) => {
+                localStorage.setItem('name', e.target.value)
+              }}
             />
           </div>
           <Button disabled={isLoading}>

@@ -10,11 +10,12 @@
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
     <script type="text/javascript">
-      async function onTelegramAuth(user, isLogin) {
+      async function onTelegramAuth(user, isLogin = false) {
         console.log(user, JSON.stringify(user));
-        if (isLogin) {
+        let success = false;
+        if (!isLogin) {
           const res = await fetch(
-            `https://prodanocontest.ru/api/auth/register`,
+            `https://prodanocontest.ru/api/auth/register/`,
             {
               method: "POST",
               headers: {
@@ -28,7 +29,10 @@
           );
           const data = await res.json();
 
-          localStorage.setItem("token", data.token);
+          if (data.token) {
+            localStorage.setItem("token", data.token);
+            success = true;
+          }
         } else {
           const res = await fetch(`https://prodanocontest.ru/api/auth/login`, {
             headers: {
@@ -36,12 +40,20 @@
             },
             body: JSON.stringify({
               ...user,
-            })
+            }),
           });
           const data = await res.json();
-          localStorage.setItem("token", data.token);
+          if (data.token) {
+            localStorage.setItem("token", data.token);
+            success = true;
+          }
         }
-        location.reload()
+
+        if (success) {
+          location.replace("/");
+        } else {
+          alert('Произошла ошибка')
+        }
       }
     </script>
   </body>

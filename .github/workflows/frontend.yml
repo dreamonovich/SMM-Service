@@ -8,7 +8,7 @@ on:
 jobs:
   build:
     name: Build
-    runs-on: ubuntu-latest
+    runs-on: tomato
     steps:
       - name: Check out the repo
         uses: actions/checkout@v4

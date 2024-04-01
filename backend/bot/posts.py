@@ -23,13 +23,3 @@ def get_keyboard(post_id):
     keyboard.add(InlineKeyboardButton("✅Принять", callback_data=f"post_approve?{post_id}"),
                  InlineKeyboardButton("🚫Отклонить", callback_data=f"post_decline?{post_id}"))
     return keyboard
-
-
-def send_post(channel_id, text, photos, files):
-    photo_group = [InputMediaPhoto(photo, caption=text) for photo in photos]
-    if photos:
-        bot.send_media_group(channel_id, photo_group)
-    else:
-        bot.send_message(channel_id, text, parse_mode="Markdown")
-    for file in files:
-        bot.send_document(channel_id, InputFile(file))

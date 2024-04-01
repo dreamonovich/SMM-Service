@@ -8,6 +8,7 @@ STATUS_CHOICES = [
     ('PENDING', 'Pending Publication'),
     ('UNDER_REVIEW', 'Under Review'),
     ('APPROVED', 'Approved'),
+    ('ALL_SENDED', 'All Sended'),
     ('REJECTED', 'Rejected'),
 ]
 
@@ -19,12 +20,12 @@ class Post(models.Model):
     creator = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name="created_posts"
     )
-    photos = fields.ArrayField(models.FilePathField())
-    files = fields.ArrayField(models.FilePathField())
+    photos = fields.ArrayField(models.CharField(max_length=300))
+    files = fields.ArrayField(models.CharField(max_length=300))
     send_planned_at = models.DateTimeField()
 
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='CREATED')
-    number_of_people = models.IntegerField()
+    number_of_confirmations = models.IntegerField()
 
     modified_at = models.DateTimeField(auto_now=True)
     created_at = models.DateTimeField(auto_now_add=True)
