@@ -7,7 +7,7 @@ class TelegramPost(models.Model):
     STATUS = [
         ("p", "pending"),
         ("r", "running"),
-        ("c", "completed"),
+        ("s", "sended"),
         ("f", "failed"),
     ]
 
