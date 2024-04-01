@@ -7,11 +7,9 @@ from drf_yasg import openapi
 # Создаем SchemaView для всех наших URL-адресов API
 schema_view = get_schema_view(
     openapi.Info(
-        title="Your API Title",
+        title="API",
         default_version='v1',
-        description="Your API Description",
-        terms_of_service="https://www.example.com/policies/terms/",
-        contact=openapi.Contact(email="contact@example.com"),
+        description="API",
         license=openapi.License(name="BSD License"),
     ),
     public=True,
@@ -19,6 +17,7 @@ schema_view = get_schema_view(
 )
 
 urlpatterns = [
+    path("api/", include("ai.urls")),
     path("api/", include("channel.urls")),
     path("api/", include("core.urls")),
     path("api/", include("post.urls")),

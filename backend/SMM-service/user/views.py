@@ -7,6 +7,8 @@ from rest_framework.generics import RetrieveUpdateDestroyAPIView
 from user.models import User
 from user.serializers import UserSerializer
 from core.utils import check_telegram_authorization
+from drf_yasg.utils import swagger_auto_schema
+
 
 
 @api_view(['POST'])
