@@ -19,6 +19,8 @@ def register_user(request):
         return Response({"error": "Please provide hash and name"}, status=status.HTTP_400_BAD_REQUEST)
 
     if check_telegram_authorization(data):
+        if User.objects.filter(telegram_id=data["id"]).exists():
+            return Response({"error": "The user is already exists"}, status=status.HTTP_409_CONFLICT)
         new_user = User(name=data["name"], telegram_id=data["id"], telegram_username=data.get("username"))
         new_user.save()
         token = AccessToken.for_user(new_user)
@@ -34,8 +36,8 @@ def authenticate_user(request):
     Authenticate a user.
     """
     data = request.data
-    if "hash" not in data or "name" not in data:
-        return Response({"error": "Please provide hash and name"}, status=status.HTTP_400_BAD_REQUEST)
+    if "hash" not in data:
+        return Response({"error": "Please provide hash"}, status=status.HTTP_400_BAD_REQUEST)
 
     if check_telegram_authorization(data):
         user = User.objects.filter(telegram_id=data["id"]).first()
@@ -45,6 +47,7 @@ def authenticate_user(request):
 
         return Response({'error': 'User with this Telegram ID does not exist'}, status=status.HTTP_404_NOT_FOUND)
 
+    return Response({"error": "The data is incorrect"}, status=status.HTTP_400_BAD_REQUEST)
 
 class RetrieveUpdateDestroyUser(RetrieveUpdateDestroyAPIView):
     queryset = User.objects.all()
