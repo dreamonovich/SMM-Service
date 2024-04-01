@@ -17,7 +17,7 @@ def register_user(request):
     Register a new user.
     """
     data = request.data
-    if data.get("token") is None or data.get("name") is None:
+    if data.get("hash") is None or data.get("name") is None:
         return Response({"error": "Please provide hash and name"}, status=status.HTTP_400_BAD_REQUEST)
 
     if check_telegram_authorization(data):
