@@ -9,7 +9,8 @@ from ai.yandex_gpt_request import generate_text
 
 
 # Create your views here.
-# @permission_classes([IsAuthenticated])
+
+@permission_classes([IsAuthenticated])
 class MessageProcessing(APIView):
     @swagger_auto_schema(
         request_body=openapi.Schema(
