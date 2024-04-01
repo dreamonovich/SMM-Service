@@ -34,7 +34,7 @@ class ChannelListCreate(ListCreateAPIView):
     def list(self, request, workspace_id, *args, **kwargs):
         workspace = Workspace.objects.filter(id=workspace_id).first()
         if workspace:
-            if workspace.creator_user == request.user:
+            if request.user in workspace.members.all():
                 queryset = Channel.objects.filter(workspace_id=workspace_id).all()
                 serializer = self.get_serializer(queryset, many=True)
                 return Response(serializer.data)
