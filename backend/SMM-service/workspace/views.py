@@ -1,9 +1,11 @@
-from rest_framework.generics import ListCreateAPIView, RetrieveDestroyAPIView, RetrieveAPIView
+from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView, RetrieveAPIView
+from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from django.core.exceptions import PermissionDenied, ValidationError
 from .models import Workspace, WorkSpaceInviteLink
+from user.models import User
 from .serializers import WorkspaceSerializer, WorkSpaceMembersSerializer
 
 
@@ -17,7 +19,7 @@ class WorkSpaceListCreate(ListCreateAPIView):
         return Workspace.objects.filter(creator_user=self.request.user).all()
 
 
-class WorkSpaceRetrieveView(RetrieveDestroyAPIView):
+class WorkSpaceRetrieveDeleteView(RetrieveUpdateDestroyAPIView):
     queryset = Workspace.objects.all()
     serializer_class = WorkspaceSerializer
     permission_classes = (IsAuthenticated,)
@@ -27,6 +29,12 @@ class WorkSpaceRetrieveView(RetrieveDestroyAPIView):
         if self.request.user not in obj.members.all():
             raise PermissionDenied("You have no access")
         return obj
+
+    def delete(self, request, *args, **kwargs):
+        workspace = self.get_object()
+        if workspace.creator_user != request.user:
+            raise PermissionDenied("You have no access")
+        workspace.delete()
 
 
 class WorkSpaceMembers(RetrieveAPIView):
@@ -65,3 +73,33 @@ def join_workspace(request, token):
     invite.workspace.save()
     invite.delete()
     return Response({"response": "success"})
+
+
+class WorkSpaceLeave(APIView):
+    permission_classes = (IsAuthenticated,)
+
+    def get_workspace(self, workspace_id, user):
+        workspace = Workspace.objects.filter(id=workspace_id).first()
+        if workspace is None:
+            raise ValidationError("The workspace is not found")
+        if user not in workspace.members.all():
+            raise PermissionDenied("You do not in this workspace")
+        return workspace
+
+    def post(self, workspace_id):
+        workspace = self.get_workspace(workspace_id, self.request.user)
+        workspace.members.remove(self.request.user)
+        workspace.save()
+        return Response({"status": "ok"})
+
+
+class WorkSpaceRemoveMember(WorkSpaceLeave):
+
+    def post(self, workspace_id, user_id):
+        user = User.objects.filter(id=user_id).first()
+        if user is None:
+            raise ValidationError("The user is not found")
+        workspace = self.get_workspace(workspace_id, user)
+        workspace.members.remove(user)
+        workspace.save()
+        return Response({"status": "ok"})
