@@ -1,31 +1,42 @@
-from rest_framework.generics import ListAPIView, RetrieveUpdateDestroyAPIView
+from rest_framework.exceptions import ValidationError
+from rest_framework.generics import ListCreateAPIView, RetrieveDestroyAPIView
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.response import Response
 from .models import Post, PostTemplate
 from .serializers import PostSerializer, PostTemplateSerializer
 
 
-class PostListCreate(ListAPIView):
-    queryset = Post.objects.all()
+class WorkspacePostListCreateView(ListCreateAPIView):
     serializer_class = PostSerializer
-    permission_classes = (IsAuthenticated,)
-    lookup_field = "workspace_id"
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        if not (workspace_id := self.kwargs.get('workspace_id')):
+            raise ValidationError("workspace_id is required")
+
+        return Post.objects.filter(workspace_id=workspace_id, workspace__members__in=(self.request.user,))
 
 
-class RUDPost(RetrieveUpdateDestroyAPIView):
-    queryset = Post.objects.all()
+class PostRetrieveDeleteView(RetrieveDestroyAPIView):
     serializer_class = PostSerializer
-    permission_classes = (IsAuthenticated,)
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return Post.objects.filter(workspace__members__in=(self.request.user,))
 
 
-class PostTemplateListCreate(ListAPIView):
-    queryset = PostTemplate.objects.all()
+class WorkspacePostTemplateListCreateView(ListCreateAPIView):
     serializer_class = PostTemplateSerializer
-    permission_classes = (IsAuthenticated,)
-    lookup_field = "workspace_id"
+    permission_classes = [IsAuthenticated]
 
+    def get_queryset(self):
+        if not (workspace_id := self.kwargs.get('workspace_id')):
+            raise ValidationError("workspace_id is required")
 
-class RUDPostTemplate(RetrieveUpdateDestroyAPIView):
-    queryset = Post.objects.all()
+        return PostTemplate.objects.filter(workspace_id=workspace_id, workspace__members__in=(self.request.user,))
+
+class PostTemplateRetrieveDeleteView(RetrieveDestroyAPIView):
     serializer_class = PostTemplateSerializer
-    permission_classes = (IsAuthenticated,)
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return Post.objects.filter(workspace__members__in=(self.request.user,))

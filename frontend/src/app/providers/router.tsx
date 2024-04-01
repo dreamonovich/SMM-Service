@@ -24,11 +24,11 @@ export const router = createBrowserRouter([
             path: "/",
             element: <Dashboard />,
           },
+          {
+            path: "/profile",
+            element: <Profile />,
+          },    
         ],
-      },
-      {
-        path: "/profile",
-        element: <Profile />,
       },
       {
         path: "/workspaces/create",
