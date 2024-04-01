@@ -7,7 +7,7 @@ class User(AbstractBaseUser):
     name = models.CharField(max_length=64)
     telegram_id = models.BigIntegerField(unique=True)
     telegram_username = models.CharField(max_length=32)
-    avatar_path = models.FilePathField(blank=True, null=True)
+    avatar_path = models.CharField(max_length=300, default="https://ui.shadcn.com/avatars/03.png")
     last_logged_in = models.DateTimeField(default=timezone.now, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     password = None

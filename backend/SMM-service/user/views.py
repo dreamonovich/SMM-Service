@@ -2,43 +2,61 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework_simplejwt.tokens import AccessToken
-from drf_yasg.utils import swagger_auto_schema
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.generics import RetrieveUpdateDestroyAPIView
 from user.models import User
 from user.serializers import UserSerializer
+from core.utils import check_telegram_authorization
 
-@swagger_auto_schema(method='post', request_body=UserSerializer, responses={status.HTTP_201_CREATED: 'Token for the created user'})
+
 @api_view(['POST'])
 def register_user(request):
     """
     Register a new user.
     """
-    if request.method == 'POST':
-        serializer = UserSerializer(data=request.data)
-        if serializer.is_valid():
-            user = serializer.save()
-            token = AccessToken.for_user(user)
-            response = Response({'message': str(token)}, status=status.HTTP_201_CREATED)
-            return response
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    data = request.data
+    if "hash" not in data or "name" not in data:
+        return Response({"error": "Please provide hash and name"}, status=status.HTTP_400_BAD_REQUEST)
 
-@swagger_auto_schema(method='post', request_body=UserSerializer, responses={status.HTTP_200_OK: 'User details and access token'})
+    if check_telegram_authorization(data):
+        if User.objects.filter(telegram_id=data["id"]).exists():
+            return Response({"error": "The user is already exists"}, status=status.HTTP_409_CONFLICT)
+        new_user = User(name=data["name"], telegram_id=data["id"], telegram_username=data.get("username"))
+        new_user.save()
+        token = AccessToken.for_user(new_user)
+        response = Response({'token': str(token)}, status=status.HTTP_201_CREATED)
+        return response
+
+    return Response({"error": "The data is incorrect"}, status=status.HTTP_400_BAD_REQUEST)
+
+
 @api_view(['POST'])
 def authenticate_user(request):
     """
     Authenticate a user.
     """
-    if request.method == 'POST':
-        telegram_id = request.data.get('telegram_id')
-        if not telegram_id:
-            return Response({'error': 'Telegram ID is required'}, status=status.HTTP_400_BAD_REQUEST)
-        try:
-            user = User.objects.get(telegram_id=telegram_id)
-        except User.DoesNotExist:
-            return Response({'error': 'User with this Telegram ID does not exist'}, status=status.HTTP_404_NOT_FOUND)
-        token = AccessToken.for_user(user)
-        serializer = UserSerializer(user)
-        response_data = {
-            'user': serializer.data,
-            'token': str(token),
-        }
-        return Response(response_data, status=status.HTTP_200_OK)
+    data = request.data
+    if "hash" not in data:
+        return Response({"error": "Please provide hash"}, status=status.HTTP_400_BAD_REQUEST)
+
+    if check_telegram_authorization(data):
+        user = User.objects.filter(telegram_id=data["id"]).first()
+        if user:
+            token = AccessToken.for_user(user)
+            return Response({'token': str(token)}, status=status.HTTP_200_OK)
+
+        return Response({'error': 'User with this Telegram ID does not exist'}, status=status.HTTP_404_NOT_FOUND)
+
+    return Response({"error": "The data is incorrect"}, status=status.HTTP_400_BAD_REQUEST)
+
+
+class RetrieveUpdateDestroyUser(RetrieveUpdateDestroyAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    permission_classes = (IsAuthenticated,)
+
+    def get_queryset(self):
+        return self.request.user
+
+    def get_object(self):
+        return self.request.user

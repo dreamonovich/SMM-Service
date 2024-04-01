@@ -1,6 +1,6 @@
 import { PostList, usePostStore } from "@/entities/post";
 import { PostEditor } from "@/features/post/editor";
-import { API_URL } from "@/shared/lib/constants";
+import { API_URL, TOKEN_HEADER } from "@/shared/lib/constants";
 import {
   ResizablePanelGroup,
   ResizablePanel,
@@ -13,16 +13,24 @@ export const WorkspacePage = () => {
   const [loading, setLoading] = useState(true);
   const [workspace, setWorkspace] = useState(null);
   const { selectedPost } = usePostStore();
-
+  const options = {
+    method: "GET",
+    headers: {
+      Authorization:
+        `"Bearer" + ${TOKEN_HEADER}`,
+        "Content-Type": 'application/json',
+    }
+  };
+  
   const { id } = useParams();
   const getData = async () => {
-    const response = await fetch(API_URL + "/workspaces/" + id);
+    const response = await fetch(API_URL + "/workspace/" + id, options);
     const data = await response.json();
     setWorkspace(data);
     setLoading(false);
   };
   useEffect(() => {
-    setLoading(false);
+    setLoading(true);
     getData();
   }, []);
   // добавить красивый лоадер

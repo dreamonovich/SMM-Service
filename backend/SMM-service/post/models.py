@@ -19,8 +19,8 @@ class Post(models.Model):
     creator = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name="created_posts"
     )
-    photos = fields.ArrayField(models.FilePathField())
-    files = fields.ArrayField(models.FilePathField())
+    photos = fields.ArrayField(models.CharField(max_length=300))
+    files = fields.ArrayField(models.CharField(max_length=300))
     send_planned_at = models.DateTimeField()
 
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='CREATED')

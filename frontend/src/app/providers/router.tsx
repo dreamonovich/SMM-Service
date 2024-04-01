@@ -9,6 +9,7 @@ import { Calendar } from "@/pages/calendar";
 import { Channels } from "@/pages/channels";
 import { Stats } from "@/pages/stats";
 import { Profile } from "@/pages/profile";
+import { LoginPage } from "@/pages/login/login";
 export const router = createBrowserRouter([
   {
     Component: AuthProvider,
@@ -25,13 +26,7 @@ export const router = createBrowserRouter([
       },
       {
         path: "/profile",
-        Component: generateLayout(false),
-        children: [
-          {
-            path: "/profile/",
-            element: <Profile />,
-          },
-        ],
+        element: <Profile />,
       },
       {
         path: "/workspaces/create",
@@ -49,14 +44,14 @@ export const router = createBrowserRouter([
         children: [
           {
             children: [
-              { path: "/workspaces/:id/", element: <WorkspacePage /> },
-              { path: "/workspaces/:id/calendar", element: <Calendar /> },
+              { path: "", element: <WorkspacePage /> },
+              { path: "calendar", element: <Calendar /> },
               {
-                path: "/workspaces/:id/channels",
+                path: "channels",
                 element: <Channels />,
               },
               {
-                path: "/workspaces/:id/stats",
+                path: "stats",
                 element: <Stats />,
               },
             ],
@@ -66,7 +61,11 @@ export const router = createBrowserRouter([
     ],
   },
   {
-    path: "/login",
+    path: "/register",
     element: <AuthenticationPage />,
+  },
+  {
+    path: "/login",
+    element: <LoginPage />,
   },
 ]);

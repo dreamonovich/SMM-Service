@@ -5,11 +5,15 @@ import { FC, useEffect } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 
 export const AuthProvider: FC = () => {
-  const navigate = useNavigate();
   const user = useUserStore();
+  const navigate = useNavigate();
   useEffect(() => {
     (async () => {
-      const res = await fetch(API_URL + "/user/info");
+      const res = await fetch(API_URL + "/me", {
+        headers: {
+          Authorization: 'Bearer ' + localStorage.getItem('token')
+        }
+      });
       if (!res.ok) {
         navigate("/login");
       } else {
