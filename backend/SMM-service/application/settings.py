@@ -85,22 +85,15 @@ WSGI_APPLICATION = "application.wsgi.application"
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
 DATABASES = {
-    # "default": {
-    #     "ENGINE": "django.db.backends.postgresql",
-    #     "NAME": os.getenv("POSTGRES_DB", "smm_service_db"),
-    #     "USER": os.getenv("POSTGRES_USER", "postgres"),
-    #     "PASSWORD": os.getenv("POSTGRES_PASSWORD", "postgres"),
-    #     "HOST": os.getenv("POSTGRES_HOST", "127.0.0.1"),
-    #     "PORT": os.getenv("POSTGRES_PORT", "5438"),
-    # }
-'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'postgres',
-        'USER': 'postgres',
-        'PASSWORD': '123',
-        'HOST': 'localhost',
-        'PORT': '5432',
-    }
+    "default": {
+         "ENGINE": "django.db.backends.postgresql",
+         "NAME": os.getenv("POSTGRES_DB", "smm_service_db"),
+       "USER": os.getenv("POSTGRES_USER", "postgres"),
+         "PASSWORD": os.getenv("POSTGRES_PASSWORD", "postgres"),
+         "HOST": os.getenv("POSTGRES_HOST", "127.0.0.1"),
+         "PORT": os.getenv("POSTGRES_PORT", "5438"),
+     }
+
 }
 
 REST_FRAMEWORK = {
@@ -131,7 +124,7 @@ SIMPLE_JWT = {
 
 AUTH_PASSWORD_VALIDATORS = [
     {
-        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
+        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilaritValidator",
     },
     {
         "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
