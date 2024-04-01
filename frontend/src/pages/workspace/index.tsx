@@ -32,6 +32,10 @@ export const WorkspacePage = () => {
       const data = await res.json();
       setPosts(data);
     })();
+
+    return () => {
+      setSelectedPost(null)
+    }
   }, [id]);
 
   return (
