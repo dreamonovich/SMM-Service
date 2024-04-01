@@ -50,6 +50,21 @@ export const ChannelsList = ({ items }: { items: Channel[] }) => {
       setOpen(false)
     }    
   }
+  const onClickDelete = async (id: number) => {
+    const res = await fetch(API_URL + "/channel/" + id, {
+      method: "DELETE",
+      headers: {
+        Authorization:
+          TOKEN_HEADER,
+          "Content-Type": 'application/json',
+      },
+    });
+    
+    if (res.ok) {
+      await fetchChannels(+(workspaceId ?? 0))
+      setOpen(false)
+    }    
+  }
   return (
     <ScrollArea className="h-full w-full">
       <div className="flex flex-col gap-2 pt-0 pr-2">
@@ -104,8 +119,9 @@ export const ChannelsList = ({ items }: { items: Channel[] }) => {
                       />
                     </div>
                   </div>
-                  <DialogFooter>
+                  <DialogFooter className="flex justify-between">
                     <Button onClick={() => {onClickSave(item.id)}}>Сохранить</Button>
+                    <Button className="bg-red-700" onClick={() => {onClickDelete(item.id)}}>Удалить</Button>
                   </DialogFooter>
                 </DialogContent>
               </Dialog>
