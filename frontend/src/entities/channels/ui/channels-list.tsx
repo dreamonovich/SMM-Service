@@ -1,6 +1,7 @@
 import { ScrollArea } from "@/shared/ui/scroll-area";
 import { FC, useState } from "react";
 import { cn } from "@/shared/lib";
+import { Button } from "@/shared/ui/button";
 
 export type Channel = {
   id: number;

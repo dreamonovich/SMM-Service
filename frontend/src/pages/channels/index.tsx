@@ -1,7 +1,9 @@
 import { ChannelsList } from "@/entities/channels/ui/channels-list";
 import { usePostStore } from "@/entities/post";
+import { AddChannel } from "@/features/channel/add-channel";
 import { PostEditor } from "@/features/post";
 import { TOKEN_HEADER, API_URL } from "@/shared/lib/constants";
+import { Button } from "@/shared/ui/button";
 import {
   ResizablePanelGroup,
   ResizablePanel,
@@ -15,7 +17,7 @@ export const Channels = () => {
   const [loading, setLoading] = useState(true);
   const { selectedPost } = usePostStore();
   const [channels, setChannels] = useState<Channel[]>([]);
-
+  const [modalOpen, setModalOpen] = useState(true)
   const { id } = useParams();
   const getData = async () => {
     const response = await fetch(API_URL + "/workspace/" + id + "/channels", {
@@ -35,11 +37,11 @@ export const Channels = () => {
   return (
     <div className="w-full h-full flex flex-col items-center">
       <>
-        {!loading && (
+      {!loading && (
           <div className="h-[100%] w-full">
             <ResizablePanelGroup direction="horizontal" className="h-[100%]">
               <ResizablePanel>
-                <div className="w-full p-4 flex items-center justify-between">
+                <div className="w-full p-2 flex items-center justify-between">
                   <div>
                     <h1 className="text-4xl font-semibold">Ваши каналы</h1>
                     <h2 className="text-l text-gray-500">
@@ -47,8 +49,10 @@ export const Channels = () => {
                       пространства
                     </h2>
                   </div>
+                  <AddChannel isOpen={modalOpen} onClose={() => setModalOpen(false)} ></AddChannel>
                 </div>
                 <ChannelsList items={channels || []} />
+                
               </ResizablePanel>
               {selectedPost ? (
                 <>
