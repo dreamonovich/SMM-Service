@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Workspace
+from .models import Workspace, WorkSpaceInviteLink
 from user.serializers import UserSerializer
 
 
