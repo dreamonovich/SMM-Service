@@ -23,7 +23,7 @@ class ChannelListCreate(ListCreateAPIView):
         channel_request = ChannelRequest.objects.filter(code=code).first()
         if channel_request is None:
             raise ValidationError("The code is invalid")
-        if Channel.objects.filter(chat_id=channel_request.chat_id,workspace_id=workspace_id).exists():
+        if Channel.objects.filter(chat_id=channel_request.chat_id, workspace_id=workspace_id).exists():
             raise ValidationError("The channel is already exists")
         new_channel = Channel(name=name, chat_id=channel_request.chat_id, is_group=channel_request.is_group,
                               workspace_id=workspace_id)

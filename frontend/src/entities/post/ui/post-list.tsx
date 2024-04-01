@@ -1,16 +1,9 @@
 import { ScrollArea } from "@/shared/ui/scroll-area";
 import { FC } from "react";
-import { usePostStore } from "..";
+import { Post, usePostStore } from "..";
 import { cn } from "@/shared/lib";
 
-export type Channel = {
-  id: number,
-  name: string,
-  chat_id: number,
-  is_group: boolean,
-}
-
-export const PostList: FC<{ items: Channel[] }> = ({ items }) => {
+export const PostList: FC<{ items: Post[] }> = ({ items }) => {
   const { selectedPost, setSelectedPost } = usePostStore();
   return (
     <ScrollArea className="h-full w-full">
@@ -34,7 +27,7 @@ export const PostList: FC<{ items: Channel[] }> = ({ items }) => {
               </div>
             </div>
             <div className="line-clamp-2 text-xs text-muted-foreground">
-              ID: {item.id}; ChatId: {item.chat_id}
+              Было/будет опубликовано: {new Date(item.send_planned_at).toLocaleString()}
             </div>
           </button>
         ))}
