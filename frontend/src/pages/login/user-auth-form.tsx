@@ -2,7 +2,6 @@ import { cn } from "@/shared/lib";
 import { Button } from "@/shared/ui/button";
 import { Icons } from "@/shared/ui/icons";
 import { Input } from "@/shared/ui/input";
-import { Label } from "@radix-ui/react-label";
 import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {}
