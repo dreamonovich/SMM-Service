@@ -16,10 +16,10 @@ def callback(call: CallbackQuery):
     elif call.data == "post_approve":
         disapprove(call.message.from_user.id, post_id)
     try:
-        approval, disapproval, number_of_people = get_approves(post_id)
+        approval, disapproval, number_of_confirmations = get_approves(post_id)
         keyboard = InlineKeyboardMarkup()
-        keyboard.add(InlineKeyboardButton(f"{approval}/{number_of_people}", callback_data=call.data),
-                     InlineKeyboardButton(f"{disapproval}/{number_of_people}", callback_data=call.data))
+        keyboard.add(InlineKeyboardButton(f"{approval}/{number_of_confirmations}", callback_data=call.data),
+                     InlineKeyboardButton(f"{disapproval}/{number_of_confirmations}", callback_data=call.data))
         bot.edit_message_reply_markup(call.message.chat.id, call.message.message_id, reply_markup=keyboard)
     except:
         pass
