@@ -1,6 +1,6 @@
 import { API_URL, TOKEN_HEADER } from "@/shared/lib/constants";
 import { create } from "zustand";
-import { Channel } from "../post";
+import { Channel } from "../channels/ui/channels-list";
 export type Workspace = {
   name: string;
   id: string;

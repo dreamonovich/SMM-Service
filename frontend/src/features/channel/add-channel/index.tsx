@@ -2,11 +2,9 @@ import { API_URL, TOKEN_HEADER } from "@/shared/lib/constants";
 import { Button } from "@/shared/ui/button";
 import {
   Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
+  DialogContent, DialogHeader,
   DialogTitle,
-  DialogTrigger,
+  DialogTrigger
 } from "@/shared/ui/dialog";
 import { Input } from "@/shared/ui/input";
 import { FC, useState } from "react";
@@ -17,7 +15,7 @@ export interface AddChannelProps {
   onClose: () => void;
 }
 
-export const AddChannel: FC<AddChannelProps> = ({ isOpen, onClose }) => {
+export const AddChannel: FC<AddChannelProps> = ({}) => {
     const navigate = useNavigate()
     const {id} = useParams()
     const [title, setTitle] = useState("");
@@ -86,7 +84,7 @@ export const AddChannel: FC<AddChannelProps> = ({ isOpen, onClose }) => {
                 <div>
                   <label>Введите код, отправленный ботом</label>
                   <Input type="number" value={code}
-                    onChange={(e) =>  !isNaN(+e.target.value) ? setCode(+e.target.value) : null}
+                    onChange={(e) =>  !isNaN(+e.target.value) ? setCode(e.target.value) : null}
                     placeholder="00000"
                   />
                 </div>

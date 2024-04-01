@@ -17,7 +17,6 @@ import { Input } from "@/shared/ui/input";
 import { Label } from "@/shared/ui/label";
 import { API_URL, TOKEN_HEADER } from "@/shared/lib/constants";
 import { useWorkspaceStore } from "@/entities/workspace";
-import { usePostStore } from "@/entities/post/store";
 import { useParams } from "react-router-dom";
 
 export type Channel = {
@@ -29,9 +28,9 @@ export type Channel = {
 
 export const ChannelsList = ({ items }: { items: Channel[] }) => {
   const [selectedChannel, setSelectedChannel] = useState<Channel | null>(null);
-  const [name, setName] = useState()
+  const [name, setName] = useState('')
   const [open, setOpen] = useState(false);
-  const { selectedWorkspace, fetchChannels } = useWorkspaceStore()
+  const { fetchChannels } = useWorkspaceStore()
   const {id: workspaceId} = useParams()
   const onClickSave = async (id: number) => {
     const res = await fetch(API_URL + "/channel/" + id, {
