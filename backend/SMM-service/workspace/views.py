@@ -51,7 +51,7 @@ class WorkSpaceMembers(RetrieveAPIView):
 
 
 @permission_classes([IsAuthenticated])
-@api_view(["POST"])
+@api_view(["GET"])
 def get_invite_link(request, workspace_id):
     workspace = Workspace.objects.filter(id=workspace_id).first()
     if workspace is None or workspace.creator_user != request.user:
@@ -64,7 +64,7 @@ def get_invite_link(request, workspace_id):
 
 
 @permission_classes([IsAuthenticated])
-@api_view(["POST"])
+@api_view(["GET"])
 def join_workspace(request, token):
     try:
         invite = WorkSpaceInviteLink.objects.filter(id=token).first()
