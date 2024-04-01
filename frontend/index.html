@@ -35,8 +35,8 @@
           }
         } else {
           const res = await fetch(`https://prodanocontest.ru/api/auth/login`, {
+            method: "POST",
             headers: {
-              "method": "POST",
               "Content-Type": "application/json",
             },
             body: JSON.stringify({
