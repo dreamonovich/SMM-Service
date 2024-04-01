@@ -7,6 +7,7 @@ bot_token = "6755435757:AAEdJcrtEuEmYz2feDl0I0bG5fbf5MpFGoA"
 def check_telegram_authorization(auth_data):
     d = auth_data.copy()
     del d['hash']
+    del d["name"]
     d_list = []
     for key in sorted(d.keys()):
         d_list.append(key + '=' + str(d[key]))
