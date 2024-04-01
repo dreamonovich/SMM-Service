@@ -15,9 +15,9 @@ class Workspace(models.Model):
 
 
 class WorkSpaceInviteLink(models.Model):
-    id = models.UUIDField(default=uuid4)
+    id = models.UUIDField(default=uuid4, primary_key=True)
     creator_user = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name="created_workspaces"
+        User, on_delete=models.CASCADE, related_name="created_user"
     )
-    workspace = models.ForeignKey(Workspace, on_delete=models.CASCADE)
+    workspace = models.ForeignKey(Workspace, on_delete=models.CASCADE, related_name="workspace")
     created_at = models.DateTimeField(auto_now_add=True)
