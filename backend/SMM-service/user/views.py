@@ -7,7 +7,7 @@ from rest_framework.generics import RetrieveUpdateDestroyAPIView
 from user.models import User
 from user.serializers import UserSerializer
 from core.utils import check_telegram_authorization
-from drf_yasg.utils import swagger_auto_schema
+from workspace.models import Workspace
 
 
 
@@ -17,7 +17,7 @@ def register_user(request):
     Register a new user.
     """
     data = request.data
-    if "hash" not in data or "name" not in data:
+    if data.get("hash") is None or data.get("name") is None:
         return Response({"error": "Please provide hash and name"}, status=status.HTTP_400_BAD_REQUEST)
 
     if check_telegram_authorization(data):
@@ -25,6 +25,9 @@ def register_user(request):
             return Response({"error": "The user is already exists"}, status=status.HTTP_409_CONFLICT)
         new_user = User(name=data["name"], telegram_id=data["id"], telegram_username=data.get("username"))
         new_user.save()
+        new_workspace = Workspace(name=f"{data['name']}-default", creator_user=new_user)
+        new_workspace.save()
+        new_workspace.members.add(new_user)
         token = AccessToken.for_user(new_user)
         response = Response({'token': str(token)}, status=status.HTTP_201_CREATED)
         return response

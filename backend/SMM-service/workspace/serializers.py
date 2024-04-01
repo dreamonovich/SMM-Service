@@ -13,6 +13,7 @@ class WorkspaceSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         user = self.context.get("request").user
+        print(user.name, "creat")
         new_workspace = Workspace(name=validated_data["name"], creator_user=user)
         new_workspace.save()
         new_workspace.members.add(user)

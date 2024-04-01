@@ -1,5 +1,6 @@
 from rest_framework.generics import ListCreateAPIView, RetrieveDestroyAPIView, RetrieveAPIView
 from rest_framework.permissions import IsAuthenticated
+from django.core.exceptions import PermissionDenied
 from .models import Workspace
 from .serializers import WorkspaceSerializer, WorkSpaceMembersSerializer
 
@@ -10,6 +11,7 @@ class WorkSpaceListCreate(ListCreateAPIView):
     permission_classes = (IsAuthenticated,)
 
     def get_queryset(self):
+        print(self.request.user.name)
         return Workspace.objects.filter(creator_user=self.request.user).all()
 
 
@@ -18,6 +20,12 @@ class WorkSpaceRetrieveView(RetrieveDestroyAPIView):
     serializer_class = WorkspaceSerializer
     permission_classes = (IsAuthenticated,)
 
+    def get_object(self):
+        obj = super().get_object()
+        if self.request.user not in obj.members.all():
+            raise PermissionDenied("You have no access")
+        return obj
+
 
 class WorkSpaceMembers(RetrieveAPIView):
     queryset = Workspace.objects.all()
@@ -25,7 +33,8 @@ class WorkSpaceMembers(RetrieveAPIView):
     permission_classes = (IsAuthenticated,)
     lookup_field = "pk"
 
-    def get_queryset(self):
-        obj = super().get_queryset()
-        print(obj)
+    def get_object(self):
+        obj = super().get_object()
+        if self.request.user not in obj.members.all():
+            raise PermissionDenied("You have no access")
         return obj

@@ -1,5 +1,5 @@
 import { ScrollArea } from "@/shared/ui/scroll-area";
-import { FC, useState } from "react";
+import { useState } from "react";
 import { cn } from "@/shared/lib";
 import { Button } from "@/shared/ui/button";
 
@@ -10,7 +10,7 @@ export type Channel = {
   is_group: boolean;
 };
 
-export const ChannelsList = ({ items }: { items: Channel[] }) => {
+export const ChannelsList = ({ items }: {items: Channel[]}) => {
   const [selectedChannel, setSelectedChannel] = useState<Channel | null>(null);
   return (
     <ScrollArea className="h-full w-full">

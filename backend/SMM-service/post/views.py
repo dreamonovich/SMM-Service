@@ -7,7 +7,7 @@ from .serializers import PostSerializer, PostTemplateSerializer
 
 class WorkspacePostListCreateView(ListCreateAPIView):
     serializer_class = PostSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = (IsAuthenticated,)
 
     def get_queryset(self):
         if not (workspace_id := self.kwargs.get('workspace_id')):
@@ -18,7 +18,7 @@ class WorkspacePostListCreateView(ListCreateAPIView):
 
 class PostRetrieveDeleteView(RetrieveDestroyAPIView):
     serializer_class = PostSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = (IsAuthenticated,)
 
     def get_queryset(self):
         return Post.objects.filter(workspace__members__in=(self.request.user,))
@@ -26,7 +26,7 @@ class PostRetrieveDeleteView(RetrieveDestroyAPIView):
 
 class WorkspacePostTemplateListCreateView(ListCreateAPIView):
     serializer_class = PostTemplateSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = (IsAuthenticated,)
 
     def get_queryset(self):
         if not (workspace_id := self.kwargs.get('workspace_id')):
@@ -34,9 +34,10 @@ class WorkspacePostTemplateListCreateView(ListCreateAPIView):
 
         return PostTemplate.objects.filter(workspace_id=workspace_id, workspace__members__in=(self.request.user,))
 
+
 class PostTemplateRetrieveDeleteView(RetrieveDestroyAPIView):
     serializer_class = PostTemplateSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = (IsAuthenticated,)
 
     def get_queryset(self):
         return Post.objects.filter(workspace__members__in=(self.request.user,))

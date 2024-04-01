@@ -9,7 +9,6 @@ import {
   ResizablePanel,
   ResizableHandle,
 } from "@/shared/ui/resizable";
-import { Channel } from "diagnostics_channel";
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 

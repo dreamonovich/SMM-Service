@@ -1,4 +1,3 @@
-from django.contrib.postgres import fields
 from django.db import models
 from user.models import User
 from workspace.models import Workspace
@@ -20,8 +19,6 @@ class Post(models.Model):
     creator = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name="created_posts"
     )
-    photos = fields.ArrayField(models.CharField(max_length=300))
-    files = fields.ArrayField(models.CharField(max_length=300))
     send_planned_at = models.DateTimeField()
 
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='CREATED')
@@ -29,6 +26,18 @@ class Post(models.Model):
 
     modified_at = models.DateTimeField(auto_now=True)
     created_at = models.DateTimeField(auto_now_add=True)
+
+
+
+class PostPhoto(models.Model):
+    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+    photo = models.FileField(upload_to='post/photo/')
+
+
+class PostFile(models.Model):
+    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+    file = models.FileField(upload_to='post/file/')
+
 
 class PostTemplate(models.Model):
     name = models.CharField(max_length=64)

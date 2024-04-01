@@ -26,7 +26,7 @@ SECRET_KEY = "django-insecure-&)b$0xqyoz@1#zuue=7+!p)(a#og#7t7hio5wq)xj2btr1@@p2
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["0.0.0.0", "127.0.0.1", "localhost", "158.160.32.163", "prodanocontest.ru"]
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -86,12 +86,12 @@ WSGI_APPLICATION = "application.wsgi.application"
 
 DATABASES = {
     "default": {
-         "ENGINE": "django.db.backends.postgresql",
-         "NAME": os.getenv("POSTGRES_DB", "smm_service_db"),
-       "USER": os.getenv("POSTGRES_USER", "postgres"),
-         "PASSWORD": os.getenv("POSTGRES_PASSWORD", "postgres"),
-         "HOST": os.getenv("POSTGRES_HOST", "127.0.0.1"),
-         "PORT": os.getenv("POSTGRES_PORT", "5438"),
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": os.getenv("POSTGRES_DB", "smm_service_db"),
+        "USER": os.getenv("POSTGRES_USER", "postgres"),
+        "PASSWORD": os.getenv("POSTGRES_PASSWORD", "postgres"),
+        "HOST": os.getenv("POSTGRES_HOST", "127.0.0.1"),
+        "PORT": os.getenv("POSTGRES_PORT", "5438"),
      }
 
 }
@@ -158,7 +158,7 @@ AWS_S3_ENDPOINT_URL = "http://minio:9001/" # поменять на "http://local
 AWS_S3_USE_SSL = False
 AWS_ACCESS_KEY_ID = "smm_service_key"
 AWS_SECRET_ACCESS_KEY = "smm_service_secret_key"
-AWS_STORAGE_BUCKET_NAME = "smm_service"
+AWS_STORAGE_BUCKET_NAME = "smm-service"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
@@ -175,11 +175,4 @@ CELERY_TIMEZONE = "Europe/Moscow"
 CELERY_BROKER_CONNECTION_RETRY = True
 
 CORS_ORIGIN_ALLOW_ALL = True
-CORS_ALLOW_METHODS = (
-    "DELETE",
-    "GET",
-    "OPTIONS",
-    "PATCH",
-    "POST",
-    "PUT",
-)
+CORS_ALLOW_METHODS = ("*",)
