@@ -57,3 +57,6 @@ class RetrieveUpdateDestroyUser(RetrieveUpdateDestroyAPIView):
 
     def get_queryset(self):
         return self.request.user
+
+    def get_object(self):
+        return self.request.user
