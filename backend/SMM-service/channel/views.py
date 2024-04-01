@@ -17,7 +17,7 @@ class ChannelListCreate(ListCreateAPIView):
     def create(self, request, *args, **kwargs):
         code = request.data.get("code")
         name = request.data.get("name")
-        workspace_id = kwargs.get("workspace_id")
+        workspace_id = request.data.get("workspace_id")
         if code is None or name is None or workspace_id is None:
             raise ValidationError("Please provide code, name and workspace")
         channel_request = ChannelRequest.objects.filter(code=code).first()
