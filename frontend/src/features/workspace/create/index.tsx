@@ -12,16 +12,30 @@ import { Input } from "@/shared/ui/input";
 import { Label } from "@radix-ui/react-dropdown-menu";
 import { useToast } from "@/shared/ui/use-toast";
 import { useNavigate } from "react-router-dom";
-
+import { useEffect } from "react";
 export function CreateWorkspace() {
+  const options = {
+    method: "POST",
+    headers: {
+      Authorization:
+        "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzEyMzUyNTU1LCJpYXQiOjE3MTE5MjA1NTUsImp0aSI6IjRiZjNjN2ZhY2I1ZDQzNWQ4ZjNkYjhhNWZmMTViYmI5IiwidXNlcl9pZCI6Mn0.w0GA_IoUw7yjZ3kz7pvz0YaDdx1rbaxsLl5MsmriIoo",
+        "Content-Type": 'application/json',
+    },
+    body: JSON.stringify({
+      name: "my super duper workspace",
+    }),
+  };
+  
   const navigate = useNavigate();
   const [title, setTitle] = useState("");
   const { toast } = useToast();
   const onClickAdd = async () => {
-    const res = await fetch(API_URL, {
-      method: "POST",
-      body: JSON.stringify({ title }),
-    });
+    console.log('reqeusts')
+    const res = await fetch(
+      API_URL+"/workspace",
+      options
+    );
+    console.log(res);
 
     if (res.ok) {
       const data = await res.json();
@@ -58,7 +72,7 @@ export function CreateWorkspace() {
         </div>
       </CardContent>
       <CardFooter>
-        <Button onClick={onClickAdd} className="w-full">
+        <Button onClick={() => onClickAdd()} className="w-full">
           Создать
         </Button>
       </CardFooter>
