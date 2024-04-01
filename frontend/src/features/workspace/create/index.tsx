@@ -1,5 +1,4 @@
 import { API_URL } from "@/shared/lib/constants";
-import { useState } from "react";
 import { Button } from "@/shared/ui/button";
 import {
   Card,
@@ -12,6 +11,9 @@ import { Input } from "@/shared/ui/input";
 import { Label } from "@radix-ui/react-dropdown-menu";
 import { useToast } from "@/shared/ui/use-toast";
 import { useNavigate } from "react-router-dom";
+
+import { useState } from "react";
+
 export function CreateWorkspace() {
   const [title, setTitle] = useState("");
   const options = {
@@ -27,7 +29,6 @@ export function CreateWorkspace() {
   };
   
   const navigate = useNavigate();
-  
   const { toast } = useToast();
   const onClickAdd = async () => {
     const res = await fetch(
