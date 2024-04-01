@@ -46,7 +46,7 @@ export const ChannelsList = ({ items }: { items: Channel[] }) => {
     });
     
     if (res.ok) {
-      await fetchChannels(workspaceId)
+      await fetchChannels(+(workspaceId ?? 0))
       setOpen(false)
     }    
   }
