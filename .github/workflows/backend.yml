@@ -8,7 +8,7 @@ on:
 jobs:
   build:
     name: Build
-    runs-on: tomato
+    runs-on: [self-hosted]
     steps:
       - name: Check out the repo
         uses: actions/checkout@v4
