@@ -34,7 +34,7 @@ def add_bot_command(message: Message):
         pass
     code = randint(11111, 99999)
     message = bot.send_message(message.chat.id, f"*Ваш код:* {code}", parse_mode="Markdown")
-    new_channel_request(message.chat.id, code, message.chat.type == "group")
+    new_channel_request(message.chat.id, message.message_id, code, message.chat.type == "group")
 
 
 bot.infinity_polling()
