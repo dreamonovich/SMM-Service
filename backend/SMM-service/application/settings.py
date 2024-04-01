@@ -158,7 +158,7 @@ AWS_S3_ENDPOINT_URL = "http://minio:9001/" # поменять на "http://local
 AWS_S3_USE_SSL = False
 AWS_ACCESS_KEY_ID = "smm_service_key"
 AWS_SECRET_ACCESS_KEY = "smm_service_secret_key"
-AWS_STORAGE_BUCKET_NAME = "smm_service"
+AWS_STORAGE_BUCKET_NAME = "smm-service"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
