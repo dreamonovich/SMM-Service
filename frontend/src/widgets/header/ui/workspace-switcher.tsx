@@ -18,35 +18,21 @@ import {
   PlusCircledIcon,
 } from "@radix-ui/react-icons";
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useWorkspaceStore } from "@/entities/workspace/store";
 
-type Workspace = {
-  label: string;
-  id: string;
-};
 
 export const WorkspaceSwitcher = () => {
   const {workspaces} = useWorkspaceStore();
   const [open, setOpen] = useState(false);
+  const navigate = useNavigate();
   const [showNewTeamDialog, setShowNewTeamDialog] = useState(false);
-  const [selectedWorkspace, setSelectedWorkspace] = useState<Workspace | null>(
-    null
-  );
-
-  useEffect(() => {
-    const id = localStorage.getItem("last_open_workspace_id");
-    if (!id) {
-      setSelectedWorkspace(workspaces[0]);
-    } else {
-      setSelectedWorkspace(
-        workspaces.find((workspace) => workspace.id === id)!
-      );
-    }
-  }, []);
+  const {selectedWorkspace, fetchWorkspaceById } = useWorkspaceStore()
 
   const { t } = useTranslation();
+
+  useEffect(() => {}, [])
 
   return (
     <Dialog open={showNewTeamDialog} onOpenChange={setShowNewTeamDialog}>
@@ -57,13 +43,13 @@ export const WorkspaceSwitcher = () => {
             role="combobox"
             aria-expanded={open}
             aria-label="Выбор workspace"
-            className={"w-[200px] justify-between"}
+            className={"min-w-[200px] justify-between"}
           >
             <Avatar className="mr-2 h-5 w-5">
               <AvatarImage src={``} alt={``} className="grayscale" />
               <AvatarFallback>SC</AvatarFallback>
             </Avatar>
-            {selectedWorkspace?.label}
+            {selectedWorkspace?.name}
             <CaretSortIcon className="ml-auto h-4 w-4 shrink-0 opacity-50" />
           </Button>
         </PopoverTrigger>
@@ -77,7 +63,9 @@ export const WorkspaceSwitcher = () => {
                   <div
                     key={workspace.id}
                     onClick={() => {
-                      setSelectedWorkspace(workspace);
+                      fetchWorkspaceById(workspace.id);
+                      navigate(`/workspaces/${workspace.id}`)
+                      localStorage.setItem('last_open_workspace_id', String(workspace.id))
                       setOpen(false);
                     }}
                     className="text-sm flex items-center rounded-lg pt-2 hover:bg-gray-100"
@@ -85,12 +73,12 @@ export const WorkspaceSwitcher = () => {
                     <Avatar className="mr-2 h-5 w-5 mb-2">
                       <AvatarImage
                         src={``}
-                        alt={workspace.label}
+                        alt={workspace.name}
                         className="grayscale"
                       />
                       <AvatarFallback>asd</AvatarFallback>
                     </Avatar>
-                    <span className="pb-2 ">{workspace.label}</span>
+                    <span className="pb-2 ">{workspace.name}</span>
                     <CheckIcon
                       className={cn(
                         "ml-auto h-4 w-4 mb-2",
