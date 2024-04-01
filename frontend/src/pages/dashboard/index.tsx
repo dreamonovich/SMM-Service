@@ -14,8 +14,8 @@ export const Dashboard = () => {
     if (lastOpenWorkspace) {
       navigate(`/workspaces/${lastOpenWorkspace}`);
     } else {
-      if (!workspaces) return;
-      const id = workspaces[0].id
+      if (!workspaces || !workspaces.length) return;
+      const id = workspaces![0].id! ?? 0
       navigate(`/workspaces/${id}`)
     }
   }, [workspaces]);
