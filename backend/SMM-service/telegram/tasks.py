@@ -7,23 +7,20 @@ from telegram.models import TelegramPost
 
 from utils import send_post
 
+
 @shared_task
 def send_telegram_post(telegram_post_id: int):
     if not (telegram_post := TelegramPost.objects.filter(id=telegram_post_id).first()):
         raise Exception(f"Failed to find telegram post, id: {telegram_post_id}")
     try:
-        telegram_post.status = "r"  # running
+        telegram_post.status = "RUNNING"  # running
         telegram_post.save(update_fields=("status",))
 
         send_post(telegram_post.telegram_channel.chat_id, text=telegram_post.post.text, photos=telegram_post.post.photos, files=telegram_post.post.files)
         # все должно быть по МСК(к часу -3)
 
-        telegram_post.status = "c"
-        telegram_post.save(
-            update_fields=(
-                "status",
-            )
-        )
+        telegram_post.status = "s"
+        telegram_post.save(update_fields=("status",))
 
     except Exception as e:
         telegram_post.status = "f"

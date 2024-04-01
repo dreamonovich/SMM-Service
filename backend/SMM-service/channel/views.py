@@ -30,6 +30,11 @@ class ChannelListCreate(ListCreateAPIView):
         serializer = self.get_serializer(new_channel)
         return Response(serializer.data)
 
+    def list(self, request, workspace_id, *args, **kwargs):
+        queryset = Channel.objects.filter(workspace_id=workspace_id).all()
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
+
 
 class RetrieveUpdateDestroyChannel(RetrieveUpdateDestroyAPIView):
     queryset = Channel.objects.all()

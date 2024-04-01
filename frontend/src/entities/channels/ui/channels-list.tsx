@@ -1,17 +1,16 @@
 import { ScrollArea } from "@/shared/ui/scroll-area";
-import { FC } from "react";
-import { usePostStore } from "..";
+import { FC, useState } from "react";
 import { cn } from "@/shared/lib";
 
 export type Channel = {
-  id: number,
-  name: string,
-  chat_id: number,
-  is_group: boolean,
-}
+  id: number;
+  name: string;
+  chat_id: number;
+  is_group: boolean;
+};
 
-export const PostList: FC<{ items: Channel[] }> = ({ items }) => {
-  const { selectedPost, setSelectedPost } = usePostStore();
+export const ChannelsList: FC<{ items: Channel[] }> = ({ items }) => {
+  const [selectedChannel, setSelectedChannel] = useState<Channel | null>(null);
   return (
     <ScrollArea className="h-full w-full">
       <div className="flex flex-col gap-2 pt-0 pr-2">
@@ -20,11 +19,9 @@ export const PostList: FC<{ items: Channel[] }> = ({ items }) => {
             key={item.id}
             className={cn(
               "flex flex-col items-start gap-2 rounded-lg border p-3 text-left text-sm transition-all w-full hover:bg-accent",
-              selectedPost?.id === item.id && "bg-muted"
+              selectedChannel?.id === item.id && "bg-muted"
             )}
-            onClick={() =>
-              setSelectedPost(item)
-            }
+            onClick={() => setSelectedChannel(item)}
           >
             <div className="flex w-full flex-col gap-1">
               <div className="flex items-center">
