@@ -11,8 +11,11 @@ import { Input } from "@/shared/ui/input";
 import { Label } from "@radix-ui/react-dropdown-menu";
 import { useToast } from "@/shared/ui/use-toast";
 import { useNavigate } from "react-router-dom";
+
 import { useState } from "react";
+
 export function CreateWorkspace() {
+  const [title, setTitle] = useState("");
   const options = {
     method: "POST",
     headers: {
@@ -21,14 +24,13 @@ export function CreateWorkspace() {
         "Content-Type": 'application/json',
     },
     body: JSON.stringify({
-      name: "my super duper workspace",
+      name: title,
     }),
   };
   
   const navigate = useNavigate();
   const { toast } = useToast();
   const onClickAdd = async () => {
-    console.log('reqeusts')
     const res = await fetch(
       API_URL+"/workspace",
       options
@@ -48,8 +50,6 @@ export function CreateWorkspace() {
       });
     }
   };
-  const [, setTitle] = useState('')
-
   return (
     <Card className="min-w-[350px]">
       <CardHeader className="space-y-1">
