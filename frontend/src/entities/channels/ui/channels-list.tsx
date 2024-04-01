@@ -18,6 +18,7 @@ import { Label } from "@/shared/ui/label";
 import { API_URL, TOKEN_HEADER } from "@/shared/lib/constants";
 import { useWorkspaceStore } from "@/entities/workspace";
 import { usePostStore } from "@/entities/post/store";
+import { useParams } from "react-router-dom";
 
 export type Channel = {
   id: number;
@@ -31,7 +32,7 @@ export const ChannelsList = ({ items }: { items: Channel[] }) => {
   const [name, setName] = useState()
   const [open, setOpen] = useState(false);
   const { selectedWorkspace, fetchChannels } = useWorkspaceStore()
-  
+  const {id: workspaceId} = useParams()
   const onClickSave = async (id: number) => {
     const res = await fetch(API_URL + "/channel/" + id, {
       method: "PATCH",
@@ -46,7 +47,7 @@ export const ChannelsList = ({ items }: { items: Channel[] }) => {
     });
     
     if (res.ok) {
-      await fetchChannels(selectedWorkspace?.id!)
+      await fetchChannels(workspaceId)
       setOpen(false)
     }    
   }
