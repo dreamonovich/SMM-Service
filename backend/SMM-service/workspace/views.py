@@ -22,8 +22,9 @@ class WorkSpaceRetrieveView(RetrieveDestroyAPIView):
 
     def get_object(self):
         obj = super().get_object()
-        if obj.user != self.request.user:
+        if self.request.user not in obj.members.all():
             raise PermissionDenied("You have no access")
+        return obj
 
 
 class WorkSpaceMembers(RetrieveAPIView):
@@ -34,5 +35,6 @@ class WorkSpaceMembers(RetrieveAPIView):
 
     def get_object(self):
         obj = super().get_object()
-        if obj.user != self.request.user:
+        if self.request.user not in obj.members.all():
             raise PermissionDenied("You have no access")
+        return obj

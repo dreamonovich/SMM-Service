@@ -1,9 +1,10 @@
 from rest_framework.response import Response
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.exceptions import ValidationError
+from rest_framework.exceptions import ValidationError, PermissionDenied
 
 from .models import ChannelRequest, Channel
+from workspace.models import Workspace
 from .serializers import ChannelSerializer
 
 
@@ -31,9 +32,14 @@ class ChannelListCreate(ListCreateAPIView):
         return Response(serializer.data)
 
     def list(self, request, workspace_id, *args, **kwargs):
-        queryset = Channel.objects.filter(workspace_id=workspace_id).all()
-        serializer = self.get_serializer(queryset, many=True)
-        return Response(serializer.data)
+        workspace = Workspace.objects.filter(id=workspace_id).first()
+        if workspace:
+            if workspace.creator_user == request.user:
+                queryset = Channel.objects.filter(workspace_id=workspace_id).all()
+                serializer = self.get_serializer(queryset, many=True)
+                return Response(serializer.data)
+            raise PermissionDenied("You have no access")
+        raise ValidationError("The workspace is not exist")
 
 
 class RetrieveUpdateDestroyChannel(RetrieveUpdateDestroyAPIView):
