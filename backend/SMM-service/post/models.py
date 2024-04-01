@@ -29,3 +29,11 @@ class Post(models.Model):
 
     modified_at = models.DateTimeField(auto_now=True)
     created_at = models.DateTimeField(auto_now_add=True)
+
+class PostTemplate(models.Model):
+    name = models.CharField(max_length=64)
+    text = models.TextField(max_length=4096)
+    workspace = models.ForeignKey(Workspace, on_delete=models.CASCADE)
+
+    modified_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField(auto_now_add=True)
