@@ -24,6 +24,7 @@ class PostTemplateListCreate(ListAPIView):
     permission_classes = (IsAuthenticated,)
     lookup_field = "workspace_id"
 
+
 class RUDPostTemplate(RetrieveUpdateDestroyAPIView):
     queryset = Post.objects.all()
     serializer_class = PostTemplateSerializer
