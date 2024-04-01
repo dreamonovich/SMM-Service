@@ -9,7 +9,9 @@ import { Calendar } from "@/pages/calendar";
 import { Channels } from "@/pages/channels";
 import { Stats } from "@/pages/stats";
 import { Profile } from "@/pages/profile";
+import { Archive } from "@/pages/archive";
 import { LoginPage } from "@/pages/login/login";
+import { Settings } from "@/pages/settings";
 export const router = createBrowserRouter([
   {
     Component: AuthProvider,
@@ -53,6 +55,14 @@ export const router = createBrowserRouter([
               {
                 path: "stats",
                 element: <Stats />,
+              },
+              {
+                path: "archive",
+                element: <Archive />,
+              },
+              {
+                path: "settings",
+                element: <Settings />,
               },
             ],
           },

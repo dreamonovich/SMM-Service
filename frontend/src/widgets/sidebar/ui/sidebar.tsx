@@ -1,8 +1,10 @@
 import { Button } from "@/shared/ui/button";
 import { MdOutlineMailOutline } from "react-icons/md";
 import { IoCalendarClear, IoStatsChart } from "react-icons/io5";
+import { IoMdSettings } from "react-icons/io";
 import { FaTelegram } from "react-icons/fa";
-import { Link, useParams } from "react-router-dom";
+import { LiaHistorySolid } from "react-icons/lia";
+import { Link, useParams  } from "react-router-dom";
 export const Sidebar = () => {
   const { id } = useParams();
   console.log(id);
@@ -30,6 +32,16 @@ export const Sidebar = () => {
         <Link to={`/workspaces/${id}/stats`}>
           <Button variant="ghost" className="w-full justify-start flex gap-2">
             <IoStatsChart /> Статистика
+          </Button>
+        </Link>
+        <Link to={`/workspaces/${id}/archive`}>
+          <Button variant="ghost" className="w-full justify-start flex gap-2">
+            <LiaHistorySolid /> Архив
+          </Button>
+        </Link>
+        <Link to={`/workspaces/${id}/settings`}>
+          <Button variant="ghost" className="w-full justify-start flex gap-2">
+            <IoMdSettings /> Настройки
           </Button>
         </Link>
       </div>

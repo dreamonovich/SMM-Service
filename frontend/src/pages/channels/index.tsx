@@ -1,6 +1,5 @@
 import { ChannelsList } from "@/entities/channels/ui/channels-list";
-import { PostList, usePostStore } from "@/entities/post";
-import {} from "@/entities/workspace";
+import { usePostStore } from "@/entities/post";
 import { PostEditor } from "@/features/post";
 import { TOKEN_HEADER, API_URL } from "@/shared/lib/constants";
 import {

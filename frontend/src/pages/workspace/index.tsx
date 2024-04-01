@@ -41,7 +41,7 @@ export const WorkspacePage = () => {
             <ResizablePanel>
               {JSON.stringify(selectedWorkspace)}
               <PostList
-                items={[]}
+                items={posts || []}
               />
             </ResizablePanel>
             {selectedPost ? (
