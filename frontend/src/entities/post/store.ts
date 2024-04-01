@@ -13,5 +13,5 @@ export const usePostStore = create<IPostStore>((set, get) => ({
   setPosts: (posts) => set({ posts }),
   selectedPost: null,
   setSelectedPost: (post) => set({ selectedPost: post }),
-  updateSelected: (post) => set({ ...get().selectedPost, ...post })
+  updateSelected: (post) => set({ ...get().selectedPost, ...post }),
 }));

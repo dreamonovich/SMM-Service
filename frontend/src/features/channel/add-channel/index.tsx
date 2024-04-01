@@ -19,6 +19,7 @@ export interface AddChannelProps {
 
 export const AddChannel: FC<AddChannelProps> = ({ isOpen, onClose }) => {
     const navigate = useNavigate()
+    const {id} = useParams()
     const [title, setTitle] = useState("");
     const [code, setCode] = useState("");
     const options = {
@@ -29,13 +30,14 @@ export const AddChannel: FC<AddChannelProps> = ({ isOpen, onClose }) => {
             "Content-Type": 'application/json',
         },
         body: JSON.stringify({
-            title: title,
+            name: title,
             code: code,
+            workspace_id: id,
 
         }),
       };
 
-  const {id} = useParams()
+
   const [step, setStep] = useState(0);
   const handleClick = async () => {
     if (title && step === 0) {
@@ -60,7 +62,7 @@ export const AddChannel: FC<AddChannelProps> = ({ isOpen, onClose }) => {
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Добавить новый канал</DialogTitle>
-          <DialogDescription>
+          
             <form className="w-5/6 space-y-6">
               <label>Введите название канала</label>
               {step == 0 && (
@@ -83,8 +85,8 @@ export const AddChannel: FC<AddChannelProps> = ({ isOpen, onClose }) => {
               {step == 2 && (
                 <div>
                   <label>Введите код, отправленный ботом</label>
-                  <Input
-                    onChange={(e) => setCode(e.target.value)}
+                  <Input type="number" value={code}
+                    onChange={(e) =>  !isNaN(+e.target.value) ? setCode(+e.target.value) : null}
                     placeholder="00000"
                   />
                 </div>
@@ -99,7 +101,7 @@ export const AddChannel: FC<AddChannelProps> = ({ isOpen, onClose }) => {
                 Продолжить
               </Button>
             </form>
-          </DialogDescription>
+          
         </DialogHeader>
       </DialogContent>
     </Dialog>
