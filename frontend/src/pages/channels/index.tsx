@@ -1,8 +1,6 @@
 import { API_URL } from "@/shared/lib/constants";
 import { useState } from "react";
-import { User } from "@/shared/lib/types";
 import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 
 export const Channels = () => {
   const options = {
