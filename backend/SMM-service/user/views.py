@@ -25,9 +25,9 @@ def register_user(request):
             return Response({"error": "The user is already exists"}, status=status.HTTP_409_CONFLICT)
         new_user = User(name=data["name"], telegram_id=data["id"], telegram_username=data.get("username"))
         new_user.save()
-        new_workspace = Workspace(name=validated_data["name"], creator_user=user)
+        new_workspace = Workspace(name=f"{data['name']}-default", creator_user=new_user)
         new_workspace.save()
-        new_workspace.members.add(user)
+        new_workspace.members.add(new_user)
         token = AccessToken.for_user(new_user)
         response = Response({'token': str(token)}, status=status.HTTP_201_CREATED)
         return response

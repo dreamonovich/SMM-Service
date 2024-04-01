@@ -10,7 +10,7 @@ class WorkSpaceListCreate(ListCreateAPIView):
     permission_classes = (IsAuthenticated,)
 
     def get_queryset(self):
-        print(self.request.user)
+        print(self.request.user.name)
         return Workspace.objects.filter(creator_user=self.request.user).all()
 
 
