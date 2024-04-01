@@ -5,7 +5,7 @@ from celery import shared_task
 
 from telegram.models import TelegramPost
 
-from utils import send_post
+from .utils import send_post
 
 
 @shared_task
