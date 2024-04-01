@@ -54,6 +54,7 @@ class RetrieveUpdateDestroyUser(RetrieveUpdateDestroyAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
     permission_classes = (IsAuthenticated,)
+    lookup_field = None
 
     def get_queryset(self):
         return self.request.user

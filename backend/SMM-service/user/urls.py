@@ -4,5 +4,5 @@ from user.views import register_user, authenticate_user,RetrieveUpdateDestroyUse
 urlpatterns = [
     path('auth/register/', register_user, name='register_user'),
     path('auth/login/', authenticate_user, name='authenticate_user'),
-    path("me",RetrieveUpdateDestroyUser.as_view(),name='RetrieveUpdateDestroyUser')
+    path("me",RetrieveUpdateDestroyUser.as_view(),name='RetrieveUpdateDestroyUser'),
 ]
