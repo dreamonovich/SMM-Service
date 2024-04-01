@@ -15,7 +15,11 @@ export const AuthProvider: FC = () => {
   };
   useEffect(() => {
     (async () => {
-      const res = await fetch(API_URL + "/me");
+      const res = await fetch(API_URL + "/me", {
+        headers: {
+          Authorization: 'Bearer ' + localStorage.getItem('token')
+        }
+      });
       if (!res.ok) {
         console.log("not registered")
         //navigate("/login");
