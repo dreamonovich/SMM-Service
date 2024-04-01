@@ -10,21 +10,38 @@
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
     <script type="text/javascript">
-      async function onTelegramAuth(user) {
-        console.log(user, JSON.stringify(user))
-        const res = await fetch(`https://prodanocontest.ru/api/auth/register`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            name: localStorage.getItem('name'),
-            telegram_id: user.id,
-            telegram_username: user.username,
-          })
-        })
-        const data = await res.json();
-        localStorage.setItem('token', data.message)
+      async function onTelegramAuth(user, isLogin) {
+        console.log(user, JSON.stringify(user));
+        if (isLogin) {
+          const res = await fetch(
+            `https://prodanocontest.ru/api/auth/register`,
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                ...user,
+                name: localStorage.getItem("name"),
+              }),
+            }
+          );
+          const data = await res.json();
+
+          localStorage.setItem("token", data.token);
+        } else {
+          const res = await fetch(`https://prodanocontest.ru/api/auth/login`, {
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              ...user,
+            })
+          });
+          const data = await res.json();
+          localStorage.setItem("token", data.token);
+        }
+        location.reload()
       }
     </script>
   </body>

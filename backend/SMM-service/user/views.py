@@ -49,6 +49,7 @@ def authenticate_user(request):
 
     return Response({"error": "The data is incorrect"}, status=status.HTTP_400_BAD_REQUEST)
 
+
 class RetrieveUpdateDestroyUser(RetrieveUpdateDestroyAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
