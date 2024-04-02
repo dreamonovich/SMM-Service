@@ -7,4 +7,6 @@ urlpatterns = [
 
    path("post/<int:post_id>/media", PostMediaCreateView.as_view()),
    path("post/media/<int:pk>", PostMediaDeleteView.as_view()),
+
+   path("post/task/<int:post_id>", CreateTaskView.as_view())
 ]
