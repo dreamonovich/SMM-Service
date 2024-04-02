@@ -11,7 +11,7 @@
     <script type="module" src="/src/main.tsx"></script>
     <script type="text/javascript">
       async function onTelegramAuth(user, isLogin = false) {
-        console.log(user, JSON.stringify(user));
+
         let success = false;
         if (!isLogin) {
           const res = await fetch(
@@ -53,7 +53,12 @@
         if (success) {
           location.replace("/");
         } else {
-          alert('Произошла ошибка')
+          if (window.location.href == "https://prodanocontest.ru/login"){
+            window.location.replace("https://prodanocontest.ru/register")
+          }
+          else if (window.location.href == "https://prodanocontest.ru/register"){
+            window.location.replace("https://prodanocontest.ru/login")
+          }
         }
       }
     </script>

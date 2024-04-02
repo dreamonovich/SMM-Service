@@ -4,7 +4,6 @@ import { Link, useNavigate } from "react-router-dom";
 import { UserAuthForm } from "./user-auth-form";
 import { useTranslation } from "react-i18next";
 import { API_URL, TOKEN_HEADER } from "@/shared/lib/constants";
-import { User } from "@/shared/lib/types";
 import { useEffect } from "react";
 
 export function AuthenticationPage() {
