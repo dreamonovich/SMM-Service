@@ -23,7 +23,7 @@ export interface IWorkspaceStore {
 
   posts: Post[];
   setPosts: (posts: Post[]) => void;
-  fetchPosts: () => Promise<void>;
+  fetchPosts: (workspaceId: number) => Promise<void>;
 }
 
 export const useWorkspaceStore = create<IWorkspaceStore>((set) => ({
@@ -67,7 +67,15 @@ export const useWorkspaceStore = create<IWorkspaceStore>((set) => ({
 
   posts: [],
   setPosts: (posts) => set({ posts }),
-  fetchPosts: async() => {
+  fetchPosts: async (id: number) => {
+    const response = await fetch(API_URL + "/workspace/" + id + "/posts", {
+      method: "GET",
+      headers: {
+        Authorization: TOKEN_HEADER,
+      },
+    });
+    const data = await response.json();
+    set({ posts: data });
     
   }
 }));

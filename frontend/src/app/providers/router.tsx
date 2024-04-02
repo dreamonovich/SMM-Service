@@ -5,7 +5,7 @@ import { AuthProvider } from "./auth";
 import { generateLayout } from "@/widgets/layout";
 import { WorkspacePage } from "@/pages/workspace";
 import { CreateWorkspacePage } from "@/pages/workspace/create";
-import { Calendar } from "@/pages/calendar";
+import { CalendarPage } from "@/pages/calendar";
 import { Channels } from "@/pages/channels";
 import { Stats } from "@/pages/stats";
 import { Profile } from "@/pages/profile";
@@ -54,7 +54,7 @@ export const router = createBrowserRouter([
           {
             children: [
               { path: "", element: <WorkspacePage /> },
-              { path: "calendar", element: <Calendar /> },
+              { path: "calendar", element: <CalendarPage /> },
               {
                 path: "channels",
                 element: <Channels />,
