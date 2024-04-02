@@ -10,7 +10,7 @@ export type Workspace = {
 export interface IWorkspaceStore {
   workspaces: Workspace[];
   setWorkspaces: (workspaces: Workspace[]) => void;
-  fetchWorkspaces: () => void;
+  fetchWorkspaces: () => Promise<void>;
   selectedWorkspace: Workspace | null;
   setSelectedWorkspace: (workspace: Workspace) => void;
   fetchWorkspaceById: (id: string) => Promise<void>;

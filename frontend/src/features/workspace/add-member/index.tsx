@@ -4,12 +4,13 @@ import { API_URL, TOKEN_HEADER } from "@/shared/lib/constants";
 import { Avatar, AvatarFallback, AvatarImage } from "@/shared/ui/avatar";
 import { Button } from "@/shared/ui/button";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 export const AddMember = () => {
-  const { selectedWorkspace } = useWorkspaceStore();
+  const { selectedWorkspace, fetchWorkspaces } = useWorkspaceStore();
   const [inviteLink, setInviteLink] = useState("");
   const { id } = useParams();
+  const navigate = useNavigate()
   const [members, setMembers] = useState<{
     id: number;
     members: any[];
@@ -49,13 +50,17 @@ export const AddMember = () => {
   }, []);
 
   const leaveTeam = async (id: number) => {
-    await fetch(API_URL + "/workspace/" + id + "/leave", {
+    const res = await fetch(API_URL + "/workspace/" + id + "/leave", {
       method: "POST",
       headers: {
         Authorization: TOKEN_HEADER,
         "Content-Type": "application/json",
       },
     });
+    if (res.ok){
+      await fetchWorkspaces()
+      navigate('/')
+    }
   };
 
   const deleteFromTeam = async (userId: number) => {
