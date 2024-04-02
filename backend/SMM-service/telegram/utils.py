@@ -8,7 +8,7 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(
 bot = TeleBot(TOKEN)
 
 def send_post(channel_id, text, photos=[], files=[]):
-    photo_group = [InputMediaPhoto(photo.photo, caption=text) for photo in photos]
+    photo_group = [InputMediaPhoto("это фото юрл", caption=text) for photo in photos]
     logging.info(f"{[photo.photo for photo in photos]}")
     if photos:
         bot.send_media_group(channel_id, photo_group)
