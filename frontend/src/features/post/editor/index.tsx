@@ -20,6 +20,7 @@ import {
 } from "@/shared/ui/alert-dialog";
 import MDEditor from "@uiw/react-md-editor";
 import { AIButtons } from "./ai";
+import { Checkbox } from "@/shared/ui/checkbox";
 
 export const PostEditor = () => {
   const { selectedPost, updateSelected, setSelectedPost } = usePostStore();
@@ -27,6 +28,7 @@ export const PostEditor = () => {
     useWorkspaceStore();
   const [images, setImages] = useState<File[]>([]);
   const [files, setFiles] = useState<File[]>([]);
+  const [sendNow, setSendNow] = useState(false);
 
   const create = async () => {
     const formData = new FormData();
@@ -68,6 +70,12 @@ export const PostEditor = () => {
 
   const update = async () => {
     const formData = new FormData();
+    let date = new Date(selectedPost?.send_planned_at! || new Date());
+
+    if (sendNow) {
+      date = new Date();
+      date.setSeconds(date.getSeconds() + 3);
+    }
 
     formData.append("name", selectedPost?.name || "");
     formData.append("text", selectedPost?.text || "");
@@ -77,7 +85,7 @@ export const PostEditor = () => {
     );
     formData.append(
       "send_planned_at",
-      selectedPost?.send_planned_at || new Date().toISOString()
+      date.toISOString(),
     );
 
     const res = await fetch(API_URL + `/post/${selectedPost?.id}`, {
@@ -238,6 +246,9 @@ export const PostEditor = () => {
           })}
         </div>
       )}
+      <div className="flex gap-1 items-center">
+        <Checkbox checked={sendNow} onCheckedChange={e => setSendNow(Boolean(sendNow))} />
+      </div>
       <Button
         onClick={async () => {
           selectedPost?.create ? create() : update();
