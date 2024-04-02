@@ -71,7 +71,7 @@ export const AddChannel: FC<AddChannelProps> = ({}) => {
             {step == 0 && (
               <Input
                 onChange={(e) => setTitle(e.target.value)}
-                placeholder="Bebra Bebrenko"
+                placeholder="Название канала"
               />
             )}
             {step == 1 && (
