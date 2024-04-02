@@ -75,7 +75,7 @@ export const AddMember = () => {
             <h3 className="text-lg font-medium mb-2">Команда:</h3>
             <div className="space-y-3">
               {members?.members.map((member) => (
-                <div className="flex items-center justify-between">
+                <div key={member.id} className="flex items-center justify-between">
                   <div className="flex items-center space-x-3">
                     <Avatar>
                       <AvatarImage
