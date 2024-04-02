@@ -11,7 +11,7 @@ def send_post(channel_id, text, photos=[], files=[]):
     photo_group = [InputMediaPhoto("это фото юрл", caption=text) for photo in photos]
     logging.info(f"{[photo.photo for photo in photos]}")
     if photos:
-        bot.send_media_group(channel_id, photo_group)
+        bot.send_media_group(channel_id, "why this govno is not working")
     else:
         bot.send_message(channel_id, text, parse_mode="Markdown")
     for file in files:
