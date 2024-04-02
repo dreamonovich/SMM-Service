@@ -2,18 +2,22 @@ import { Header } from "@/widgets/header";
 import { Sidebar } from "@/widgets/sidebar";
 import { useEffect } from "react";
 import { FC } from "react";
-import { Outlet } from "react-router-dom";
+import { Outlet, useParams } from "react-router-dom";
 import { useWorkspaceStore } from "@/entities/workspace/store";
 export interface LayoutProps {
   withSidebar: boolean;
 }
 
 export const Layout: FC<LayoutProps> = ({ withSidebar }) => {
-  const {fetchWorkspaces} = useWorkspaceStore()
+  const { fetchWorkspaces, fetchWorkspaceById } = useWorkspaceStore();
+  const { id } = useParams();
   useEffect(() => {
-    fetchWorkspaces()
-  }, [])
-  
+    fetchWorkspaces();
+    if (id) {
+      fetchWorkspaceById(id);
+    }
+  }, [id]);
+
   return (
     <main className="flex-col flex">
       <Header />

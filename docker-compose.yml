@@ -101,6 +101,7 @@ services:
       - "traefik.http.routers.minio.rule=Host(`prodanocontest.ru`) && PathPrefix(`/smm-service`)"
       - "traefik.http.routers.minio.entrypoints=web"
       - "traefik.http.services.minio.loadbalancer.server.port=9000"
+      - "traefik.http.routers.minio.priority=200"
     restart: always
 
   create_minio_buckets:
