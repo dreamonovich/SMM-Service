@@ -13,4 +13,5 @@ urlpatterns = [
    path("workspace/join/<str:token>", join_workspace),
    path("workspace/<int:workspace_id>/leave", WorkSpaceLeave.as_view()),
    path("workspace/<int:workspace_id>/remove_member/<int:user_id>", WorkSpaceRemoveMember.as_view()),
+   path("workspace/invitelink_info/<str:token>", get_invite_info)
 ]
