@@ -6,7 +6,7 @@ TOKEN = "6755435757:AAEdJcrtEuEmYz2feDl0I0bG5fbf5MpFGoA"
 bot = TeleBot(TOKEN)
 
 
-def send_message(chat_id, text, photos, files, post_id):
+def send_message(chat_id, text, post_id, photos=[], files=[]):
     if photos:
         photo_group = [InputMediaPhoto(photo, caption=text) for photo in photos]
         bot.send_media_group(chat_id, photo_group)

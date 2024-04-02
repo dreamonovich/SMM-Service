@@ -73,8 +73,6 @@ class CreateTasksView(APIView):
     def post(self, request, post_id):
         try:
             post = Post.objects.get(pk=post_id)
-            post.status = "APPROVED"
-            post.save(updated_fields=("status",))
 
             channels = post.workspace.channels.all()
 

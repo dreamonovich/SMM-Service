@@ -107,9 +107,13 @@ class PostSerializer(CheckPermissionAndGetWorkspaceMixin, CreateMediaMixin, seri
         self.create_media(new_post, PostPhoto, 'photos')
         self.create_media(new_post, PostFile, 'files')
 
-        group = Channel.objects.filter(id=workspace.id, is_group=True).first()
-        print(group)
-        #send_message(group.chat_id, new_post.text, new_post.files, new_post.id)
+        photos = PostPhoto.objects.filter(post=new_post)
+        files = PostFile.objects.filter(post=new_post)
+
+        group = Channel.objects.filter(workspace=workspace.id, is_group=True).first()
+
+        send_message(group.chat_id, new_post.text, new_post.id, photos=photos, files=files)
+
         return new_post
 
     def get_photos(self, obj):
