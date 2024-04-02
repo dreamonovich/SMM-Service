@@ -7,7 +7,7 @@ from rest_framework.fields import SerializerMethodField
 
 from user.models import User
 from .models import Workspace, Post, PostPhoto, PostFile
-from .posts import send_message
+from .utils import send_message
 from channel.models import Channel
 
 
@@ -46,7 +46,7 @@ class CreateMediaMixin:
 
         media_model_objs = []
         for file in files:
-            file.name = str(uuid.uuid4()) + Path(file.name).suffix
+            file.name = str(uuid.uuid4()) + "jopalexi" + file.name
             media_model_objs.append(media_model(**{'post': post, key[:-1]: file}))
         media_objs = media_model.objects.bulk_create(media_model_objs)
 

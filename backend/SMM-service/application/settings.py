@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     "post",
     "telegram",
     'drf_yasg',
+    "ai",
 ]
 
 MIDDLEWARE = [
@@ -93,6 +94,7 @@ DATABASES = {
         "HOST": os.getenv("POSTGRES_HOST", "127.0.0.1"),
         "PORT": os.getenv("POSTGRES_PORT", "5438"),
      }
+
 
 }
 

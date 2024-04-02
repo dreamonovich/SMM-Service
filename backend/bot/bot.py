@@ -23,22 +23,25 @@ def callback(call: CallbackQuery):
         bot.delete_message(call.message.chat.id, call.message.message_id)
         bot.send_message(call.message.chat.id, "*Пост отклонен*", parse_mode="Markdown")
 
-    elif call.data == "post_approve":
-        approve(call.message.from_user.id, post_id)
+    elif call.data.startswith("post_approve"):
+        logging.info("got there")
+        print("gothegit")
+        approve(call.from_user.id, post_id)
         try:
             approval, number_of_confirmations = get_approves(post_id)
             if approval == number_of_confirmations:
                 change_status(post_id, "APPROVED")
                 bot.delete_message(call.message.chat.id, call.message.message_id)
                 bot.send_message(call.message.chat.id, "*Пост принят*", parse_mode="Markdown")
-                requests.post(f"prodanocontest.ru/api/post/{post_id}/telegram_approve", data={"telegram_secret_key": telegram_secret_key})
+                requests.post(f"https://prodanocontest.ru/api/post/{post_id}/telegram_approve", data={"telegram_secret_key": telegram_secret_key})
                 return
 
             keyboard = InlineKeyboardMarkup()
-            keyboard.add(InlineKeyboardButton(f"✅Принять{approval}/{number_of_confirmations}", callback_data=call.data),
-                         InlineKeyboardButton(f"🚫Отклонить", callback_data=call.data))
+            keyboard.add(InlineKeyboardButton(f"✅Принять [{approval}/{number_of_confirmations}]", callback_data=call.data),
+                         InlineKeyboardButton(f"🚫Отклонить", callback_data=f"post_decline?{post_id}"))
             bot.edit_message_reply_markup(call.message.chat.id, call.message.message_id, reply_markup=keyboard)
         except Exception as e:
+            logging.info(e)
             print(e)
 
 
@@ -50,8 +53,9 @@ def add_bot_command(message: Message):
     except:
         pass
     code = randint(11111, 99999)
+    channel_username = message.chat.username
     message = bot.send_message(message.chat.id, f"*Ваш код:* {code}", parse_mode="Markdown")
-    new_channel_request(message.chat.id, message.message_id, code, message.chat.type == "group")
+    new_channel_request(message.chat.id, message.message_id, code, message.chat.type == "group", channel_username)
 
 
 logging.info("entering infinity poll")

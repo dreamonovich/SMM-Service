@@ -72,12 +72,11 @@ class PostMediaDeleteView(DestroyAPIView):
 class CreateTasksView(APIView):
     def post(self, request, post_id):
         try:
-            post = Post.objects.get(pk=post_id)
-
+            post = Post.objects.filter(pk=post_id).first()
             channels = post.workspace.channels.all()
 
             for channel in channels:
-                telegram_post = TelegramPost.objects.create(post=post, telegram_channel=channel)
+                telegram_post = TelegramPost.objects.create(post_id=post.id, telegram_channel_id=channel.id)
                 send_telegram_post.apply_async((telegram_post,), eta=post.send_planned_at - timedelta(hours=3))
 
             return Response({})

@@ -16,8 +16,7 @@ export const WorkspacePage = () => {
   const { id } = useParams();
   const [isLoading, setIsLoading] = useState(true);
   const { selectedPost, setSelectedPost } = usePostStore();
-  const { selectedWorkspace, fetchChannels } = useWorkspaceStore();
-  const [posts, setPosts] = useState([]);
+  const { selectedWorkspace, fetchChannels, fetchPosts } = useWorkspaceStore();
 
   useEffect(() => {
     if (!id) return;
@@ -30,7 +29,7 @@ export const WorkspacePage = () => {
         },
       });
       const data = await res.json();
-      setPosts(data);
+      fetchPosts(data);
       setIsLoading(false);
     })();
 
@@ -67,7 +66,7 @@ export const WorkspacePage = () => {
                   <span>загрузка...</span>
                 </div>
               )}
-              <PostList items={posts || []} />
+              <PostList />
             </div>
           </ResizablePanel>
           {selectedPost && (
