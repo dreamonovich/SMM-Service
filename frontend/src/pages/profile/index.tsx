@@ -5,12 +5,12 @@ import { Button } from "@/shared/ui/button";
 import { Icons } from "@/shared/ui/icons";
 import { Input } from "@/shared/ui/input";
 import { Separator } from "@/shared/ui/separator";
-import { useEffect, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 
 export const Profile = () => {
   const { user, fetchUser } = useUserStore();
   const [name, setName] = useState("");
-const [isLoading, setIsLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(false);
   useEffect(() => {
     if (user) {
       setName(user.name);
@@ -27,13 +27,13 @@ const [isLoading, setIsLoading] = useState(false)
       name: name,
     }),
   };
-  const handleNameChange = async (e: SubmitEvent) => {
-    setIsLoading(true)
-    e.preventDefault()
+  const handleNameChange = async (e: FormEvent<HTMLFormElement>) => {
+    setIsLoading(true);
+    e.preventDefault();
     const res = await fetch(API_URL + "/me", options);
     if (res.ok) {
       fetchUser();
-      setIsLoading(false)
+      setIsLoading(false);
     }
   };
   return (
@@ -50,7 +50,9 @@ const [isLoading, setIsLoading] = useState(false)
             <div className="text-3xl font-semibold text-right">
               {user?.name}
             </div>
-            <div className="text-l text-gray-500 text-right">@{user?.telegram_id}</div>
+            <div className="text-l text-gray-500 text-right">
+              @{user?.telegram_id}
+            </div>
           </div>
           <Avatar className="w-20 h-20">
             <AvatarImage src={user?.avatar} />
@@ -64,11 +66,10 @@ const [isLoading, setIsLoading] = useState(false)
         <label>Имя пользователя</label>
         <Input value={name} onChange={(e) => setName(e.target.value)} />
 
-        <Button type="submit">{isLoading ? (
-                        <>
-                          <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />{" "}
-                        </>
-                      ) : null}Сохранить</Button>
+        <Button type="submit">
+          {isLoading && <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />}
+          Сохранить
+        </Button>
       </form>
       <div></div>
     </div>
