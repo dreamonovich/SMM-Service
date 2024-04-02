@@ -2,7 +2,7 @@ from rest_framework.response import Response
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.exceptions import ValidationError, PermissionDenied
-from telegram.utils import delete_message
+from post.utils import delete_message
 from .models import ChannelRequest, Channel
 from workspace.models import Workspace
 from .serializers import ChannelSerializer
