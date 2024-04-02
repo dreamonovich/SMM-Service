@@ -5,9 +5,8 @@ from workspace.models import Workspace
 STATUS_CHOICES = [
     ('CREATED', 'Created'),
     ('PENDING', 'Pending Publication'),
-    ('UNDER_REVIEW', 'Under Review'),
     ('APPROVED', 'Approved'),
-    ('ALL_SENDED', 'All Sended'),
+    ('ALL_SENT', 'All Sent'),
     ('REJECTED', 'Rejected'),
 ]
 
@@ -26,7 +25,6 @@ class Post(models.Model):
 
     modified_at = models.DateTimeField(auto_now=True)
     created_at = models.DateTimeField(auto_now_add=True)
-
 
 
 class PostPhoto(models.Model):
