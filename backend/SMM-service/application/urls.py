@@ -18,6 +18,7 @@ schema_view = get_schema_view(
 
 urlpatterns = [
     path("api/", include("ai.urls")),
+    path("api/", include("analytics.urls")),
     path("api/", include("channel.urls")),
     path("api/", include("core.urls")),
     path("api/", include("post.urls")),

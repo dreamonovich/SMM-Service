@@ -2,7 +2,7 @@ import requests
 
 
 def generate_text(role, text):
-    role = "Ты ассистент СММ специалиста. " + role
+    role = "Ты помощник СММ специалиста. " + role
 
     url = "https://llm.api.cloud.yandex.net/foundationModels/v1/completion"
     headers = {
