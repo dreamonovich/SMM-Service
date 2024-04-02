@@ -43,8 +43,7 @@ export const AddMember = () => {
         options
       );
       const data = await res.json()
-      console.log(data)
-      setInviteLink(`http://localhost:5173/invite/${data.link}`)
+      setInviteLink(`http://prodanocontest.ru/invite/${data.link}`)
     })();
   }, []);
   const leaveTeam = async (id: number) => {
