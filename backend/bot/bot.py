@@ -26,7 +26,7 @@ def callback(call: CallbackQuery):
     elif call.data.startswith("post_approve"):
         logging.info("got there")
         print("gothegit")
-        approve(call.message.from_user.id, post_id)
+        approve(call.from_user.id, post_id)
         try:
             approval, number_of_confirmations = get_approves(post_id)
             if approval == number_of_confirmations:
@@ -37,7 +37,7 @@ def callback(call: CallbackQuery):
                 return
 
             keyboard = InlineKeyboardMarkup()
-            keyboard.add(InlineKeyboardButton(f"✅Принять{approval}/{number_of_confirmations}", callback_data=call.data),
+            keyboard.add(InlineKeyboardButton(f"✅Принять [{approval}/{number_of_confirmations}]", callback_data=call.data),
                          InlineKeyboardButton(f"🚫Отклонить", callback_data=f"post_decline?{post_id}"))
             bot.edit_message_reply_markup(call.message.chat.id, call.message.message_id, reply_markup=keyboard)
         except Exception as e:
