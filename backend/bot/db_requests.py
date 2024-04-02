@@ -1,5 +1,5 @@
 import psycopg2
-from datetime import datetime
+from datetime import datetime, timezone
 import os
 
 dsl = {
@@ -33,8 +33,8 @@ def approve(telegram_id, post_id):
                        (telegram_id, post_id))
         approval_id = cursor.fetchone()
         if approval_id is None:
-            cursor.execute("INSERT INTO public.telegram_telegramapproval(telegram_id, post_id) VALUES (%s, %s)",
-                           (telegram_id, post_id))
+            cursor.execute("INSERT INTO public.telegram_telegramapproval(telegram_id, post_id, created_at) VALUES (%s, %s, %s)",
+                           (telegram_id, post_id, datetime.now(timezone.utc)))
             connection.commit()
 
 
