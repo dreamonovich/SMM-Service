@@ -61,7 +61,7 @@ export const AddChannel: FC<AddChannelProps> = ({}) => {
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogTrigger>Добавить</DialogTrigger>
+      <DialogTrigger><Button>Добавить</Button></DialogTrigger>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Добавить новый канал</DialogTitle>
