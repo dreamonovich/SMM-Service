@@ -52,7 +52,7 @@ export const CalendarPage = () => {
   return (
     <div className="h-full flex items-center justify-center">
       <Calendar
-        eventPropGetter={(event, start, end, isSelected) => {
+        eventPropGetter={(event) => {
           const newStyle = {
             backgroundColor: "lightgrey",
             color: "black",

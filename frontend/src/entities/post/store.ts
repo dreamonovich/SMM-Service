@@ -22,6 +22,7 @@ export interface Post {
   text: string;
   send_planned_at: string;
   number_of_confirmations: number;
+  status: string
 
   // 
   create: boolean
