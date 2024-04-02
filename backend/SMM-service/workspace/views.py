@@ -55,7 +55,7 @@ class WorkSpaceMembers(RetrieveAPIView):
 def get_invite_link(request, workspace_id):
     workspace = Workspace.objects.filter(id=workspace_id).first()
     if workspace is None or workspace.creator_user != request.user:
-        raise PermissionDenied("You have no access")
+        return Response({"error": "You have no access"}, status=409)
 
     invite = WorkSpaceInviteLink(creator_user=request.user, workspace=workspace)
     invite.save()
@@ -66,18 +66,20 @@ def get_invite_link(request, workspace_id):
 @permission_classes([IsAuthenticated])
 @api_view(["GET"])
 def join_workspace(request, token):
+    print(token)
     try:
         invite = WorkSpaceInviteLink.objects.filter(id=token).first()
         if invite is None:
-            raise ValidationError("The link is not working")
+            return Response({"error": "The link is not working"}, status=400)
         if request.user in invite.workspace.members.all():
-            raise ValidationError("The user is already member")
-        invite.workspace.members.add(request.user)
-        invite.workspace.save()
+            return Response({"error": "The user is already member"}, status=400)
+        workspace = invite.workspace
+        workspace.members.add(request.user)
         #invite.delete()
         return Response({"response": "success"})
     except:
-        raise ValidationError("The token is invalid")
+        raise Response({"error": "The token is invalid"}, status=400)
+
 
 class WorkSpaceLeave(APIView):
     permission_classes = (IsAuthenticated,)
