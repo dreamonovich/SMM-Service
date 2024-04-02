@@ -7,9 +7,9 @@ from rest_framework.fields import SerializerMethodField
 
 from user.models import User
 from .models import Workspace, Post, PostPhoto, PostFile
-from .posts import send_message
+from .utils import send_message
 from channel.models import Channel
-
+гешды
 
 class CheckPermissionAndGetPostMixin:
     def check_permissions_and_get_post(self) -> tuple[User, Post]:
