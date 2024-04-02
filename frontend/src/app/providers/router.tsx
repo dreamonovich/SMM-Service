@@ -7,12 +7,12 @@ import { WorkspacePage } from "@/pages/workspace";
 import { CreateWorkspacePage } from "@/pages/workspace/create";
 import { CalendarPage } from "@/pages/calendar";
 import { Channels } from "@/pages/channels";
-import { Stats } from "@/pages/stats";
 import { Profile } from "@/pages/profile";
 import { Archive } from "@/pages/archive";
 import { LoginPage } from "@/pages/login/login";
 import { Settings } from "@/pages/settings";
 import { Invite } from "@/pages/invite";
+import { Analytics } from "@/pages/analytics";
 export const router = createBrowserRouter([
   {
     Component: AuthProvider,
@@ -61,7 +61,7 @@ export const router = createBrowserRouter([
               },
               {
                 path: "stats",
-                element: <Stats />,
+                element: <Analytics />,
               },
               {
                 path: "archive",

@@ -3,6 +3,7 @@ import { usePostStore } from "@/entities/post";
 import { useWorkspaceStore } from "@/entities/workspace";
 import { AddChannel } from "@/features/channel/add-channel";
 import { PostEditor } from "@/features/post";
+import { Icons } from "@/shared/ui/icons";
 import {
   ResizablePanelGroup,
   ResizablePanel,
@@ -28,7 +29,12 @@ export const Channels = () => {
   }, [id]);
   return (
     <div className="w-full h-full flex flex-col items-center">
-      <>
+      <>{loading && (
+                <div className="flex items-center">
+                  <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+                  <span>загрузка...</span>
+                </div>
+              )}
         {!loading && (
           <div className="h-[100%] w-full">
             <ResizablePanelGroup direction="horizontal" className="h-[100%]">

@@ -127,7 +127,7 @@ export const AddMember = () => {
                 >
                   <div className="flex items-center space-x-3">
                     <Avatar>
-                      <AvatarImage alt={member.name} src={member.avatar_path} />
+                      <AvatarImage alt={member.name} src={member.avatar} />
                       <AvatarFallback>OM</AvatarFallback>
                     </Avatar>
                     <div>

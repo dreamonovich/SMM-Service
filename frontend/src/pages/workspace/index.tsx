@@ -3,6 +3,7 @@ import { useWorkspaceStore } from "@/entities/workspace";
 import { PostEditor } from "@/features/post/editor";
 import { API_URL, TOKEN_HEADER } from "@/shared/lib/constants";
 import { Button } from "@/shared/ui/button";
+import { Icons } from "@/shared/ui/icons";
 import {
   ResizablePanelGroup,
   ResizablePanel,
@@ -13,13 +14,13 @@ import { useParams } from "react-router-dom";
 
 export const WorkspacePage = () => {
   const { id } = useParams();
-
+  const [isLoading, setIsLoading] = useState(true);
   const { selectedPost, setSelectedPost } = usePostStore();
   const { selectedWorkspace, fetchChannels } = useWorkspaceStore();
   const [posts, setPosts] = useState([]);
 
   useEffect(() => {
-    if (!id) return
+    if (!id) return;
     fetchChannels(Number(id));
 
     (async () => {
@@ -30,11 +31,12 @@ export const WorkspacePage = () => {
       });
       const data = await res.json();
       setPosts(data);
+      setIsLoading(false);
     })();
 
     return () => {
-      setSelectedPost(null)
-    }
+      setSelectedPost(null);
+    };
   }, [id]);
 
   return (
@@ -59,6 +61,12 @@ export const WorkspacePage = () => {
         <ResizablePanelGroup direction="horizontal" className="h-full">
           <ResizablePanel>
             <div className="p-2">
+              {isLoading && (
+                <div className="flex items-center">
+                  <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+                  <span>загрузка...</span>
+                </div>
+              )}
               <PostList items={posts || []} />
             </div>
           </ResizablePanel>
