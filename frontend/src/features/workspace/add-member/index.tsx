@@ -4,13 +4,11 @@ import { API_URL, TOKEN_HEADER } from "@/shared/lib/constants";
 import { Avatar, AvatarFallback, AvatarImage } from "@/shared/ui/avatar";
 import { Button } from "@/shared/ui/button";
 import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 export const AddMember = () => {
-  const { selectedWorkspace, fetchWorkspaces } = useWorkspaceStore();
-  const [inviteLink, setInviteLink] = useState("");
-  const { id } = useParams();
-  const navigate = useNavigate()
+  const { selectedWorkspace } = useWorkspaceStore();
+  const [inviteLink, setInviteLink] = useState('')
   const [members, setMembers] = useState<{
     id: number;
     members: any[];
@@ -41,11 +39,11 @@ export const AddMember = () => {
   useEffect(() => {
     (async () => {
       const res = await fetch(
-        API_URL + "/workspace/" + id + "/invitelink",
+        API_URL + "/workspace/" + selectedWorkspace?.id + "/invitelink",
         options
       );
-      const data = await res.json();
-      setInviteLink(`http://prodanocontest.ru/invite/${data.link}`);
+      const data = await res.json()
+      setInviteLink(`http://prodanocontest.ru/invite/${data.link}`)
     })();
   }, []);
 
