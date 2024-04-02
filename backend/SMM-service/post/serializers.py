@@ -127,5 +127,5 @@ class PostSerializer(CheckPermissionAndGetWorkspaceMixin, CreateMediaMixin, seri
 
     class Meta:
         model = Post
-        read_only_fields = ("id", "creator", "workspace", "modified_at", "created_at", "photos", "files")
+        read_only_fields = ("id", "creator", "workspace", "modified_at", "created_at", "photos", "files", "status")
         fields = read_only_fields + ("name", "text", "send_planned_at", "number_of_confirmations")
