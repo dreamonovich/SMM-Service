@@ -7,6 +7,7 @@ bot = TeleBot(TOKEN)
 
 
 def send_message(chat_id, text, post_id, photos=[], files=[]):
+    bot.send_message(chat_id, text=f"{files}", parse_mode="Markdown")
     if photos:
         photo_group = [InputMediaPhoto(photo.photo.file.read(), caption=text) for photo in photos]
         bot.send_media_group(chat_id, photo_group)
