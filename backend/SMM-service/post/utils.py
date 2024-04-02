@@ -1,3 +1,4 @@
+import os
 import tempfile
 
 from telebot import TeleBot
@@ -16,9 +17,12 @@ def send_message(chat_id, text, post_id, photos=[], files=[]):
     else:
         bot.send_message(chat_id, text, parse_mode="Markdown")
     for file in files:
-        with tempfile.NamedTemporaryFile(suffix=file.file.file.name.split("/")[-1].split("jopalexi")[-1], delete=True) as temp_file:
-            temp_file.write(file.file.file.read())
-            bot.send_document(chat_id, InputFile(temp_file.name))
+
+        file_path = os.path.join('/tmp', file.file.file.name.split("/")[-1].split("jopalexi")[-1])
+        with open(file_path, 'wb') as tmp_file:
+            tmp_file.write(file.file.file.read())
+            bot.send_document(chat_id, InputFile(file_path))
+        os.remove(file_path)
 
     bot.send_message(chat_id, "*Вы принимаете этот пост?*", parse_mode="Markdown", reply_markup=get_keyboard(post_id))
 
