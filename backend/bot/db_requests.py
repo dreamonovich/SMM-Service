@@ -35,21 +35,6 @@ def approve(telegram_id, post_id):
         if approval_id is None:
             cursor.execute("INSERT INTO public.telegram_telegramapproval(telegram_id, post_id) VALUES (%s, %s)",
                            (telegram_id, post_id))
-            cursor.execute("DELETE FROM public.telegram_telegramdisapproval WHERE telegram_id = %s and post_id = %s",
-                           (telegram_id, post_id))
-            connection.commit()
-
-
-def disapprove(telegram_id, post_id):
-    with connection.cursor() as cursor:
-        cursor.execute("SELECT id FROM public.telegram_telegramdisapproval WHERE telegram_id = %s and post_id = %s",
-                       (telegram_id, post_id))
-        approval_id = cursor.fetchone()
-        if approval_id is None:
-            cursor.execute("INSERT INTO public.telegram_telegramdisapproval(telegram_id, post_id) VALUES (%s, %s)",
-                           (telegram_id, post_id))
-            cursor.execute("DELETE FROM public.telegram_telegramapproval WHERE telegram_id = %s and post_id = %s",
-                           (telegram_id, post_id))
             connection.commit()
 
 
@@ -57,9 +42,13 @@ def get_approves(post_id):
     with connection.cursor() as cursor:
         cursor.execute("SELECT count(id) FROM public.telegram_telegramapproval == %s", (post_id,))
         approval = cursor.fetchone()[0]
-        cursor.execute("SELECT count(id) FROM public.telegram_telegramdisapproval == %s", (post_id,))
-        disapproval = cursor.fetchone()[0]
         cursor.execute('SELECT number_of_confirmations FROM public.post_post WHERE id = %s', (post_id,))
         number_of_confirmations = cursor.fetchone()[0]
 
-    return approval, disapproval, number_of_confirmations
+    return approval, number_of_confirmations
+
+
+def change_status(post_id, new_status):
+    with connection.cursor() as cursor:
+        cursor.execute("UPDATE post_post SET status = %s WHERE id = %s", (new_status, post_id))
+        connection.commit()

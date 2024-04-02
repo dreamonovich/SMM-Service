@@ -2,7 +2,10 @@ import logging
 from random import randint
 from telebot import TeleBot
 from telebot.types import CallbackQuery, Message, InlineKeyboardMarkup, InlineKeyboardButton
-from db_requests import new_channel_request, approve, disapprove, get_approves
+from db_requests import new_channel_request, approve, change_status, get_approves
+import requests
+
+telegram_secret_key = "telegram_secret_key"
 
 TOKEN = "6755435757:AAEdJcrtEuEmYz2feDl0I0bG5fbf5MpFGoA"
 
@@ -16,17 +19,27 @@ bot = TeleBot(TOKEN)
 def callback(call: CallbackQuery):
     post_id = int(call.data.split("?")[1])
     if call.data.startswith("post_decline"):
-        approve(call.message.from_user.id, post_id)
+        change_status(post_id, "REJECTED")
+        bot.delete_message(call.message.chat.id, call.message.message_id)
+        bot.send_message(call.message.chat.id, "*Пост отклонен*", parse_mode="Markdown")
+
     elif call.data == "post_approve":
-        disapprove(call.message.from_user.id, post_id)
-    try:
-        approval, disapproval, number_of_confirmations = get_approves(post_id)
-        keyboard = InlineKeyboardMarkup()
-        keyboard.add(InlineKeyboardButton(f"{approval}/{number_of_confirmations}", callback_data=call.data),
-                     InlineKeyboardButton(f"{disapproval}/{number_of_confirmations}", callback_data=call.data))
-        bot.edit_message_reply_markup(call.message.chat.id, call.message.message_id, reply_markup=keyboard)
-    except:
-        pass
+        approve(call.message.from_user.id, post_id)
+        try:
+            approval, number_of_confirmations = get_approves(post_id)
+            if approval == number_of_confirmations:
+                change_status(post_id, "APPROVED")
+                bot.delete_message(call.message.chat.id, call.message.message_id)
+                bot.send_message(call.message.chat.id, "*Пост принят*", parse_mode="Markdown")
+                requests.post(f"prodanocontest.ru/api/post/{post_id}/telegram_approve", data={"telegram_secret_key": telegram_secret_key})
+                return
+
+            keyboard = InlineKeyboardMarkup()
+            keyboard.add(InlineKeyboardButton(f"✅Принять{approval}/{number_of_confirmations}", callback_data=call.data),
+                         InlineKeyboardButton(f"🚫Отклонить", callback_data=call.data))
+            bot.edit_message_reply_markup(call.message.chat.id, call.message.message_id, reply_markup=keyboard)
+        except:
+            pass
 
 
 @bot.channel_post_handler(commands=["add_bot"])
