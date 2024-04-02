@@ -1,13 +1,15 @@
+import logging
 from telebot import TeleBot
 from telebot.types import InputMediaPhoto, InputFile
 
 TOKEN = "6755435757:AAEdJcrtEuEmYz2feDl0I0bG5fbf5MpFGoA"
 
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 bot = TeleBot(TOKEN)
 
 def send_post(channel_id, text, photos=[], files=[]):
     photo_group = [InputMediaPhoto(photo.photo, caption=text) for photo in photos]
-    print([photo.photo for photo in photos])
+    logging.info([photo.photo for photo in photos])
     if photos:
         bot.send_media_group(channel_id, photo_group)
     else:
