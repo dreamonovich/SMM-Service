@@ -1,7 +1,6 @@
 import { PostList, usePostStore } from "@/entities/post";
 import { useWorkspaceStore } from "@/entities/workspace";
 import { PostEditor } from "@/features/post/editor";
-import { API_URL, TOKEN_HEADER } from "@/shared/lib/constants";
 import { Button } from "@/shared/ui/button";
 import { Icons } from "@/shared/ui/icons";
 import {
@@ -23,13 +22,7 @@ export const WorkspacePage = () => {
     fetchChannels(Number(id));
 
     (async () => {
-      const res = await fetch(API_URL + `/workspace/${id}/posts`, {
-        headers: {
-          Authorization: TOKEN_HEADER,
-        },
-      });
-      const data = await res.json();
-      fetchPosts(data);
+      await fetchPosts(+id);
       setIsLoading(false);
     })();
 

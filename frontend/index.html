@@ -11,7 +11,6 @@
     <script type="module" src="/src/main.tsx"></script>
     <script type="text/javascript">
       async function onTelegramAuth(user, isLogin = false) {
-
         let success = false;
         if (!isLogin) {
           const res = await fetch(
@@ -53,11 +52,12 @@
         if (success) {
           location.replace("/");
         } else {
-          if (window.location.href == "https://prodanocontest.ru/login"){
-            window.location.replace("https://prodanocontest.ru/register")
-          }
-          else if (window.location.href == "https://prodanocontest.ru/register"){
-            window.location.replace("https://prodanocontest.ru/login")
+          if (window.location.href == "https://prodanocontest.ru/login") {
+            window.location.replace("https://prodanocontest.ru/register");
+          } else if (
+            window.location.href == "https://prodanocontest.ru/register"
+          ) {
+            window.location.replace("https://prodanocontest.ru/login");
           }
         }
       }
