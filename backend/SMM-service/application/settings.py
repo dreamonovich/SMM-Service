@@ -48,7 +48,6 @@ INSTALLED_APPS = [
     "telegram",
     'drf_yasg',
     "ai",
-    "analytics",
 ]
 
 MIDDLEWARE = [
