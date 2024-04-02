@@ -10,7 +10,7 @@ export type Workspace = {
 export interface IWorkspaceStore {
   workspaces: Workspace[];
   setWorkspaces: (workspaces: Workspace[]) => void;
-  fetchWorkspaces: () => void;
+  fetchWorkspaces: () => Promise<Workspace[]>;
   selectedWorkspace: Workspace | null;
   setSelectedWorkspace: (workspace: Workspace) => void;
   fetchWorkspaceById: (id: string) => Promise<void>;
@@ -29,7 +29,9 @@ export const useWorkspaceStore = create<IWorkspaceStore>((set) => ({
         Authorization: TOKEN_HEADER,
       },
     });
-    set({ workspaces: await res.json() });
+    const data = await res.json()
+    set({ workspaces: data });
+    return data
   },
   selectedWorkspace: null,
   setSelectedWorkspace: (work) => set({ selectedWorkspace: work }),
