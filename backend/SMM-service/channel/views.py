@@ -29,6 +29,11 @@ class ChannelListCreate(ListCreateAPIView):
                               workspace_id=workspace_id, channel_username=channel_request.channel_username)
         new_channel.save()
         delete_message(channel_request.chat_id, channel_request.message_id)
+
+        workspace = Workspace.objects.filter(id=workspace_id).first()
+        workspace.channels.add(workspace)
+        workspace.save()
+
         channel_request.delete()
         serializer = self.get_serializer(new_channel)
         return Response(serializer.data)

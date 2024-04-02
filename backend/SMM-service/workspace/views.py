@@ -125,4 +125,8 @@ class WorkSpaceRemoveMember(WorkSpaceLeave):
         workspace = self.get_workspace(workspace_id, user)
         workspace.members.remove(user)
         workspace.save()
+
+        if workspace.creator_user == user:
+            workspace.delete()
+
         return Response({"status": "ok"})
