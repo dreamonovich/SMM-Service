@@ -3,17 +3,25 @@ import { useWorkspaceStore } from "@/entities/workspace";
 import { API_URL, TOKEN_HEADER } from "@/shared/lib/constants";
 import { Avatar, AvatarFallback, AvatarImage } from "@/shared/ui/avatar";
 import { Button } from "@/shared/ui/button";
-import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useEffect, useMemo, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 
 export const AddMember = () => {
-  const { selectedWorkspace } = useWorkspaceStore();
-  const [inviteLink, setInviteLink] = useState('')
+  const navigate = useNavigate();
+
+  const { selectedWorkspace, fetchWorkspaces } = useWorkspaceStore();
+  const { user } = useUserStore();
+  const creator = useMemo(
+    () => user?.id == selectedWorkspace?.creator_user?.id,
+    [user, selectedWorkspace]
+  );
+  const [inviteLink, setInviteLink] = useState("");
+
   const [members, setMembers] = useState<{
     id: number;
     members: any[];
   } | null>(null);
-  const { user } = useUserStore();
+
   useEffect(() => {
     if (!selectedWorkspace?.id) return;
     (async () => {
@@ -29,23 +37,24 @@ export const AddMember = () => {
       setMembers(data);
     })();
   }, [selectedWorkspace]);
-  const options = {
-    method: "GET",
-    headers: {
-      Authorization: TOKEN_HEADER,
-      "Content-Type": "application/json",
-    },
-  };
+
   useEffect(() => {
+    if (!selectedWorkspace?.id) return;
     (async () => {
       const res = await fetch(
         API_URL + "/workspace/" + selectedWorkspace?.id + "/invitelink",
-        options
+        {
+          method: "GET",
+          headers: {
+            Authorization: TOKEN_HEADER,
+            "Content-Type": "application/json",
+          },
+        }
       );
-      const data = await res.json()
-      setInviteLink(`http://prodanocontest.ru/invite/${data.link}`)
+      const data = await res.json();
+      setInviteLink(`http://prodanocontest.ru/invite/${data.link}`);
     })();
-  }, []);
+  }, [selectedWorkspace]);
 
   const leaveTeam = async (id: number) => {
     const res = await fetch(API_URL + "/workspace/" + id + "/leave", {
@@ -55,9 +64,10 @@ export const AddMember = () => {
         "Content-Type": "application/json",
       },
     });
-    if (res.ok){
-      await fetchWorkspaces()
-      navigate('/')
+    if (res.ok) {
+      const workspaces = await fetchWorkspaces();
+
+      navigate(`/workspaces/${workspaces[0].id}`);
     }
   };
 
@@ -91,6 +101,7 @@ export const AddMember = () => {
       })();
     }
   };
+
   return (
     <>
       <div>
@@ -98,15 +109,15 @@ export const AddMember = () => {
           <h2 className="text-xl font-semibold mb-4">
             Настройки рабочего пространства
           </h2>
-          <div className="flex items-center justify-between mb-4">
+          {creator && <div className="flex items-center justify-between mb-4">
             <div>Ссылка для приглашения</div>
             <span>{inviteLink}</span>
-          </div>
+          </div>}
           <hr className="my-4" />
           <div className="mb-4">
             <h3 className="text-lg font-medium mb-2">Команда:</h3>
             <div className="space-y-3">
-              {members?.members.map((member) => (
+              {members?.members?.map((member) => (
                 <div
                   key={member.id}
                   className="flex items-center justify-between"
@@ -124,11 +135,13 @@ export const AddMember = () => {
                     </div>
                   </div>
                   {user.id != member.id ? (
-                    <Button onClick={() => deleteFromTeam(member.id)}>
-                      Удалить
-                    </Button>
+                    creator && (
+                      <Button onClick={() => deleteFromTeam(member.id)}>
+                        Удалить
+                      </Button>
+                    )
                   ) : (
-                    <Button onClick={() => leaveTeam(id)}>Покинуть</Button>
+                    <Button onClick={() => leaveTeam(Number(selectedWorkspace?.id))}>Покинуть</Button>
                   )}
                 </div>
               ))}
