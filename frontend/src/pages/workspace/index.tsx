@@ -1,36 +1,25 @@
 import { PostList, usePostStore } from "@/entities/post";
 import { useWorkspaceStore } from "@/entities/workspace";
 import { PostEditor } from "@/features/post/editor";
-import { API_URL, TOKEN_HEADER } from "@/shared/lib/constants";
 import { Button } from "@/shared/ui/button";
 import {
   ResizablePanelGroup,
   ResizablePanel,
   ResizableHandle,
 } from "@/shared/ui/resizable";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 
 export const WorkspacePage = () => {
   const { id } = useParams();
 
   const { selectedPost, setSelectedPost } = usePostStore();
-  const { selectedWorkspace, fetchChannels } = useWorkspaceStore();
-  const [posts, setPosts] = useState([]);
+  const { selectedWorkspace, fetchChannels, posts, fetchPosts } = useWorkspaceStore();
 
   useEffect(() => {
     if (!id) return
     fetchChannels(Number(id));
-
-    (async () => {
-      const res = await fetch(API_URL + `/workspace/${id}/posts`, {
-        headers: {
-          Authorization: TOKEN_HEADER,
-        },
-      });
-      const data = await res.json();
-      setPosts(data);
-    })();
+    fetchPosts(Number(id))
 
     return () => {
       setSelectedPost(null)
