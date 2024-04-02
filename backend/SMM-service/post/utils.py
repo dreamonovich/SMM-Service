@@ -16,9 +16,9 @@ def send_message(chat_id, text, photos=None, files=None, post_id=None, is_send_c
         files = []
     if photos:
         photo_group = [InputMediaPhoto(photo.photo.file.read(), caption=text) for photo in photos]
-        bot.send_media_group(chat_id, photo_group)
+        message = bot.send_media_group(chat_id, photo_group)
     else:
-        bot.send_message(chat_id, text, parse_mode="MarkdownV2")
+        message = bot.send_message(chat_id, text, parse_mode="MarkdownV2")
     for file in files:
         file_path = os.path.join('/tmp', file.file.file.name.split("/")[-1].split("jopalexi")[-1])
         with open(file_path, 'wb') as tmp_file:
@@ -28,6 +28,7 @@ def send_message(chat_id, text, photos=None, files=None, post_id=None, is_send_c
     if is_send_confirmation:
         bot.send_message(chat_id, "*Вы принимаете этот пост?*", parse_mode="Markdown", reply_markup=get_keyboard(post_id))
 
+    return message.message_id
 
 def get_keyboard(post_id):
     keyboard = InlineKeyboardMarkup()
