@@ -26,7 +26,19 @@ export const CalendarPage = () => {
 
     fetchPosts(Number(selectedWorkspace?.id));
   }, [selectedWorkspace]);
-
+  const messages = {
+    allDay: "Весь день",
+    previous: "<",
+    next: ">",
+    today: "Сегодня",
+    month: "Месяц",
+    week: "Неделя",
+    day: "День",
+    agenda: "События",
+    date: "Дата",
+    time: "Время",
+    event: "Событие",
+  };
   const events = useMemo(() => {
     if (!posts || !posts.length) return;
     return posts.map((obj) => {
@@ -36,7 +48,7 @@ export const CalendarPage = () => {
         start: new Date(obj.send_planned_at),
         end: new Date(obj.send_planned_at),
         isMine: true,
-        status: obj.status
+        status: obj.status,
       };
     });
   }, [posts]);
@@ -81,9 +93,8 @@ export const CalendarPage = () => {
         events={events}
         startAccessor="start"
         endAccessor="end"
-        locale="ru"
         culture="ru"
-        // style={{ height: 500 }}
+        messages={messages}
       />
     </div>
   );
