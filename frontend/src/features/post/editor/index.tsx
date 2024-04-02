@@ -30,7 +30,7 @@ export const PostEditor = () => {
     formData.append("send_planned_at", selectedPost?.send_planned_at!);
 
     for (const image of images) {
-      formData.append("images", image);
+      formData.append("photos", image);
     }
     for (const file of files) {
       formData.append("files", file);
@@ -49,7 +49,7 @@ export const PostEditor = () => {
 
     if (res.ok) {
       setSelectedPost(null);
-      fetchPosts(id)
+      fetchPosts(Number(id));
     }
   };
   const update = async () => {};
@@ -132,6 +132,13 @@ export const PostEditor = () => {
           }}
         />
       </div>
+      {!selectedPost?.create && (
+        <div id="photos">
+          {selectedPost?.photos?.map(photo => (
+            <img key={photo.id} src={photo.url} />
+          ))}
+        </div>
+      )}
       <Button onClick={async () => {(selectedPost?.create ? create() : update())}}>
         {selectedPost?.create ? "Создать" : "Сохранить"}
       </Button>

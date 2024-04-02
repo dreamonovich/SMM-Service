@@ -2,6 +2,7 @@ import { API_URL, TOKEN_HEADER } from "@/shared/lib/constants";
 import { create } from "zustand";
 
 interface Photo {
+  id: number;
   url: string;
 }
 
