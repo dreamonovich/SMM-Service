@@ -1,14 +1,13 @@
 import { PostList, usePostStore } from "@/entities/post";
 import { useWorkspaceStore } from "@/entities/workspace";
 import { PostEditor } from "@/features/post/editor";
-import { API_URL, TOKEN_HEADER } from "@/shared/lib/constants";
 import { Button } from "@/shared/ui/button";
 import {
   ResizablePanelGroup,
   ResizablePanel,
   ResizableHandle,
 } from "@/shared/ui/resizable";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 
 export const WorkspacePage = () => {
