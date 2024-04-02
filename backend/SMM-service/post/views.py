@@ -68,9 +68,6 @@ class PostMediaDeleteView(DestroyAPIView):
 
         return Response({})
 
-# while поста:
-# post_id, база->пост. Пройтись по каналам воркспейса данного
-
 class CreateTaskView(View):
     def post(self, request):
         if not (post_id := request.POST.get('post_id')):
