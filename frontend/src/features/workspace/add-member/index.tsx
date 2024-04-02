@@ -3,12 +3,10 @@ import { API_URL, TOKEN_HEADER } from "@/shared/lib/constants";
 import { Avatar, AvatarFallback, AvatarImage } from "@/shared/ui/avatar";
 import { Button } from "@/shared/ui/button";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
 
 export const AddMember = () => {
   const { selectedWorkspace } = useWorkspaceStore();
-  const [inviteLink, setInviteLink] = useState('')
-  const {id} = useParams()
+  const [inviteLink, setInviteLink] = useState("");
   const [members, setMembers] = useState<{
     id: number;
     members: any[];
@@ -29,35 +27,30 @@ export const AddMember = () => {
       setMembers(data);
     })();
   }, [selectedWorkspace]);
-  const options = {
-    method: "GET",
-    headers: {
-      Authorization: TOKEN_HEADER,
-      "Content-Type": "application/json",
-    },
-  };
+
   useEffect(() => {
     (async () => {
-      const res = await fetch(
-        API_URL + "/workspace/" + id + "/invitelink",
-        options
-      );
-      const data = await res.json()
-      setInviteLink(`http://prodanocontest.ru/invite/${data.link}`)
-    })();
-  }, []);
-  const leaveTeam = async (id: number) => {
-    await fetch(
-      API_URL + "/workspace/" + id + "/leave",
-      {
-        method: "POST",
+      const res = await fetch(API_URL + "/workspace/" + selectedWorkspace?.id + "/invitelink", {
+        method: "GET",
         headers: {
           Authorization: TOKEN_HEADER,
           "Content-Type": "application/json",
         },
-      }
-    );
-  }
+      });
+      const data = await res.json();
+      console.log(data);
+      setInviteLink(`http://localhost:5173/invite/${data.link}`);
+    })();
+  }, []);
+  const leaveTeam = async (id: number) => {
+    await fetch(API_URL + "/workspace/" + id + "/leave", {
+      method: "POST",
+      headers: {
+        Authorization: TOKEN_HEADER,
+        "Content-Type": "application/json",
+      },
+    });
+  };
   return (
     <>
       <div>
@@ -77,22 +70,23 @@ export const AddMember = () => {
                 <div key={member.id} className="flex items-center justify-between">
                   <div className="flex items-center space-x-3">
                     <Avatar>
-                      <AvatarImage
-                        alt={member.name}
-                        src={member.avatar_path}
-                      />
+                      <AvatarImage alt={member.name} src={member.avatar_path} />
                       <AvatarFallback>OM</AvatarFallback>
                     </Avatar>
                     <div>
                       <div className="font-medium">{member.name}</div>
-                      <div className="text-sm text-gray-500">@{member.telegram_username}</div>
+                      <div className="text-sm text-gray-500">
+                        @{member.telegram_username}
+                      </div>
                     </div>
                   </div>
                   <Button>Удалить</Button>
                 </div>
               ))}
             </div>
-            <Button onClick={() => leaveTeam(id)}>Покинуть</Button>
+            <Button onClick={() => leaveTeam(+selectedWorkspace?.id!)}>
+              Покинуть
+            </Button>
           </div>
         </div>
       </div>
