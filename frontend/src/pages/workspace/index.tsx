@@ -14,7 +14,7 @@ export const WorkspacePage = () => {
   const { id } = useParams();
 
   const { selectedPost, setSelectedPost } = usePostStore();
-  const { selectedWorkspace, fetchChannels, posts, fetchPosts } = useWorkspaceStore();
+  const { selectedWorkspace, fetchChannels, fetchPosts } = useWorkspaceStore();
 
   useEffect(() => {
     if (!id) return
@@ -48,7 +48,7 @@ export const WorkspacePage = () => {
         <ResizablePanelGroup direction="horizontal" className="h-full">
           <ResizablePanel>
             <div className="p-2">
-              <PostList items={posts || []} />
+              <PostList />
             </div>
           </ResizablePanel>
           {selectedPost && (

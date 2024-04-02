@@ -1,10 +1,10 @@
 import { ScrollArea } from "@/shared/ui/scroll-area";
 import { FC } from "react";
-import { Post, usePostStore } from "..";
+import { usePostStore } from "..";
 import { cn } from "@/shared/lib";
 
-export const PostList: FC<{ items: Post[] }> = ({ items }) => {
-  const { selectedPost, setSelectedPost } = usePostStore();
+export const PostList: FC = () => {
+  const { selectedPost, setSelectedPost, posts: items } = usePostStore();
   return (
     <ScrollArea className="h-full w-full">
       <div className="flex flex-col gap-2 pt-0 pr-2">
