@@ -53,6 +53,7 @@ export const PostEditor = () => {
       fetchPosts(Number(id));
     }
   };
+
   const update = async () => {
     const formData = new FormData();
 
@@ -83,7 +84,7 @@ export const PostEditor = () => {
   }, [selectedPost]);
 
   if (!channels.length) {
-    return <div>Сначала стоит добавить канал</div>;
+    return <div className="p-2/>>">Сначала стоит добавить канал</div>;
   }
 
   return (

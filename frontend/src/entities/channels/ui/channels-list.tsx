@@ -71,7 +71,7 @@ export const ChannelsList = ({ items }: { items: Channel[] }) => {
   };
   return (
     <ScrollArea className="h-full w-full">
-      <div className="flex flex-col gap-2 pt-0 pr-2">
+      <div className="flex flex-col gap-2 pt-0 p-2">
         {items.map((item) => (
           <div
             key={item.id}
