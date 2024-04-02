@@ -31,7 +31,7 @@ def send_telegram_post(telegram_post_id: int):
         telegram_post.save(update_fields=("status", "message_id", "posted_at"))
 
         if is_all_telegram_posts_sended_to_channels(telegram_post.post):
-            telegram_post.post.status = "ALL_SENDED"
+            telegram_post.post.status = "ALL_SENT"
             telegram_post.post.save(update_fields=("status",))
     except Exception as e:
         telegram_post.status = "f"
