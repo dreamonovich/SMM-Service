@@ -80,5 +80,6 @@ class CreateTaskView(APIView):
             for channel_id in channel_ids:
                 send_telegram_post.apply_async((channel_id,), eta=send_planned_at - timedelta(hours=3))
 
+            return Response({})
         except ObjectDoesNotExist:
-            return JsonResponse({'error': f'post: {post_id} does not exist'}, status=404)
+            return Response({'error': f'post: {post_id} does not exist'}, status=404)
