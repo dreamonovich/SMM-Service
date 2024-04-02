@@ -10,7 +10,6 @@ from core.utils import check_telegram_authorization
 from workspace.models import Workspace
 
 
-
 @api_view(['POST'])
 def register_user(request):
     """
@@ -23,7 +22,8 @@ def register_user(request):
     if check_telegram_authorization(data):
         if User.objects.filter(telegram_id=data["id"]).exists():
             return Response({"error": "The user is already exists"}, status=status.HTTP_409_CONFLICT)
-        new_user = User(name=data["name"], telegram_id=data["id"], telegram_username=data.get("username"))
+        avatar = data.get("photo_url")
+        new_user = User(name=data["name"], telegram_id=data["id"], telegram_username=data.get("username"), avatar=avatar)
         new_user.save()
         new_workspace = Workspace(name=f"{data['name']}-default", creator_user=new_user)
         new_workspace.save()
