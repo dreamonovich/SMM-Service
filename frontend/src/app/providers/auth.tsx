@@ -19,7 +19,7 @@ export const AuthProvider: FC = () => {
         },
       });
       if (!res.ok) {
-        navigate("/login");
+        navigate("/register");
       } else {
         user.setUser((await res.json()) as User);
       }

@@ -1,11 +1,27 @@
 import { cn } from "@/shared/lib";
 import { buttonVariants } from "@/shared/ui/button";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { UserAuthForm } from "./user-auth-form";
 import { useTranslation } from "react-i18next";
+import { API_URL, TOKEN_HEADER } from "@/shared/lib/constants";
+import { User } from "@/shared/lib/types";
+import { useEffect } from "react";
 
 export function AuthenticationPage() {
+  const navigate = useNavigate()
   const { t } = useTranslation();
+  useEffect(() => {
+    (async () => {
+      const res = await fetch(API_URL + "/me", {
+        headers: {
+          Authorization: TOKEN_HEADER,
+        },
+      });
+      if (res.ok) {
+        navigate("/");
+      }
+    })();
+  }, []);
   return (
     <>
       <div className="container relative h-screen flex-col items-center justify-center grid lg:max-w-none lg:grid-cols-2 lg:px-0">
