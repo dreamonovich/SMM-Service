@@ -12,7 +12,7 @@ jobs:
         uses: actions/checkout@v4
       - name: Run docker-compose
         run: |
-          cd /home/ubuntu
+          cd /home/ubuntu/PROD-PRODlenka
+          git pull
           sudo docker compose pull
           sudo docker compose up -d
-          sudo docker image prune -f
