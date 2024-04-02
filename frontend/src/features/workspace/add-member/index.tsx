@@ -104,7 +104,7 @@ export const AddMember = () => {
 
   return (
     <>
-      <div>
+      <div className="mt-4">
         <div className="max-w-md mx-auto p-6 bg-white rounded-lg shadow-md">
           <h2 className="text-xl font-semibold mb-4">
             Настройки рабочего пространства
