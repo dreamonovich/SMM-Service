@@ -2,7 +2,6 @@ import { usePostStore } from "@/entities/post";
 import { cn } from "@/shared/lib";
 import { Button } from "@/shared/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/shared/ui/popover";
-import { Textarea } from "@/shared/ui/textarea";
 import { CalendarIcon } from "@radix-ui/react-icons";
 import { useEffect, useState } from "react";
 import { format } from "date-fns";
@@ -10,7 +9,16 @@ import { Calendar } from "@/shared/ui/calendar";
 import { Input } from "@/shared/ui/input";
 import { API_URL, TOKEN_HEADER } from "@/shared/lib/constants";
 import { useWorkspaceStore } from "@/entities/workspace";
-import { useParams } from "react-router-dom";
+import {
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogAction,
+} from "@/shared/ui/alert-dialog";
+import MDEditor from "@uiw/react-md-editor";
 
 export const PostEditor = () => {
   const { selectedPost, updateSelected, setSelectedPost, fetchPosts } =
@@ -18,7 +26,7 @@ export const PostEditor = () => {
   const { selectedWorkspace, channels, fetchChannels } = useWorkspaceStore();
   const [images, setImages] = useState<File[]>([]);
   const [files, setFiles] = useState<File[]>([]);
-  const { id } = useParams();
+
   const create = async () => {
     const formData = new FormData();
 
@@ -49,8 +57,8 @@ export const PostEditor = () => {
     );
 
     if (res.ok) {
+      await fetchPosts(Number(selectedWorkspace?.id));
       setSelectedPost(null);
-      fetchPosts(Number(id));
     }
   };
 
@@ -73,8 +81,9 @@ export const PostEditor = () => {
       body: formData,
     });
 
-    const data = await res.json();
-    if (data) {
+    if (res.ok) {
+      await fetchPosts(Number(selectedWorkspace?.id));
+      setSelectedPost(null);
     }
   };
 
@@ -83,8 +92,25 @@ export const PostEditor = () => {
     fetchChannels(+selectedWorkspace.id);
   }, [selectedPost]);
 
+  const [error, setError] = useState(true);
   if (!channels.length) {
-    return <div className="p-2/>>">Сначала стоит добавить канал</div>;
+    return (
+      <AlertDialog open={error}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Ошибка</AlertDialogTitle>
+            <AlertDialogDescription>
+              Необходимо создать группу или канал
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogAction onClick={() => setError(false)}>
+              Понятно
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    );
   }
 
   return (
@@ -99,12 +125,9 @@ export const PostEditor = () => {
           updateSelected({ name: e.target.value });
         }}
       />
-      <Textarea
-        placeholder="Текст..."
+      <MDEditor
         value={selectedPost?.text || ""}
-        onChange={(e) => {
-          updateSelected({ text: e.target.value });
-        }}
+        onChange={(text) => updateSelected({ text })}
       />
       <Input
         placeholder="Количество одобряющих..."
@@ -156,7 +179,6 @@ export const PostEditor = () => {
             const date = new Date(selectedPost?.send_planned_at || new Date());
             date.setMinutes(+e.target.value);
             updateSelected({ send_planned_at: date.toISOString() });
-            console.log(date);
           }}
         />
       </div>

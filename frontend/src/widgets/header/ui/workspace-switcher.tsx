@@ -24,11 +24,10 @@ import { useWorkspaceStore } from "@/entities/workspace/store";
 
 
 export const WorkspaceSwitcher = () => {
-  const {workspaces} = useWorkspaceStore();
+  const {workspaces, selectedWorkspace, fetchWorkspaceById, setPosts, setChannels} = useWorkspaceStore();
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
   const [showNewTeamDialog, setShowNewTeamDialog] = useState(false);
-  const {selectedWorkspace, fetchWorkspaceById } = useWorkspaceStore()
 
   const { t } = useTranslation();
 
@@ -64,6 +63,9 @@ export const WorkspaceSwitcher = () => {
                     key={workspace.id}
                     onClick={() => {
                       fetchWorkspaceById(workspace.id);
+                      setPosts([])
+                      setChannels([])
+                      
                       navigate(`/workspaces/${workspace.id}`)
                       localStorage.setItem('last_open_workspace_id', String(workspace.id))
                       setOpen(false);

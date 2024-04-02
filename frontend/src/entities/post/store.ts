@@ -33,7 +33,7 @@ export interface IPostStore {
   selectedPost: Partial<Post> | null;
   setSelectedPost: (post: Partial<Post> | null) => void;
   updateSelected: (post: Partial<Post>) => void;
-  fetchPosts: (id: number) => void;
+  fetchPosts: (id: number) => Promise<void>;
 }
 
 export const usePostStore = create<IPostStore>((set, get) => ({
