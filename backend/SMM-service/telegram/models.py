@@ -17,7 +17,7 @@ class TelegramPost(models.Model):
     message_id = models.BigIntegerField(null=True)
     posted_at = models.DateTimeField(null=True, default=None)
 
-    status = models.CharField(max_length=3, choices=STATUS, default="pending")
+    status = models.CharField(max_length=30, choices=STATUS, default="p")
     modified_at = models.DateTimeField(auto_now=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
