@@ -82,7 +82,7 @@ services:
     volumes:
       - ./backend:/app
     working_dir: /app/SMM-service
-    command: "cd SMM-service && python3 -m celery -A application worker -l INFO "
+    command: "python3 -m celery -A application worker -l INFO "
 
   minio:
     image: minio/minio
@@ -124,8 +124,6 @@ services:
       - POSTGRES_DB=smm_service_db
       - POSTGRES_HOST=postgres
       - POSTGRES_PORT=5432
-    ports:
-      - "8080:8080"
     volumes:
       - ./data:/app/data
     command: "python bot/bot.py"
