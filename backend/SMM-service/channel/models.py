@@ -6,6 +6,7 @@ class Channel(models.Model):
     chat_id = models.BigIntegerField()
     is_group = models.BooleanField(default=False)
     workspace = models.ForeignKey("workspace.Workspace", on_delete=models.CASCADE)
+    channel_username = models.CharField(max_length=100)
     created_at = models.DateTimeField(auto_now_add=True)
 
 
@@ -14,5 +15,6 @@ class ChannelRequest(models.Model):
     message_id = models.BigIntegerField()
     is_group = models.BooleanField(default=False)
     code = models.IntegerField()
+    channel_username = models.CharField(max_length=100)
     created_at = models.DateTimeField(auto_now_add=True)
 

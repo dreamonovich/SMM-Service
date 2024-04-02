@@ -26,7 +26,7 @@ class ChannelListCreate(ListCreateAPIView):
         if Channel.objects.filter(chat_id=channel_request.chat_id, workspace_id=workspace_id).exists():
             raise ValidationError("The channel is already exists")
         new_channel = Channel(name=name, chat_id=channel_request.chat_id, is_group=channel_request.is_group,
-                              workspace_id=workspace_id)
+                              workspace_id=workspace_id, channel_username=channel_request.channel_username)
         new_channel.save()
         delete_message(channel_request.chat_id, channel_request.message_id)
         channel_request.delete()
