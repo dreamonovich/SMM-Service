@@ -19,12 +19,15 @@ import {
   AlertDialogAction,
 } from "@/shared/ui/alert-dialog";
 import MDEditor from "@uiw/react-md-editor";
+import { Icons } from "@/shared/ui/icons";
 
 export const PostEditor = () => {
   const { selectedPost, updateSelected, setSelectedPost, fetchPosts } =
     usePostStore();
   const { selectedWorkspace, channels, fetchChannels } = useWorkspaceStore();
   const [images, setImages] = useState<File[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [query, setQuery] = useState('');
   const [files, setFiles] = useState<File[]>([]);
 
   const create = async () => {
@@ -88,7 +91,7 @@ export const PostEditor = () => {
   };
 
   useEffect(() => {
-    if (!selectedWorkspace?.id) return;
+    if (!selectedWorkspace?.id || channels.length) return;
     fetchChannels(+selectedWorkspace.id);
   }, [selectedPost]);
 
@@ -113,6 +116,49 @@ export const PostEditor = () => {
     );
   }
 
+  const askAI = async (type: string) => {
+    switch (type) {
+      case "append": {
+        const res = await fetch(API_URL + `/process-message/`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: TOKEN_HEADER,
+          },
+          body: JSON.stringify({
+            role: "Дописать текст",
+            text: selectedPost?.text,
+          }),
+        });
+        const data = await res.json();
+        const text = data.result[0].message.text;
+
+        updateSelected({ text });
+        break;
+      };
+      case 'write': {
+        const res = await fetch(API_URL + `/process-message/`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: TOKEN_HEADER,
+          },
+          body: JSON.stringify({
+            role: "Придумай текст по запросу",
+            text: `Вот текущий текст: ${selectedPost?.text}; Выполни запрос: ${query}`,
+          }),
+        });
+        const data = await res.json();
+        const text = data.result[0].message.text;
+
+        updateSelected({ text: selectedPost?.text + '\n' + text })
+      }
+    }
+
+    setQuery('')
+    setLoading(false)
+  };
+
   return (
     <div className="grid w-full gap-2 p-2">
       <h3 className="text-2xl">
@@ -129,6 +175,39 @@ export const PostEditor = () => {
         value={selectedPost?.text || ""}
         onChange={(text) => updateSelected({ text })}
       />
+      <div className="flex gap-1">
+        <Button
+          onClick={() => {
+            setLoading(true);
+            askAI("append");
+          }}
+          disabled={!selectedPost?.text || loading}
+          className="flex items-center gap-2"
+        >
+          {loading && <Icons.spinner className="animate-spin" />} Дописать текст
+        </Button>
+        <Popover>
+          <PopoverTrigger>
+            <Button>Сгенерировать текст</Button>
+          </PopoverTrigger>
+          <PopoverContent className="grid gap-1">
+            <Input placeholder="Текст" value={query} className="w-full" onChange={e => {
+              setQuery(e.target.value)
+            }} />
+            <Button
+              className="w-full flex items-center gap-2"
+              disabled={loading}
+              onClick={() => {
+                askAI('write')
+                setLoading(true)
+              }}
+            >
+              {loading && <Icons.spinner className="animate-spin" />} Отправить
+            </Button>
+          </PopoverContent>
+        </Popover>
+      </div>
+      <hr />
       <Input
         placeholder="Количество одобряющих..."
         value={selectedPost?.number_of_confirmations || ""}
@@ -171,7 +250,7 @@ export const PostEditor = () => {
           max={23}
           onChange={(e) => {
             const date = new Date(selectedPost?.send_planned_at || new Date());
-            const hours = +e.target.value
+            const hours = +e.target.value;
             if (hours < 0 || hours > 23) return;
             date.setHours(hours);
             updateSelected({ send_planned_at: date.toISOString() });
@@ -183,7 +262,7 @@ export const PostEditor = () => {
           max={59}
           onChange={(e) => {
             const date = new Date(selectedPost?.send_planned_at || new Date());
-            const minute = +e.target.value
+            const minute = +e.target.value;
             if (minute < 0 || minute > 59) return;
             date.setMinutes(minute);
             updateSelected({ send_planned_at: date.toISOString() });

@@ -14,7 +14,9 @@ def send_message(chat_id, text, post_id, photos=[], files=[]):
     else:
         bot.send_message(chat_id, text, parse_mode="Markdown")
     for file in files:
-        bot.send_document(chat_id, InputFile(BytesIO(file.file.file.read())))
+        file = BytesIO(file.file.file.read())
+        file.name = "image.png"
+        bot.send_document(chat_id, InputFile(file))
 
     bot.send_message(chat_id, "*Вы принимаете этот пост?*", parse_mode="Markdown", reply_markup=get_keyboard(post_id))
 
