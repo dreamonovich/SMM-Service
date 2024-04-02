@@ -33,7 +33,7 @@ export const Channels = () => {
           <div className="h-[100%] w-full">
             <ResizablePanelGroup direction="horizontal" className="h-[100%]">
               <ResizablePanel>
-                <div className="w-full p-2 flex items-center justify-between">
+                <div className="w-full flex items-center justify-between p-2">
                   <div>
                     <h1 className="text-4xl font-semibold">Ваши каналы</h1>
                     <h2 className="text-l text-gray-500">

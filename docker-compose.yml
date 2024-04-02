@@ -82,7 +82,7 @@ services:
     volumes:
       - ./backend:/app
     working_dir: /app/SMM-service
-    command: "python3 -m celery -A application worker -l INFO"
+    command: "cd SMM-service && python3 -m celery -A application worker -l INFO "
 
   minio:
     image: minio/minio
