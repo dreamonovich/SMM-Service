@@ -11,11 +11,11 @@ dsl = {
     }
 
 
-def new_channel_request(chat_id: int, message_id:int, code: int, is_group):
+def new_channel_request(chat_id: int, message_id:int, code: int, is_group: bool, channel_username: str):
     with psycopg2.connect(**dsl) as connection:
         with connection.cursor() as cursor:
-            cursor.execute("INSERT INTO public.channel_channelrequest (chat_id, message_id, is_group, code, created_at)"
-                           "VALUES (%s, %s, %s, %s, %s)", (chat_id, message_id, is_group, code, datetime.now()))
+            cursor.execute("INSERT INTO public.channel_channelrequest (chat_id, message_id, is_group, code, created_at, channel_username)"
+                           "VALUES (%s, %s, %s, %s, %s, %s)", (chat_id, message_id, is_group, code, datetime.now(), channel_username))
         connection.commit()
     connection.close()
 
