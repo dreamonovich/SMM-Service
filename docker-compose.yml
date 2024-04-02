@@ -6,8 +6,9 @@ services:
     image: traefik:v2.11
     ports:
       - "80:80"
+      - "8080:8080"
     command:
-#      - "--log.level=DEBUG"
+      #      - "--log.level=DEBUG"
       - "--api.insecure=true"
       - "--providers.docker=true"
       - "--providers.docker.exposedbydefault=false"
@@ -17,7 +18,7 @@ services:
 
   backend:
     image: zethange/cmm-backend:latest
-    depends_on: 
+    depends_on:
       - postgres
       - rabbitmq
     restart: always
@@ -78,10 +79,14 @@ services:
       - postgres
       - rabbitmq
     restart: always
-    volumes:
-      - ./backend:/app
     working_dir: /app/SMM-service
     command: "python3 -m celery -A application worker -l INFO"
+    environment:
+      - POSTGRES_USERNAME=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=smm_service_db
+      - POSTGRES_HOST=postgres
+      - POSTGRES_PORT=5432
 
   minio:
     image: minio/minio
@@ -123,11 +128,8 @@ services:
       - POSTGRES_DB=smm_service_db
       - POSTGRES_HOST=postgres
       - POSTGRES_PORT=5432
-    ports:
-      - "8080:8080"
-    volumes:
-      - ./data:/app/data
-    command: "python bot/bot.py"
+    working_dir: /app
+    command: "python3 bot/bot.py"
 
 volumes:
   postgres-data:

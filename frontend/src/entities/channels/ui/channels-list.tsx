@@ -18,6 +18,7 @@ import { Label } from "@/shared/ui/label";
 import { API_URL, TOKEN_HEADER } from "@/shared/lib/constants";
 import { useWorkspaceStore } from "@/entities/workspace";
 import { useParams } from "react-router-dom";
+import { Icons } from "@/shared/ui/icons";
 
 export type Channel = {
   id: number;
@@ -28,46 +29,49 @@ export type Channel = {
 
 export const ChannelsList = ({ items }: { items: Channel[] }) => {
   const [selectedChannel, setSelectedChannel] = useState<Channel | null>(null);
-  const [name, setName] = useState('')
+  const [isLoading, setIsLoading] = useState(false);
+  const [name, setName] = useState("");
   const [open, setOpen] = useState(false);
-  const { fetchChannels } = useWorkspaceStore()
-  const {id: workspaceId} = useParams()
+  const { fetchChannels } = useWorkspaceStore();
+  const { id: workspaceId } = useParams();
   const onClickSave = async (id: number) => {
+    setIsLoading(true);
     const res = await fetch(API_URL + "/channel/" + id, {
       method: "PATCH",
       headers: {
-        Authorization:
-          TOKEN_HEADER,
-          "Content-Type": 'application/json',
+        Authorization: TOKEN_HEADER,
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({
-          name: name
+        name: name,
       }),
     });
-    
+
     if (res.ok) {
-      await fetchChannels(+(workspaceId ?? 0))
-      setOpen(false)
-    }    
-  }
+      await fetchChannels(+(workspaceId ?? 0));
+      setOpen(false);
+      setIsLoading(false);
+    }
+  };
   const onClickDelete = async (id: number) => {
+    setIsLoading(true);
     const res = await fetch(API_URL + "/channel/" + id, {
       method: "DELETE",
       headers: {
-        Authorization:
-          TOKEN_HEADER,
-          "Content-Type": 'application/json',
+        Authorization: TOKEN_HEADER,
+        "Content-Type": "application/json",
       },
     });
-    
+
     if (res.ok) {
-      await fetchChannels(+(workspaceId ?? 0))
-      setOpen(false)
-    }    
-  }
+      await fetchChannels(+(workspaceId ?? 0));
+      setOpen(false);
+    }
+    setIsLoading(false);
+  };
   return (
     <ScrollArea className="h-full w-full">
-      <div className="flex flex-col gap-2 pt-0 pr-2">
+      <div className="flex flex-col gap-2 pt-0 p-2">
         {items.map((item) => (
           <div
             key={item.id}
@@ -93,22 +97,26 @@ export const ChannelsList = ({ items }: { items: Channel[] }) => {
                   ChatId: {item.chat_id}
                 </div>
               </div>
-              
+
               <Dialog open={open} onOpenChange={setOpen}>
                 <DialogTrigger asChild>
-                  <button><IoIosMore className="h-full w-8" onClick={() => setName(item.name)}/></button>
+                  <button>
+                    <IoIosMore
+                      className="h-full w-8"
+                      onClick={() => setName(item.name)}
+                    />
+                  </button>
                 </DialogTrigger>
                 <DialogContent className="sm:max-w-[425px]">
                   <DialogHeader>
                     <DialogTitle>Настройки канала</DialogTitle>
                     <DialogDescription>
-                      Make changes to your profile here. Click save when you're
-                      done.
+                      Здесь вы можете изменить название канала и удалить его.
                     </DialogDescription>
                   </DialogHeader>
                   <div className="grid gap-4 py-4">
                     <div className="grid grid-cols-4 items-center gap-4">
-                      <Label htmlFor="name" className="text-right">
+                      <Label className="text-right">
                         Название
                       </Label>
                       <Input
@@ -120,8 +128,31 @@ export const ChannelsList = ({ items }: { items: Channel[] }) => {
                     </div>
                   </div>
                   <DialogFooter className="flex justify-between">
-                    <Button onClick={() => {onClickSave(item.id)}}>Сохранить</Button>
-                    <Button className="bg-red-700" onClick={() => {onClickDelete(item.id)}}>Удалить</Button>
+                    <Button
+                      className="bg-red-700"
+                      onClick={() => {
+                        onClickDelete(item.id);
+                      }}
+                    >
+                      {isLoading ? (
+                        <>
+                          <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />{" "}
+                        </>
+                      ) : null}
+                      Удалить
+                    </Button>
+                    <Button
+                      onClick={() => {
+                        onClickSave(item.id);
+                      }}
+                    >
+                      {isLoading ? (
+                        <>
+                          <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />{" "}
+                        </>
+                      ) : null}
+                      Сохранить
+                    </Button>
                   </DialogFooter>
                 </DialogContent>
               </Dialog>

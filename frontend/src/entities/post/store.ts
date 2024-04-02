@@ -22,6 +22,7 @@ export interface Post {
   text: string;
   send_planned_at: string;
   number_of_confirmations: number;
+  status: string
 
   // 
   create: boolean
@@ -33,7 +34,7 @@ export interface IPostStore {
   selectedPost: Partial<Post> | null;
   setSelectedPost: (post: Partial<Post> | null) => void;
   updateSelected: (post: Partial<Post>) => void;
-  fetchPosts: (id: number) => void;
+  fetchPosts: (id: number) => Promise<void>;
 }
 
 export const usePostStore = create<IPostStore>((set, get) => ({

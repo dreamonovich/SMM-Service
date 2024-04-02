@@ -61,7 +61,7 @@ export const AddChannel: FC<AddChannelProps> = ({}) => {
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogTrigger>Добавить</DialogTrigger>
+      <DialogTrigger><Button>Добавить</Button></DialogTrigger>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Добавить новый канал</DialogTitle>
@@ -71,7 +71,7 @@ export const AddChannel: FC<AddChannelProps> = ({}) => {
             {step == 0 && (
               <Input
                 onChange={(e) => setTitle(e.target.value)}
-                placeholder="Bebra Bebrenko"
+                placeholder="Название канала"
               />
             )}
             {step == 1 && (
@@ -81,7 +81,7 @@ export const AddChannel: FC<AddChannelProps> = ({}) => {
                   to={"/instruction"}
                   className="hover:underline text-[#7AAEEE]"
                 >
-                  инструкция
+                  {" "}инструкция
                 </Link>
               </div>
             )}
