@@ -23,13 +23,7 @@ export const WorkspacePage = () => {
     fetchChannels(Number(id));
 
     (async () => {
-      const res = await fetch(API_URL + `/workspace/${id}/posts`, {
-        headers: {
-          Authorization: TOKEN_HEADER,
-        },
-      });
-      const data = await res.json();
-      fetchPosts(data);
+      await fetchPosts(+id);
       setIsLoading(false);
     })();
 
