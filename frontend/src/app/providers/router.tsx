@@ -12,6 +12,7 @@ import { Profile } from "@/pages/profile";
 import { Archive } from "@/pages/archive";
 import { LoginPage } from "@/pages/login/login";
 import { Settings } from "@/pages/settings";
+import { Invite } from "@/pages/invite";
 export const router = createBrowserRouter([
   {
     Component: AuthProvider,
@@ -27,9 +28,15 @@ export const router = createBrowserRouter([
           {
             path: "/profile",
             element: <Profile />,
-          },    
+          },
         ],
       },
+      {
+        path: "/invite/:invitelink",
+
+        element: <Invite />,
+      },
+
       {
         path: "/workspaces/create",
         Component: generateLayout(false),

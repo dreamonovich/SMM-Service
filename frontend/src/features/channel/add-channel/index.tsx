@@ -1,12 +1,11 @@
+import { useWorkspaceStore } from "@/entities/workspace/store";
 import { API_URL, TOKEN_HEADER } from "@/shared/lib/constants";
 import { Button } from "@/shared/ui/button";
 import {
   Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
+  DialogContent, DialogHeader,
   DialogTitle,
-  DialogTrigger,
+  DialogTrigger
 } from "@/shared/ui/dialog";
 import { Input } from "@/shared/ui/input";
 import { FC, useState } from "react";
@@ -17,8 +16,10 @@ export interface AddChannelProps {
   onClose: () => void;
 }
 
-export const AddChannel: FC<AddChannelProps> = ({ isOpen, onClose }) => {
+export const AddChannel: FC<AddChannelProps> = ({}) => {
     const navigate = useNavigate()
+const [isOpen, setIsOpen] = useState(false)
+    const {id} = useParams()
     const [title, setTitle] = useState("");
     const [code, setCode] = useState("");
     const options = {
@@ -29,13 +30,14 @@ export const AddChannel: FC<AddChannelProps> = ({ isOpen, onClose }) => {
             "Content-Type": 'application/json',
         },
         body: JSON.stringify({
-            title: title,
+            name: title,
             code: code,
+            workspace_id: id,
 
         }),
       };
-
-  const {id} = useParams()
+      const ws = useWorkspaceStore()
+     const workspaceId = useParams().id
   const [step, setStep] = useState(0);
   const handleClick = async () => {
     if (title && step === 0) {
@@ -50,17 +52,20 @@ export const AddChannel: FC<AddChannelProps> = ({ isOpen, onClose }) => {
         //display error message
         setStep(1)
       }
-      else{navigate(`/workspaces/${id}`);}
+      else{
+        ws.fetchChannels(workspaceId)
+        setIsOpen(false)
+      }
     }
   };
 
   return (
-    <Dialog onOpenChange={() => setStep(0)}>
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger>Добавить</DialogTrigger>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Добавить новый канал</DialogTitle>
-          <DialogDescription>
+          
             <form className="w-5/6 space-y-6">
               <label>Введите название канала</label>
               {step == 0 && (
@@ -83,8 +88,8 @@ export const AddChannel: FC<AddChannelProps> = ({ isOpen, onClose }) => {
               {step == 2 && (
                 <div>
                   <label>Введите код, отправленный ботом</label>
-                  <Input
-                    onChange={(e) => setCode(e.target.value)}
+                  <Input type="number" value={code}
+                    onChange={(e) =>  !isNaN(+e.target.value) ? setCode(e.target.value) : null}
                     placeholder="00000"
                   />
                 </div>
@@ -99,7 +104,7 @@ export const AddChannel: FC<AddChannelProps> = ({ isOpen, onClose }) => {
                 Продолжить
               </Button>
             </form>
-          </DialogDescription>
+          
         </DialogHeader>
       </DialogContent>
     </Dialog>

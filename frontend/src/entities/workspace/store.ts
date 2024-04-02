@@ -1,9 +1,10 @@
 import { API_URL, TOKEN_HEADER } from "@/shared/lib/constants";
 import { create } from "zustand";
+import { Channel } from "../channels/ui/channels-list";
 export type Workspace = {
   name: string;
   id: string;
-  members: any[],
+  members: any[];
 };
 
 export interface IWorkspaceStore {
@@ -13,6 +14,10 @@ export interface IWorkspaceStore {
   selectedWorkspace: Workspace | null;
   setSelectedWorkspace: (workspace: Workspace) => void;
   fetchWorkspaceById: (id: string) => Promise<void>;
+
+  channels: Channel[];
+  setChannels: (channels: Channel[]) => void;
+  fetchChannels: (workspaceId: number) => Promise<void>;
 }
 
 export const useWorkspaceStore = create<IWorkspaceStore>((set) => ({
@@ -37,5 +42,18 @@ export const useWorkspaceStore = create<IWorkspaceStore>((set) => ({
     const data = await res.json();
 
     set({ selectedWorkspace: data });
+  },
+
+  channels: [],
+  setChannels: (channels) => set({ channels }),
+  fetchChannels: async (id) => {
+    const response = await fetch(API_URL + "/workspace/" + id + "/channels", {
+      method: "GET",
+      headers: {
+        Authorization: TOKEN_HEADER,
+      },
+    });
+    const data = await response.json();
+    set({ channels: data });
   },
 }));

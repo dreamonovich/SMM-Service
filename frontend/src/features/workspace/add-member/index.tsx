@@ -4,9 +4,12 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/shared/ui/avatar";
 import { Button } from "@/shared/ui/button";
 import { Input } from "@/shared/ui/input";
 import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 
 export const AddMember = () => {
   const { selectedWorkspace } = useWorkspaceStore();
+  const [inviteLink, setInviteLink] = useState('')
+  const {id} = useParams()
   const [members, setMembers] = useState<{
     id: number;
     members: any[];
@@ -27,7 +30,36 @@ export const AddMember = () => {
       setMembers(data);
     })();
   }, [selectedWorkspace]);
-
+  const options = {
+    method: "GET",
+    headers: {
+      Authorization: TOKEN_HEADER,
+      "Content-Type": "application/json",
+    },
+  };
+  useEffect(() => {
+    (async () => {
+      const res = await fetch(
+        API_URL + "/workspace/" + id + "/invitelink",
+        options
+      );
+      const data = await res.json()
+      console.log(data)
+      setInviteLink(`http://localhost:5173/invite/${data.link}`)
+    })();
+  }, []);
+  const leaveTeam = async (id: number) => {
+    await fetch(
+      API_URL + "/workspace/" + id + "/leave",
+      {
+        method: "POST",
+        headers: {
+          Authorization: TOKEN_HEADER,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+  }
   return (
     <>
       <div>
@@ -36,12 +68,8 @@ export const AddMember = () => {
             Настройки рабочего пространства
           </h2>
           <div className="flex items-center justify-between mb-4">
-            <Input
-              className="border-gray-300"
-              readOnly
-              type="text"
-              value={"https://pomidro"}
-            />
+            <div>Ссылка для приглашения</div>
+            <span>{inviteLink}</span>
           </div>
           <hr className="my-4" />
           <div className="mb-4">
@@ -66,6 +94,7 @@ export const AddMember = () => {
                 </div>
               ))}
             </div>
+            <Button onClick={() => leaveTeam(id)}>Покинуть</Button>
           </div>
         </div>
       </div>

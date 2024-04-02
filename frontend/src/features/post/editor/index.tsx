@@ -10,13 +10,14 @@ import { Calendar } from "@/shared/ui/calendar";
 import { Input } from "@/shared/ui/input";
 import { API_URL, TOKEN_HEADER } from "@/shared/lib/constants";
 import { useWorkspaceStore } from "@/entities/workspace";
+import { useParams } from "react-router-dom";
 
 export const PostEditor = () => {
-  const { selectedPost, updateSelected, setSelectedPost } = usePostStore();
+  const { selectedPost, updateSelected, setSelectedPost, fetchPosts} = usePostStore();
   const { selectedWorkspace } = useWorkspaceStore();
   const [images, setImages] = useState<File[]>([]);
   const [files, setFiles] = useState<File[]>([]);
-
+  const {id} = useParams()
   const create = async () => {
     const formData = new FormData();
 
@@ -48,6 +49,7 @@ export const PostEditor = () => {
 
     if (res.ok) {
       setSelectedPost(null);
+      fetchPosts(id)
     }
   };
   const update = async () => {};
@@ -130,7 +132,7 @@ export const PostEditor = () => {
           }}
         />
       </div>
-      <Button onClick={() => (selectedPost?.create ? create() : update())}>
+      <Button onClick={async () => {(selectedPost?.create ? create() : update())}}>
         {selectedPost?.create ? "Создать" : "Сохранить"}
       </Button>
     </div>
