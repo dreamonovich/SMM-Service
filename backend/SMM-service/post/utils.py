@@ -16,7 +16,7 @@ def send_message(chat_id, text, post_id, photos=[], files=[]):
     else:
         bot.send_message(chat_id, text, parse_mode="Markdown")
     for file in files:
-        with tempfile.NamedTemporaryFile(prefix=file.file.file.name.split("/")[-1].split("*#*#")[-1], delete=True) as temp_file:
+        with tempfile.NamedTemporaryFile(prefix=file.file.file.name.split("/")[-1].split("jopalexi")[-1], delete=True) as temp_file:
             temp_file.write(file.file.file.read())
             bot.send_document(chat_id, InputFile(file))
 
