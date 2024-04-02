@@ -76,7 +76,7 @@ class CreateTasksView(APIView):
             channels = post.workspace.channels.all()
 
             for channel in channels:
-                telegram_post = TelegramPost.objects.create(post_id=post.id, telegram_channe_idl=channel.id)
+                telegram_post = TelegramPost.objects.create(post_id=post.id, telegram_channe_id=channel.id)
                 send_telegram_post.apply_async((telegram_post,), eta=post.send_planned_at - timedelta(hours=3))
 
             return Response({})
