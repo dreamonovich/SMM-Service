@@ -2,6 +2,7 @@ import { useUserStore } from "@/entities/user";
 import { API_URL, TOKEN_HEADER } from "@/shared/lib/constants";
 import { Avatar, AvatarFallback, AvatarImage } from "@/shared/ui/avatar";
 import { Button } from "@/shared/ui/button";
+import { Icons } from "@/shared/ui/icons";
 import { Input } from "@/shared/ui/input";
 import { Separator } from "@/shared/ui/separator";
 import { useEffect, useState } from "react";
@@ -9,7 +10,7 @@ import { useEffect, useState } from "react";
 export const Profile = () => {
   const { user, fetchUser } = useUserStore();
   const [name, setName] = useState("");
-
+const [isLoading, setIsLoading] = useState(false)
   useEffect(() => {
     if (user) {
       setName(user.name);
@@ -27,10 +28,12 @@ export const Profile = () => {
     }),
   };
   const handleNameChange = async (e: SubmitEvent) => {
+    setIsLoading(true)
     e.preventDefault()
     const res = await fetch(API_URL + "/me", options);
     if (res.ok) {
       fetchUser();
+      setIsLoading(false)
     }
   };
   return (
@@ -61,7 +64,11 @@ export const Profile = () => {
         <label>Имя пользователя</label>
         <Input value={name} onChange={(e) => setName(e.target.value)} />
 
-        <Button type="submit">Сохранить</Button>
+        <Button type="submit">{isLoading ? (
+                        <>
+                          <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />{" "}
+                        </>
+                      ) : null}Сохранить</Button>
       </form>
       <div></div>
     </div>
