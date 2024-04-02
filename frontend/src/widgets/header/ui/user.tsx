@@ -25,7 +25,7 @@ export const User = () => {
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" className="relative h-8 w-8 rounded-full">
             <Avatar className="h-8 w-8">
-              <AvatarImage src="/avatars/01.png" alt="@shadcn" />
+              <AvatarImage src={user?.avatar} alt={user?.name} />
               <AvatarFallback>{user?.name}</AvatarFallback>
             </Avatar>
           </Button>
@@ -59,9 +59,9 @@ export const User = () => {
             </DropdownMenuItem>
           </DropdownMenuGroup>
           <DropdownMenuSeparator />
-          <DropdownMenuItem>
+          <DropdownMenuItem onClick={() => {localStorage.clear(); location.reload()}}>
             {t("log-out")}
-            <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
+            <DropdownMenuShortcut>⌘</DropdownMenuShortcut>
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
