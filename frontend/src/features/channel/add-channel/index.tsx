@@ -81,7 +81,7 @@ export const AddChannel: FC<AddChannelProps> = ({}) => {
                   to={"/instruction"}
                   className="hover:underline text-[#7AAEEE]"
                 >
-                  инструкция
+                  {" "}инструкция
                 </Link>
               </div>
             )}
