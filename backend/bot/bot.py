@@ -24,6 +24,7 @@ def callback(call: CallbackQuery):
         bot.send_message(call.message.chat.id, "*Пост отклонен*", parse_mode="Markdown")
 
     elif call.data.startswith("post_approve"):
+        logging.info("got there")
         print("gothegit")
         approve(call.message.from_user.id, post_id)
         try:
@@ -37,9 +38,10 @@ def callback(call: CallbackQuery):
 
             keyboard = InlineKeyboardMarkup()
             keyboard.add(InlineKeyboardButton(f"✅Принять{approval}/{number_of_confirmations}", callback_data=call.data),
-                         InlineKeyboardButton(f"🚫Отклонить", callback_data=call.data))
+                         InlineKeyboardButton(f"🚫Отклонить", callback_data=f"post_decline?{post_id}"))
             bot.edit_message_reply_markup(call.message.chat.id, call.message.message_id, reply_markup=keyboard)
         except Exception as e:
+            logging.info(e)
             print(e)
 
 
