@@ -34,45 +34,45 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
     if (!showTelegram || !scriptRef.current) return;
     console.log(showTelegram, scriptRef);
 
-    const script = document.createElement('script');
+    const script = document.createElement("script");
     script.src = "https://telegram.org/js/telegram-widget.js?22";
-    script.setAttribute(
-      "data-telegram-login",
-      "prodsmm_service_bot"
-    );
+    script.setAttribute("data-telegram-login", "prodsmm_service_bot");
     script.setAttribute("data-size", "large");
     script.setAttribute("data-onauth", "onTelegramAuth(user)");
     script.setAttribute("data-request-access", "write");
 
     script.async = true;
-    scriptRef.current.appendChild(script)
+    scriptRef.current.appendChild(script);
   }, [showTelegram, scriptRef]);
 
   return (
     <div className={cn("grid gap-6", className)} {...props}>
-      <form onSubmit={onSubmit}>
-        <div className="grid gap-2">
-          <div className="grid gap-1">
-            <Input
-              id="username"
-              placeholder={t("username")}
-              autoCapitalize="none"
-              autoCorrect="off"
-              disabled={isLoading}
-              onChange={(e) => {
-                localStorage.setItem('name', e.target.value)
-              }}
-            />
+      {!showTelegram ? (
+        <form onSubmit={onSubmit}>
+          <div className="grid gap-2">
+            <div className="grid gap-1">
+              <Input
+                id="username"
+                placeholder={t("username")}
+                autoCapitalize="none"
+                autoCorrect="off"
+                disabled={isLoading}
+                onChange={(e) => {
+                  localStorage.setItem("name", e.target.value);
+                }}
+              />
+            </div>
+            <Button disabled={isLoading}>
+              {isLoading && (
+                <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+              )}
+              {t("sign-in")}
+            </Button>
           </div>
-          <Button disabled={isLoading}>
-            {isLoading && (
-              <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
-            )}
-            {t("sign-in")}
-          </Button>
-        </div>
-      </form>
-      {showTelegram && <div ref={scriptRef}></div>}
+        </form>
+      ) : (
+        <div ref={scriptRef}></div>
+      )}
       {/* <div className="relative">
         <div className="absolute inset-0 flex items-center">
           <span className="w-full border-t" />
