@@ -5,6 +5,7 @@ export type Workspace = {
   name: string;
   id: string;
   members: any[];
+  creator_user: any;
 };
 
 export interface IWorkspaceStore {

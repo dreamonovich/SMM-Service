@@ -1,10 +1,10 @@
 from rest_framework.exceptions import ValidationError
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView, CreateAPIView, DestroyAPIView
+from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from django.http import JsonResponse
-from django.views import View
 from django.core.exceptions import ObjectDoesNotExist
 
 import json
@@ -68,11 +68,8 @@ class PostMediaDeleteView(DestroyAPIView):
 
         return Response({})
 
-class CreateTaskView(View):
-    def post(self, request):
-        if not (post_id := request.POST.get('post_id')):
-            raise ValidationError("post_id required")
-
+class CreateTaskView(APIView):
+    def post(self, request, post_id):
         try:
             post = Post.objects.get(pk=post_id)
             send_planned_at = post.send_planned_at

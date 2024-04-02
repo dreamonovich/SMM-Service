@@ -4,7 +4,7 @@ import { Button } from "@/shared/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/shared/ui/popover";
 import { Textarea } from "@/shared/ui/textarea";
 import { CalendarIcon } from "@radix-ui/react-icons";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { format } from "date-fns";
 import { Calendar } from "@/shared/ui/calendar";
 import { Input } from "@/shared/ui/input";
@@ -15,7 +15,7 @@ import { useParams } from "react-router-dom";
 export const PostEditor = () => {
   const { selectedPost, updateSelected, setSelectedPost, fetchPosts } =
     usePostStore();
-  const { selectedWorkspace } = useWorkspaceStore();
+  const { selectedWorkspace, channels, fetchChannels } = useWorkspaceStore();
   const [images, setImages] = useState<File[]>([]);
   const [files, setFiles] = useState<File[]>([]);
   const { id } = useParams();
@@ -77,6 +77,15 @@ export const PostEditor = () => {
     }
   };
 
+  useEffect(() => {
+    if (!selectedWorkspace?.id) return;
+    fetchChannels(+selectedWorkspace.id);
+  }, [selectedPost]);
+
+  if (!channels.length) {
+    return <div>Сначала стоит добавить канал</div>;
+  }
+
   return (
     <div className="grid w-full gap-2 p-2">
       <h3 className="text-2xl">
@@ -137,7 +146,7 @@ export const PostEditor = () => {
           onChange={(e) => {
             const date = new Date(selectedPost?.send_planned_at || new Date());
             date.setHours(+e.target.value);
-            updateSelected({send_planned_at: date.toISOString()})
+            updateSelected({ send_planned_at: date.toISOString() });
           }}
         />
         <Input
@@ -145,8 +154,8 @@ export const PostEditor = () => {
           onChange={(e) => {
             const date = new Date(selectedPost?.send_planned_at || new Date());
             date.setMinutes(+e.target.value);
-            updateSelected({send_planned_at: date.toISOString()});
-            console.log(date)
+            updateSelected({ send_planned_at: date.toISOString() });
+            console.log(date);
           }}
         />
       </div>
