@@ -66,9 +66,12 @@ export const AddMember = () => {
     });
     if (res.ok) {
       const workspaces = await fetchWorkspaces();
-
+      if (!workspaces.length){
+        navigate(`/workspaces/create`)
+      }
       navigate(`/workspaces/${workspaces[0].id}`);
     }
+    else{alert("Не удалось удалить рабочее пространство")}
   };
 
   const deleteFromTeam = async (userId: number) => {
