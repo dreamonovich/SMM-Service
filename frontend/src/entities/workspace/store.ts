@@ -9,6 +9,8 @@ export type Workspace = {
   creator_user: any;
 };
 
+export type Stat = any
+
 export interface IWorkspaceStore {
   workspaces: Workspace[];
   setWorkspaces: (workspaces: Workspace[]) => void;

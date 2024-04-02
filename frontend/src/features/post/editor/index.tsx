@@ -26,20 +26,18 @@ export const PostEditor = () => {
     usePostStore();
   const { selectedWorkspace, channels, fetchChannels } = useWorkspaceStore();
   const [images, setImages] = useState<File[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [query, setQuery] = useState('');
   const [files, setFiles] = useState<File[]>([]);
 
   const create = async () => {
     const formData = new FormData();
 
-    formData.append("name", selectedPost?.name!);
-    formData.append("text", selectedPost?.text!);
+    formData.append("name", selectedPost?.name || '');
+    formData.append("text", selectedPost?.text || '');
     formData.append(
       "number_of_confirmations",
-      String(selectedPost?.number_of_confirmations!)
+      String(selectedPost?.number_of_confirmations)
     );
-    formData.append("send_planned_at", selectedPost?.send_planned_at!);
+    formData.append("send_planned_at", selectedPost?.send_planned_at || new Date().toISOString());
 
     for (const image of images) {
       formData.append("photos", image);

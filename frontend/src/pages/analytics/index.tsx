@@ -16,7 +16,7 @@ export const Analytics = () => {
   const { fetchStats, stats } = useWorkspaceStore();
   const { id } = useParams();
   useEffect(() => {
-    fetchStats(id);
+    fetchStats(Number(id));
     console.log(stats);
   }, []);
 
