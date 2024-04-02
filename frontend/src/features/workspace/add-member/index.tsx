@@ -1,3 +1,4 @@
+import { useUserStore } from "@/entities/user";
 import { useWorkspaceStore } from "@/entities/workspace";
 import { API_URL, TOKEN_HEADER } from "@/shared/lib/constants";
 import { Avatar, AvatarFallback, AvatarImage } from "@/shared/ui/avatar";
@@ -7,13 +8,13 @@ import { useParams } from "react-router-dom";
 
 export const AddMember = () => {
   const { selectedWorkspace } = useWorkspaceStore();
-  const [inviteLink, setInviteLink] = useState('')
-  const {id} = useParams()
+  const [inviteLink, setInviteLink] = useState("");
+  const { id } = useParams();
   const [members, setMembers] = useState<{
     id: number;
     members: any[];
   } | null>(null);
-
+  const { user } = useUserStore();
   useEffect(() => {
     if (!selectedWorkspace?.id) return;
     (async () => {
@@ -42,13 +43,28 @@ export const AddMember = () => {
         API_URL + "/workspace/" + id + "/invitelink",
         options
       );
-      const data = await res.json()
-      setInviteLink(`http://prodanocontest.ru/invite/${data.link}`)
+      const data = await res.json();
+      setInviteLink(`http://prodanocontest.ru/invite/${data.link}`);
     })();
   }, []);
+
   const leaveTeam = async (id: number) => {
-    await fetch(
-      API_URL + "/workspace/" + id + "/leave",
+    await fetch(API_URL + "/workspace/" + id + "/leave", {
+      method: "POST",
+      headers: {
+        Authorization: TOKEN_HEADER,
+        "Content-Type": "application/json",
+      },
+    });
+  };
+
+  const deleteFromTeam = async (userId: number) => {
+    const res = await fetch(
+      API_URL +
+        "/workspace/" +
+        selectedWorkspace?.id +
+        "/remove_member/" +
+        userId,
       {
         method: "POST",
         headers: {
@@ -57,7 +73,21 @@ export const AddMember = () => {
         },
       }
     );
-  }
+    if (res.ok) {
+      (async () => {
+        const res = await fetch(
+          API_URL + `/workspace/${selectedWorkspace?.id}/members`,
+          {
+            headers: {
+              Authorization: TOKEN_HEADER,
+            },
+          }
+        );
+        const data = await res.json();
+        setMembers(data);
+      })();
+    }
+  };
   return (
     <>
       <div>
@@ -74,25 +104,32 @@ export const AddMember = () => {
             <h3 className="text-lg font-medium mb-2">Команда:</h3>
             <div className="space-y-3">
               {members?.members.map((member) => (
-                <div key={member.id} className="flex items-center justify-between">
+                <div
+                  key={member.id}
+                  className="flex items-center justify-between"
+                >
                   <div className="flex items-center space-x-3">
                     <Avatar>
-                      <AvatarImage
-                        alt={member.name}
-                        src={member.avatar_path}
-                      />
+                      <AvatarImage alt={member.name} src={member.avatar_path} />
                       <AvatarFallback>OM</AvatarFallback>
                     </Avatar>
                     <div>
                       <div className="font-medium">{member.name}</div>
-                      <div className="text-sm text-gray-500">@{member.telegram_username}</div>
+                      <div className="text-sm text-gray-500">
+                        @{member.telegram_username}
+                      </div>
                     </div>
                   </div>
-                  <Button>Удалить</Button>
+                  {user.id != member.id ? (
+                    <Button onClick={() => deleteFromTeam(member.id)}>
+                      Удалить
+                    </Button>
+                  ) : (
+                    <Button onClick={() => leaveTeam(id)}>Покинуть</Button>
+                  )}
                 </div>
               ))}
             </div>
-            <Button onClick={() => leaveTeam(id)}>Покинуть</Button>
           </div>
         </div>
       </div>
