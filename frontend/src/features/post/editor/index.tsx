@@ -22,22 +22,25 @@ import MDEditor from "@uiw/react-md-editor";
 import { AIButtons } from "./ai";
 
 export const PostEditor = () => {
-  const { selectedPost, updateSelected, setSelectedPost, fetchPosts } =
-    usePostStore();
-  const { selectedWorkspace, channels, fetchChannels } = useWorkspaceStore();
+  const { selectedPost, updateSelected, setSelectedPost } = usePostStore();
+  const { selectedWorkspace, channels, fetchChannels, fetchPosts } =
+    useWorkspaceStore();
   const [images, setImages] = useState<File[]>([]);
   const [files, setFiles] = useState<File[]>([]);
 
   const create = async () => {
     const formData = new FormData();
 
-    formData.append("name", selectedPost?.name || '');
-    formData.append("text", selectedPost?.text || '');
+    formData.append("name", selectedPost?.name || "");
+    formData.append("text", selectedPost?.text || "");
     formData.append(
       "number_of_confirmations",
       String(selectedPost?.number_of_confirmations)
     );
-    formData.append("send_planned_at", selectedPost?.send_planned_at || new Date().toISOString());
+    formData.append(
+      "send_planned_at",
+      selectedPost?.send_planned_at || new Date().toISOString()
+    );
 
     for (const image of images) {
       formData.append("photos", image);
@@ -66,13 +69,16 @@ export const PostEditor = () => {
   const update = async () => {
     const formData = new FormData();
 
-    formData.append("name", selectedPost?.name || '');
-    formData.append("text", selectedPost?.text || '');
+    formData.append("name", selectedPost?.name || "");
+    formData.append("text", selectedPost?.text || "");
     formData.append(
       "number_of_confirmations",
       String(selectedPost?.number_of_confirmations || 0)
     );
-    formData.append("send_planned_at", selectedPost?.send_planned_at || new Date().toISOString())
+    formData.append(
+      "send_planned_at",
+      selectedPost?.send_planned_at || new Date().toISOString()
+    );
 
     const res = await fetch(API_URL + `/post/${selectedPost?.id}`, {
       method: "PATCH",
@@ -113,7 +119,6 @@ export const PostEditor = () => {
       </AlertDialog>
     );
   }
-
 
   return (
     <div className="grid w-full gap-2 p-2">
