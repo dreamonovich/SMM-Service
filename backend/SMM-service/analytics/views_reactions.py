@@ -1,10 +1,9 @@
 from pyrogram import Client
 
 
+
 def count_emojis(app, channel_name, message_id):
-    # Инициализация клиента
     with app:
-        # Получаем сообщение
         message = app.get_messages(channel_name, message_id)
         views = message.views if hasattr(message, "views") else 0
 
@@ -35,4 +34,3 @@ def update_workspace_data(workspace_data):
     except Exception as e:
         print("Error:", e)
         return None
-
