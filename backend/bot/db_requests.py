@@ -45,7 +45,7 @@ def approve(telegram_id, post_id):
 def get_approves(post_id):
     with psycopg2.connect(**dsl) as connection:
         with connection.cursor() as cursor:
-            cursor.execute("SELECT count(id) FROM public.telegram_telegramapproval == %s", (post_id,))
+            cursor.execute("SELECT count(id) FROM public.telegram_telegramapproval WHERE post_id == %s", (post_id,))
             approval = cursor.fetchone()[0]
             cursor.execute('SELECT number_of_confirmations FROM public.post_post WHERE id = %s', (post_id,))
             number_of_confirmations = cursor.fetchone()[0]
