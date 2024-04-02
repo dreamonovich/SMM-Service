@@ -45,7 +45,7 @@ class CreateMediaMixin:
         media_model_objs = []
         for file in files:
             file.name = str(uuid.uuid4()) + Path(file.name).suffix
-            media_model_objs.append(media_model(post=post, photo=file))
+            media_model_objs.append(media_model(**{'post': post, key[:-1]: file}))
         media_objs = media_model.objects.bulk_create(media_model_objs)
 
         return media_objs
