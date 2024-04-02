@@ -1,3 +1,4 @@
+import logging
 from random import randint
 from telebot import TeleBot
 from telebot.types import CallbackQuery, Message, InlineKeyboardMarkup, InlineKeyboardButton
@@ -5,6 +6,9 @@ from db_requests import new_channel_request, approve, disapprove, get_approves
 
 TOKEN = "6755435757:AAEdJcrtEuEmYz2feDl0I0bG5fbf5MpFGoA"
 
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+
+logging.info("started")
 bot = TeleBot(TOKEN)
 
 
@@ -37,4 +41,5 @@ def add_bot_command(message: Message):
     new_channel_request(message.chat.id, message.message_id, code, message.chat.type == "group")
 
 
+logging.info("entering infinity poll")
 bot.infinity_polling()

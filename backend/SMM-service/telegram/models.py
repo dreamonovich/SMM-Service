@@ -13,8 +13,8 @@ class TelegramPost(models.Model):
 
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
     telegram_channel = models.ForeignKey(Channel, on_delete=models.CASCADE)
-    channel_name = models.CharField(max_length=100)
-    message_id = models.BigIntegerField()
+
+    message_id = models.BigIntegerField(null=True)
     posted_at = models.DateTimeField(null=True, default=None)
 
     status = models.CharField(max_length=3, choices=STATUS, default="pending")

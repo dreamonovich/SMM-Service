@@ -8,6 +8,7 @@ from django.core.exceptions import ObjectDoesNotExist
 
 import json
 
+from telegram.models import TelegramPost
 from .models import Post, PostFile, PostPhoto
 from .serializers import PostSerializer, PostCreateFileSerializer, PostCreatePhotoSerializer
 
@@ -67,17 +68,19 @@ class PostMediaDeleteView(DestroyAPIView):
 
         return Response({})
 
-class CreateTaskView(APIView):
+
+class CreateTasksView(APIView):
     def post(self, request, post_id):
         try:
             post = Post.objects.get(pk=post_id)
-            send_planned_at = post.send_planned_at
+            post.status = "APPROVED"
+            post.save(updated_fields=("status",))
 
             channels = post.workspace.channels.all()
-            channel_ids = [channel.chat_id for channel in channels]
 
-            for channel_id in channel_ids:
-                send_telegram_post.apply_async((channel_id,), eta=send_planned_at - timedelta(hours=3))
+            for channel in channels:
+                telegram_post = TelegramPost.objects.create(post=post, telegram_channel=channel)
+                send_telegram_post.apply_async((telegram_post,), eta=post.send_planned_at - timedelta(hours=3))
 
             return Response({})
         except ObjectDoesNotExist:
