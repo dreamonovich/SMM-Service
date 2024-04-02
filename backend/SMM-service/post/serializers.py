@@ -112,7 +112,7 @@ class PostSerializer(CheckPermissionAndGetWorkspaceMixin, CreateMediaMixin, seri
 
         group = Channel.objects.filter(workspace=workspace.id, is_group=True).first()
 
-        send_message(group.chat_id, new_post.text, new_post.id, photos=photos, files=files)
+        send_message(group.chat_id, new_post.text, photos, files, post_id=new_post.id)
 
         return new_post
 
