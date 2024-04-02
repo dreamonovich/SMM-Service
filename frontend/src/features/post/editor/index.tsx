@@ -167,17 +167,25 @@ export const PostEditor = () => {
         </Popover>
         <Input
           placeholder="Час"
+          min={0}
+          max={23}
           onChange={(e) => {
             const date = new Date(selectedPost?.send_planned_at || new Date());
-            date.setHours(+e.target.value);
+            const hours = +e.target.value
+            if (hours < 0 || hours > 23) return;
+            date.setHours(hours);
             updateSelected({ send_planned_at: date.toISOString() });
           }}
         />
         <Input
           placeholder="Минуты"
+          min={0}
+          max={59}
           onChange={(e) => {
             const date = new Date(selectedPost?.send_planned_at || new Date());
-            date.setMinutes(+e.target.value);
+            const minute = +e.target.value
+            if (minute < 0 || minute > 59) return;
+            date.setMinutes(minute);
             updateSelected({ send_planned_at: date.toISOString() });
           }}
         />
