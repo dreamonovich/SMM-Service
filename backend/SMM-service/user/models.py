@@ -7,7 +7,7 @@ class User(AbstractBaseUser):
     name = models.CharField(max_length=64)
     telegram_id = models.BigIntegerField(unique=True)
     telegram_username = models.CharField(max_length=32)
-    avatar = models.FileField(null=True, default=None, upload_to='user/avatars/')
+    avatar = models.CharField(null=True, default=None)
     last_logged_in = models.DateTimeField(default=timezone.now, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     password = None
