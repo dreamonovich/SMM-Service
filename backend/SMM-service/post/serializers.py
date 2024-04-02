@@ -9,7 +9,7 @@ from user.models import User
 from .models import Workspace, Post, PostPhoto, PostFile
 from .utils import send_message
 from channel.models import Channel
-гешды
+
 
 class CheckPermissionAndGetPostMixin:
     def check_permissions_and_get_post(self) -> tuple[User, Post]:
