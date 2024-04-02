@@ -42,6 +42,7 @@ export const AddMember = () => {
       setInviteLink(`http://localhost:5173/invite/${data.link}`);
     })();
   }, []);
+  
   const leaveTeam = async (id: number) => {
     await fetch(API_URL + "/workspace/" + id + "/leave", {
       method: "POST",
