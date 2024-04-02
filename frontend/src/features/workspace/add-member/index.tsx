@@ -4,7 +4,7 @@ import { API_URL, TOKEN_HEADER } from "@/shared/lib/constants";
 import { Avatar, AvatarFallback, AvatarImage } from "@/shared/ui/avatar";
 import { Button } from "@/shared/ui/button";
 import { useEffect, useMemo, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 export const AddMember = () => {
   const navigate = useNavigate();
@@ -66,9 +66,12 @@ export const AddMember = () => {
     });
     if (res.ok) {
       const workspaces = await fetchWorkspaces();
-
+      if (!workspaces.length){
+        navigate(`/workspaces/create`)
+      }
       navigate(`/workspaces/${workspaces[0].id}`);
     }
+    else{alert("Не удалось удалить рабочее пространство")}
   };
 
   const deleteFromTeam = async (userId: number) => {
@@ -134,7 +137,7 @@ export const AddMember = () => {
                       </div>
                     </div>
                   </div>
-                  {user.id != member.id ? (
+                  {user?.id != member?.id ? (
                     creator && (
                       <Button onClick={() => deleteFromTeam(member.id)}>
                         Удалить

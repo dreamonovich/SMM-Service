@@ -15,10 +15,12 @@ export const WorkspacePage = () => {
   const { id } = useParams();
 
   const { selectedPost, setSelectedPost } = usePostStore();
-  const { selectedWorkspace } = useWorkspaceStore();
+  const { selectedWorkspace, fetchChannels } = useWorkspaceStore();
   const [posts, setPosts] = useState([]);
+
   useEffect(() => {
-    if (!id) return;
+    if (!id) return
+    fetchChannels(Number(id));
 
     (async () => {
       const res = await fetch(API_URL + `/workspace/${id}/posts`, {

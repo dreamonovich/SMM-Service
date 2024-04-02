@@ -7,6 +7,8 @@ from rest_framework.fields import SerializerMethodField
 
 from user.models import User
 from .models import Workspace, Post, PostPhoto, PostFile
+from .utils import send_message
+from channel.models import Channel
 
 
 class CheckPermissionAndGetPostMixin:
@@ -105,6 +107,13 @@ class PostSerializer(CheckPermissionAndGetWorkspaceMixin, CreateMediaMixin, seri
         self.create_media(new_post, PostPhoto, 'photos')
         self.create_media(new_post, PostFile, 'files')
 
+        photos = PostPhoto.objects.filter(post=new_post)
+        files = PostFile.objects.filter(post=new_post)
+
+        group = Channel.objects.filter(workspace=workspace.id, is_group=True).first()
+
+        send_message(group.chat_id, new_post.text, new_post.id, photos=photos, files=files)
+
         return new_post
 
     def get_photos(self, obj):
@@ -118,5 +127,5 @@ class PostSerializer(CheckPermissionAndGetWorkspaceMixin, CreateMediaMixin, seri
 
     class Meta:
         model = Post
-        read_only_fields = ("id", "creator", "workspace", "modified_at", "created_at", "photos", "files")
+        read_only_fields = ("id", "creator", "workspace", "modified_at", "created_at", "photos", "files", "status")
         fields = read_only_fields + ("name", "text", "send_planned_at", "number_of_confirmations")

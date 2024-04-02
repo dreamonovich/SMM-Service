@@ -28,7 +28,7 @@ class WorkspaceChannels(APIView):
             channels = Channel.objects.filter(workspace_id=workspace_id)
             workspace_data = {}
             for channel in channels:
-                telegram_posts = TelegramPost.objects.filter(telegram_channel=channel)
+                telegram_posts = TelegramPost.objects.filter(telegram_channel=channel).all()
                 telegram_post_serializer = TelegramPostSerializer(telegram_posts, many=True)
                 workspace_data[channel.name] = telegram_post_serializer.data
 

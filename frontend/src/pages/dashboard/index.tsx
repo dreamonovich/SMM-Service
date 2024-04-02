@@ -11,13 +11,15 @@ export const Dashboard = () => {
   useEffect(() => {
     const lastOpenWorkspace = localStorage.getItem("last_open_workspace_id");
 
-    if (lastOpenWorkspace) {
-      navigate(`/workspaces/${lastOpenWorkspace}`);
-    } else {
-      if (!workspaces || !workspaces.length) return;
-      const id = workspaces![0].id! ?? 0
-      navigate(`/workspaces/${id}`)
-    }
+    (async () => {
+      if (lastOpenWorkspace) {
+        navigate(`/workspaces/${lastOpenWorkspace}`);
+      } else {
+        if (!workspaces || !workspaces.length) return;
+        const id = workspaces![0].id! ?? 0
+        navigate(`/workspaces/${id}`)
+      }  
+    })()
   }, [workspaces]);
   return (
     <div className="w-full h-full flex justify-center pt-4">

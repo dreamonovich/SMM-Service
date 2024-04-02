@@ -1,14 +1,14 @@
 from rest_framework.exceptions import ValidationError
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView, CreateAPIView, DestroyAPIView
+from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
-from django.http import JsonResponse
-from django.views import View
 from django.core.exceptions import ObjectDoesNotExist
 
 import json
 
+from telegram.models import TelegramPost
 from .models import Post, PostFile, PostPhoto
 from .serializers import PostSerializer, PostCreateFileSerializer, PostCreatePhotoSerializer
 
@@ -68,20 +68,18 @@ class PostMediaDeleteView(DestroyAPIView):
 
         return Response({})
 
-class CreateTaskView(View):
-    def post(self, request):
-        if not (post_id := request.POST.get('post_id')):
-            raise ValidationError("post_id required")
 
+class CreateTasksView(APIView):
+    def post(self, request, post_id):
         try:
             post = Post.objects.get(pk=post_id)
-            send_planned_at = post.send_planned_at
 
             channels = post.workspace.channels.all()
-            channel_ids = [channel.chat_id for channel in channels]
 
-            for channel_id in channel_ids:
-                send_telegram_post.apply_async((channel_id,), eta=send_planned_at - timedelta(hours=3))
+            for channel in channels:
+                telegram_post = TelegramPost.objects.create(post=post, telegram_channel=channel)
+                send_telegram_post.apply_async((telegram_post,), eta=post.send_planned_at - timedelta(hours=3))
 
+            return Response({})
         except ObjectDoesNotExist:
-            return JsonResponse({'error': f'post: {post_id} does not exist'}, status=404)
+            return Response({'error': f'post: {post_id} does not exist'}, status=404)
