@@ -9,13 +9,15 @@ export type Workspace = {
   creator_user: any;
 };
 
+export type Stat = any
+
 export interface IWorkspaceStore {
   workspaces: Workspace[];
   setWorkspaces: (workspaces: Workspace[]) => void;
   fetchWorkspaces: () => Promise<Workspace[]>;
   selectedWorkspace: Workspace | null;
   setSelectedWorkspace: (workspace: Workspace) => void;
-  fetchWorkspaceById: (id: string) => Promise<void>;
+  fetchWorkspaceById: (id: string) => Promise<Workspace | null>;
 
   channels: Channel[];
   setChannels: (channels: Channel[]) => void;
@@ -24,6 +26,10 @@ export interface IWorkspaceStore {
   posts: Post[];
   setPosts: (posts: Post[]) => void;
   fetchPosts: (workspaceId: number) => Promise<void>;
+
+  stats: Stat[];
+  setStats: (posts: Stat[]) => void;
+  fetchStats: (workspaceId: number) => Promise<void>;
 }
 
 export const useWorkspaceStore = create<IWorkspaceStore>((set) => ({
@@ -48,8 +54,11 @@ export const useWorkspaceStore = create<IWorkspaceStore>((set) => ({
       },
     });
     const data = await res.json();
-
+    if (!res.ok){
+      return null
+    }
     set({ selectedWorkspace: data });
+    return data
   },
 
   channels: [],
@@ -76,6 +85,19 @@ export const useWorkspaceStore = create<IWorkspaceStore>((set) => ({
     });
     const data = await response.json();
     set({ posts: data });
+    
+  },
+  stats: [],
+  setStats: (stats) => set({ stats }),
+  fetchStats: async (id: number) => {
+    const response = await fetch(API_URL + "/workspace/" + id + "/analytics", {
+      method: "GET",
+      headers: {
+        Authorization: TOKEN_HEADER,
+      },
+    });
+    const data = await response.json();
+    set({ stats: data });
     
   }
 }));
