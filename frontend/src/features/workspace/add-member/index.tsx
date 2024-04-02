@@ -2,7 +2,6 @@ import { useWorkspaceStore } from "@/entities/workspace";
 import { API_URL, TOKEN_HEADER } from "@/shared/lib/constants";
 import { Avatar, AvatarFallback, AvatarImage } from "@/shared/ui/avatar";
 import { Button } from "@/shared/ui/button";
-import { Input } from "@/shared/ui/input";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 

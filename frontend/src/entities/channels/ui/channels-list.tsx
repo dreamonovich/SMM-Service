@@ -69,7 +69,7 @@ export const ChannelsList = ({ items }: { items: Channel[] }) => {
     <ScrollArea className="h-full w-full">
       <div className="flex flex-col gap-2 pt-0 pr-2">
         {items.map((item) => (
-          <button
+          <div
             key={item.id}
             className={cn(
               "flex flex-col items-start gap-2 rounded-lg border p-3 text-left text-sm transition-all w-full hover:bg-accent",
@@ -126,7 +126,7 @@ export const ChannelsList = ({ items }: { items: Channel[] }) => {
                 </DialogContent>
               </Dialog>
             </div>
-          </button>
+          </div>
         ))}
       </div>
     </ScrollArea>
