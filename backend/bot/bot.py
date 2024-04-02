@@ -23,7 +23,7 @@ def callback(call: CallbackQuery):
         bot.delete_message(call.message.chat.id, call.message.message_id)
         bot.send_message(call.message.chat.id, "*Пост отклонен*", parse_mode="Markdown")
 
-    elif call.data == "post_approve":
+    elif call.data.startswith("post_approve"):
         approve(call.message.from_user.id, post_id)
         try:
             approval, number_of_confirmations = get_approves(post_id)
