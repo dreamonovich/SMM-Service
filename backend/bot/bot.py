@@ -24,6 +24,7 @@ def callback(call: CallbackQuery):
         bot.send_message(call.message.chat.id, "*Пост отклонен*", parse_mode="Markdown")
 
     elif call.data.startswith("post_approve"):
+        print("gothegit")
         approve(call.message.from_user.id, post_id)
         try:
             approval, number_of_confirmations = get_approves(post_id)
