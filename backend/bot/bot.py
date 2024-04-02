@@ -38,8 +38,8 @@ def callback(call: CallbackQuery):
             keyboard.add(InlineKeyboardButton(f"✅Принять{approval}/{number_of_confirmations}", callback_data=call.data),
                          InlineKeyboardButton(f"🚫Отклонить", callback_data=call.data))
             bot.edit_message_reply_markup(call.message.chat.id, call.message.message_id, reply_markup=keyboard)
-        except:
-            pass
+        except Exception as e:
+            print(e)
 
 
 @bot.channel_post_handler(commands=["add_bot"])
