@@ -23,7 +23,7 @@ class WorkspacePostListCreateView(ListCreateAPIView):
         if not (workspace_id := self.kwargs.get('workspace_id')):
             raise ValidationError("workspace_id is required")
 
-        return Post.objects.filter(workspace_id=workspace_id, workspace__members__in=(self.request.user,))
+        return Post.objects.filter(workspace_id=workspace_id, workspace__members__in=(self.request.user,)).order_by("-created_at")
 
 
 class PostRetrieveUpdateDeleteView(RetrieveUpdateDestroyAPIView):
