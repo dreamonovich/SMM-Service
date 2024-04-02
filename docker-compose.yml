@@ -79,10 +79,8 @@ services:
       - postgres
       - rabbitmq
     restart: always
-    volumes:
-      - ./backend:/app
     working_dir: /app/SMM-service
-    command: "python3 -m celery -A application worker -l INFO "
+    command: "python3 -m celery -A application worker -l INFO"
 
   minio:
     image: minio/minio
