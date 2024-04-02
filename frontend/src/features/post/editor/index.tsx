@@ -246,8 +246,9 @@ export const PostEditor = () => {
           })}
         </div>
       )}
-      <div className="flex gap-1 items-center">
-        <Checkbox checked={sendNow} onCheckedChange={e => setSendNow(Boolean(sendNow))} />
+      <div className="flex gap-2 items-center">
+        <Checkbox checked={sendNow} onCheckedChange={e => setSendNow(Boolean(e))} />
+        Опубликовать сейчас
       </div>
       <Button
         onClick={async () => {
