@@ -31,7 +31,7 @@ class ChannelListCreate(ListCreateAPIView):
         delete_message(channel_request.chat_id, channel_request.message_id)
 
         workspace = Workspace.objects.filter(id=workspace_id).first()
-        workspace.channels.add(workspace)
+        workspace.channels.add(new_channel)
         workspace.save()
 
         channel_request.delete()
