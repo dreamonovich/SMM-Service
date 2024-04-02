@@ -77,15 +77,13 @@ export const useWorkspaceStore = create<IWorkspaceStore>((set) => ({
   posts: [],
   setPosts: (posts) => set({ posts }),
   fetchPosts: async (id: number) => {
-    const response = await fetch(API_URL + "/workspace/" + id + "/posts", {
-      method: "GET",
+    const res = await fetch(API_URL + "/workspace/" + id + "/posts", {
       headers: {
         Authorization: TOKEN_HEADER,
       },
     });
-    const data = await response.json();
+    const data = await res.json();
     set({ posts: data });
-    
   },
   stats: [],
   setStats: (stats) => set({ stats }),

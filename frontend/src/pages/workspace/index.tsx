@@ -19,9 +19,9 @@ export const WorkspacePage = () => {
 
   useEffect(() => {
     if (!id) return;
-    fetchChannels(Number(id));
-
+    
     (async () => {
+      await fetchChannels(Number(id));
       await fetchPosts(+id);
       setIsLoading(false);
     })();
