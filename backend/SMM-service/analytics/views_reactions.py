@@ -10,7 +10,7 @@ def count_views(channel, id):
         bs = bs4.BeautifulSoup(response.text, 'html.parser')
         print(bs)
         views_element = bs.find(class_='tgme_widget_message_views')
-
+        print(views_element, "count views")
         if views_element:
             views = views_element.text
             if 'K' in views:
@@ -36,7 +36,7 @@ def update_workspace_data(workspace_data):
 
                 # Добавляем данные о просмотрах к текущему посту
                 post["views"] = views
-
+        print(workspace_data, "create")
         return workspace_data
     # except Exception as e:
     #     print("Error:", e)
