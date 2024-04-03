@@ -20,6 +20,7 @@ import {
 } from "@/shared/ui/alert-dialog";
 import MDEditor from "@uiw/react-md-editor";
 import { AIButtons } from "./ai";
+import { IoMdClose } from "react-icons/io";
 
 export const PostEditor = () => {
   const { selectedPost, updateSelected, setSelectedPost } = usePostStore();
@@ -65,7 +66,18 @@ export const PostEditor = () => {
       // setSelectedPost(null);
     }
   };
-
+  const del = async () => {
+    const res = await fetch(API_URL + `/post/${selectedPost?.id}`, {
+      method: "DELETE",
+      headers: {
+        Authorization: TOKEN_HEADER,
+      },
+    });
+    if (res.ok) {
+      await fetchPosts(Number(selectedWorkspace?.id));
+      setSelectedPost(null);
+    }
+  };
   const update = async () => {
     const formData = new FormData();
 
@@ -122,9 +134,14 @@ export const PostEditor = () => {
 
   return (
     <div className="grid w-full gap-2 p-2">
-      <h3 className="text-2xl">
-        {selectedPost?.create ? "Создание поста" : "Редактирование поста"}
-      </h3>
+      <div className="flex justify-between items-center">
+        <h3 className="text-2xl">
+          {selectedPost?.create ? "Создание поста" : "Редактирование поста"}
+        </h3>
+        <button onClick={() => setSelectedPost(null)}>
+          <IoMdClose />
+        </button>
+      </div>
       <Input
         placeholder="Название поста..."
         value={selectedPost?.name || ""}
@@ -245,6 +262,15 @@ export const PostEditor = () => {
       >
         {selectedPost?.create ? "Создать" : "Сохранить"}
       </Button>
+      {!selectedPost?.create ? (
+        <Button
+          onClick={async () => {
+            del();
+          }}
+        >
+          Удалить
+        </Button>
+      ) : null}
     </div>
   );
 };
