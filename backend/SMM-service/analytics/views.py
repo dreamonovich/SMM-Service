@@ -10,6 +10,11 @@ from analytics.views_reactions import update_workspace_data, update_workspace_da
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
 
+import logging
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+
+logging.info("started")
+
 
 # @permission_classes([IsAuthenticated])
 class AnalyticsWorkspaceChannels(APIView):
@@ -24,10 +29,11 @@ class AnalyticsWorkspaceChannels(APIView):
         ]
     )
     def get(self, request, workspace_id):
-
+        logging.info("analytic")
         channels = Channel.objects.filter(workspace_id=workspace_id).all()
         workspace_data = {}
         print(channels)
+        logging.info(channels)
         for channel in channels:
             telegram_posts = TelegramPost.objects.filter(telegram_channel=channel).all()
             telegram_post_serializer = TelegramPostSerializer(telegram_posts, many=True)
