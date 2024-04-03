@@ -22,6 +22,7 @@ import MDEditor from "@uiw/react-md-editor";
 import { AIButtons } from "./ai";
 import { Checkbox } from "@/shared/ui/checkbox";
 import { useToast } from "@/shared/ui/use-toast";
+import { IoMdClose } from "react-icons/io";
 
 export const PostEditor = () => {
   const { selectedPost, updateSelected, setSelectedPost } = usePostStore();
@@ -31,12 +32,12 @@ export const PostEditor = () => {
   const [files, setFiles] = useState<File[]>([]);
   const [sendNow, setSendNow] = useState(false);
 
-  const {toast} = useToast();
+  const { toast } = useToast();
 
   const create = async () => {
     const formData = new FormData();
-    let date = new Date(selectedPost?.send_planned_at! || new Date());
-    date.setSeconds(0)
+    let date = new Date(selectedPost?.send_planned_at || new Date());
+    date.setSeconds(0);
 
     if (sendNow) {
       date = new Date();
@@ -49,10 +50,7 @@ export const PostEditor = () => {
       "number_of_confirmations",
       String(selectedPost?.number_of_confirmations)
     );
-    formData.append(
-      "send_planned_at",
-      date.toISOString(),
-    );
+    formData.append("send_planned_at", date.toISOString());
 
     for (const image of images) {
       formData.append("photos", image);
@@ -75,18 +73,30 @@ export const PostEditor = () => {
     if (res.ok) {
       await fetchPosts(Number(selectedWorkspace?.id));
       toast({
-        title: 'Пост добавлен',
-        description: 'Пост будет опубликован в ' + date.toLocaleString(),
+        title: "Пост добавлен",
+        description: "Пост будет опубликован в " + date.toLocaleString(),
         duration: 3000,
-      })
+      });
+      setSelectedPost(null);
+    }
+  };
+  const del = async () => {
+    const res = await fetch(API_URL + `/post/${selectedPost?.id}`, {
+      method: "DELETE",
+      headers: {
+        Authorization: TOKEN_HEADER,
+      },
+    });
+    if (res.ok) {
+      await fetchPosts(Number(selectedWorkspace?.id));
       setSelectedPost(null);
     }
   };
 
   const update = async () => {
     const formData = new FormData();
-    let date = new Date(selectedPost?.send_planned_at! || new Date());
-    date.setSeconds(0)
+    let date = new Date(selectedPost?.send_planned_at || new Date());
+    date.setSeconds(0);
 
     if (sendNow) {
       date = new Date();
@@ -99,10 +109,7 @@ export const PostEditor = () => {
       "number_of_confirmations",
       String(selectedPost?.number_of_confirmations || 0)
     );
-    formData.append(
-      "send_planned_at",
-      date.toISOString(),
-    );
+    formData.append("send_planned_at", date.toISOString());
 
     const res = await fetch(API_URL + `/post/${selectedPost?.id}`, {
       method: "PATCH",
@@ -146,9 +153,14 @@ export const PostEditor = () => {
 
   return (
     <div className="grid w-full gap-2 p-2">
-      <h3 className="text-2xl">
-        {selectedPost?.create ? "Создание поста" : "Редактирование поста"}
-      </h3>
+      <div className="flex justify-between items-center">
+        <h3 className="text-2xl">
+          {selectedPost?.create ? "Создание поста" : "Редактирование поста"}
+        </h3>
+        <button onClick={() => setSelectedPost(null)}>
+          <IoMdClose />
+        </button>
+      </div>
       <Input
         placeholder="Название поста..."
         value={selectedPost?.name || ""}
@@ -263,7 +275,10 @@ export const PostEditor = () => {
         </div>
       )}
       <div className="flex gap-2 items-center">
-        <Checkbox checked={sendNow} onCheckedChange={e => setSendNow(Boolean(e))} />
+        <Checkbox
+          checked={sendNow}
+          onCheckedChange={(e) => setSendNow(Boolean(e))}
+        />
         Опубликовать сейчас
       </div>
       <Button
@@ -273,6 +288,15 @@ export const PostEditor = () => {
       >
         {selectedPost?.create ? "Создать" : "Сохранить"}
       </Button>
+      {!selectedPost?.create ? (
+        <Button
+          onClick={async () => {
+            del();
+          }}
+        >
+          Удалить
+        </Button>
+      ) : null}
     </div>
   );
 };
