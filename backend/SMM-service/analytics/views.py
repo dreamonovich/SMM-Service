@@ -6,13 +6,18 @@ from rest_framework.decorators import permission_classes
 from channel.models import Channel
 from telegram.models import TelegramPost
 from analytics.serializers import TelegramPostSerializer
-from analytics.views_reactions import update_workspace_data,update_workspace_data_list
+from analytics.views_reactions import update_workspace_data, update_workspace_data_list
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
 
+import logging
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+
+logging.info("started")
+
 
 # @permission_classes([IsAuthenticated])
-class WorkspaceChannels(APIView):
+class AnalyticsWorkspaceChannels(APIView):
     @swagger_auto_schema(
         manual_parameters=[
             openapi.Parameter(
@@ -24,20 +29,24 @@ class WorkspaceChannels(APIView):
         ]
     )
     def get(self, request, workspace_id):
-        # try:
-            channels = Channel.objects.filter(workspace_id=workspace_id)
-            workspace_data = {}
-            for channel in channels:
-                telegram_posts = TelegramPost.objects.filter(telegram_channel=channel).all()
-                telegram_post_serializer = TelegramPostSerializer(telegram_posts, many=True)
-                workspace_data[channel.name] = telegram_post_serializer.data
-            print(workspace_data)
-            updated_workspace_data = update_workspace_data(workspace_data)
-            updated_workspace_data = update_workspace_data_list(updated_workspace_data)
-            if updated_workspace_data:
-                return Response({"workspace_data": updated_workspace_data}, status=status.HTTP_200_OK)
-            else:
-                return Response({"error": "Failed to update workspace data"},
-                                status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-        # except Exception as e:
-        #     return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        logging.info("analytic")
+        channels = Channel.objects.filter(workspace_id=workspace_id).all()
+        workspace_data = {}
+        print(channels)
+        logging.info(channels)
+        for channel in channels:
+            telegram_posts = TelegramPost.objects.filter(telegram_channel=channel).all()
+            telegram_post_serializer = TelegramPostSerializer(telegram_posts, many=True)
+
+            posts_with_channel_username = []
+            for post_data in telegram_post_serializer.data:
+                if not channel.is_group:
+                    post_data['channel_name'] = channel.channel_username
+                    posts_with_channel_username.append(post_data)
+
+            workspace_data[channel.name] = posts_with_channel_username
+        print(workspace_data)
+        updated_workspace_data = update_workspace_data(workspace_data)
+        updated_workspace_data = update_workspace_data_list(updated_workspace_data)
+
+        return Response({"workspace_data": updated_workspace_data}, status=status.HTTP_200_OK)
