@@ -23,7 +23,7 @@ class WorkspacePostListCreateView(ListCreateAPIView):
         if not (workspace_id := self.kwargs.get('workspace_id')):
             raise ValidationError("workspace_id is required")
 
-        return Post.objects.filter(workspace_id=workspace_id, workspace__members__in=(self.request.user,))
+        return Post.objects.filter(workspace_id=workspace_id, workspace__members__in=(self.request.user,)).order_by("-created_at")
 
 
 class PostRetrieveUpdateDeleteView(RetrieveUpdateDestroyAPIView):
@@ -77,7 +77,7 @@ class CreateTasksView(APIView):
 
             for channel in channels:
                 telegram_post = TelegramPost.objects.create(post_id=post.id, telegram_channel=channel)
-                send_telegram_post.apply_async((telegram_post.id,), eta=post.send_planned_at - timedelta(hours=3))
+                send_telegram_post.apply_async((telegram_post.id,), eta=post.send_planned_at)
 
             return Response({})
         except ObjectDoesNotExist:

@@ -20,6 +20,8 @@ import {
 } from "@/shared/ui/alert-dialog";
 import MDEditor from "@uiw/react-md-editor";
 import { AIButtons } from "./ai";
+import { Checkbox } from "@/shared/ui/checkbox";
+import { useToast } from "@/shared/ui/use-toast";
 import { IoMdClose } from "react-icons/io";
 
 export const PostEditor = () => {
@@ -28,9 +30,19 @@ export const PostEditor = () => {
     useWorkspaceStore();
   const [images, setImages] = useState<File[]>([]);
   const [files, setFiles] = useState<File[]>([]);
+  const [sendNow, setSendNow] = useState(false);
+
+  const { toast } = useToast();
 
   const create = async () => {
     const formData = new FormData();
+    let date = new Date(selectedPost?.send_planned_at || new Date());
+    date.setSeconds(0);
+
+    if (sendNow) {
+      date = new Date();
+      date.setSeconds(date.getSeconds() + 3);
+    }
 
     formData.append("name", selectedPost?.name || "");
     formData.append("text", selectedPost?.text || "");
@@ -38,10 +50,7 @@ export const PostEditor = () => {
       "number_of_confirmations",
       String(selectedPost?.number_of_confirmations)
     );
-    formData.append(
-      "send_planned_at",
-      selectedPost?.send_planned_at || new Date().toISOString()
-    );
+    formData.append("send_planned_at", date.toISOString());
 
     for (const image of images) {
       formData.append("photos", image);
@@ -63,7 +72,12 @@ export const PostEditor = () => {
 
     if (res.ok) {
       await fetchPosts(Number(selectedWorkspace?.id));
-      // setSelectedPost(null);
+      toast({
+        title: "Пост добавлен",
+        description: "Пост будет опубликован в " + date.toLocaleString(),
+        duration: 3000,
+      });
+      setSelectedPost(null);
     }
   };
   const del = async () => {
@@ -78,8 +92,16 @@ export const PostEditor = () => {
       setSelectedPost(null);
     }
   };
+
   const update = async () => {
     const formData = new FormData();
+    let date = new Date(selectedPost?.send_planned_at || new Date());
+    date.setSeconds(0);
+
+    if (sendNow) {
+      date = new Date();
+      date.setSeconds(date.getSeconds() + 3);
+    }
 
     formData.append("name", selectedPost?.name || "");
     formData.append("text", selectedPost?.text || "");
@@ -87,10 +109,7 @@ export const PostEditor = () => {
       "number_of_confirmations",
       String(selectedPost?.number_of_confirmations || 0)
     );
-    formData.append(
-      "send_planned_at",
-      selectedPost?.send_planned_at || new Date().toISOString()
-    );
+    formData.append("send_planned_at", date.toISOString());
 
     const res = await fetch(API_URL + `/post/${selectedPost?.id}`, {
       method: "PATCH",
@@ -255,6 +274,13 @@ export const PostEditor = () => {
           })}
         </div>
       )}
+      <div className="flex gap-2 items-center">
+        <Checkbox
+          checked={sendNow}
+          onCheckedChange={(e) => setSendNow(Boolean(e))}
+        />
+        Опубликовать сейчас
+      </div>
       <Button
         onClick={async () => {
           selectedPost?.create ? create() : update();

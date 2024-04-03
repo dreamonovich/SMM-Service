@@ -54,6 +54,8 @@ export const AddChannel: FC<AddChannelProps> = ({}) => {
         setStep(1);
       } else {
         ws.fetchChannels(+selectedWorkspace?.id!);
+        setStep(0)
+        setCode('')
         setIsOpen(false);
       }
     }

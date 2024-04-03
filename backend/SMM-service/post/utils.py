@@ -1,9 +1,7 @@
 import os
-import tempfile
-
 from telebot import TeleBot
 from telebot.types import InputMediaPhoto, InputFile, InlineKeyboardMarkup, InlineKeyboardButton
-from io import BytesIO
+from telegramify_markdown import convert
 
 TOKEN = "6755435757:AAEdJcrtEuEmYz2feDl0I0bG5fbf5MpFGoA"
 
@@ -11,6 +9,7 @@ bot = TeleBot(TOKEN)
 
 
 def send_message(chat_id, text, photos=None, files=None, post_id=None, is_send_confirmation=True):
+    text = convert(text)
     if photos is None:
         photos = []
     if files is None:
@@ -19,7 +18,7 @@ def send_message(chat_id, text, photos=None, files=None, post_id=None, is_send_c
         photo_group = [InputMediaPhoto(photo.photo.file.read(), caption=text) for photo in photos]
         bot.send_media_group(chat_id, photo_group)
     else:
-        bot.send_message(chat_id, text, parse_mode="Markdown")
+        bot.send_message(chat_id, text, parse_mode="MarkdownV2")
     for file in files:
         file_path = os.path.join('/tmp', file.file.file.name.split("/")[-1].split("jopalexi")[-1])
         with open(file_path, 'wb') as tmp_file:
