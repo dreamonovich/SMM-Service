@@ -39,11 +39,7 @@ class WorkspaceChannels(APIView):
 
             workspace_data[channel.name] = posts_with_channel_username
 
-
         updated_workspace_data = update_workspace_data(workspace_data)
         updated_workspace_data = update_workspace_data_list(updated_workspace_data)
-        if updated_workspace_data:
-            return Response({"workspace_data": updated_workspace_data}, status=status.HTTP_200_OK)
-        else:
-            return Response({"error": "Failed to update workspace data"},
-                            status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+        return Response({"workspace_data": updated_workspace_data}, status=status.HTTP_200_OK)

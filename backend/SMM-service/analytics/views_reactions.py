@@ -42,6 +42,7 @@ def update_workspace_data(workspace_data):
     #     print("Error:", e)
     #     return None
 
+
 def update_workspace_data_list(workspace_data):
     updated_workspace_data = []
     for channel_name, posts in workspace_data.items():
