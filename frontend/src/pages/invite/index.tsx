@@ -5,22 +5,21 @@ import { useNavigate, useParams } from "react-router-dom";
 export const Invite = () => {
   const { invitelink } = useParams();
   const navigate = useNavigate();
-  const options = {
-    method: "GET",
-    headers: {
-      Authorization: TOKEN_HEADER,
-      "Content-Type": "application/json",
-    },
-  };
   const onClickJoin = async () => {
       const res = await fetch(
         API_URL + "/workspace/join/" + invitelink,
-        options
+        {
+          method: "GET",
+          headers: {
+            Authorization: TOKEN_HEADER,
+            "Content-Type": "application/json",
+          },
+        }
       );
       console.log(res);
       if (res.ok) {
         navigate("/");
-      }
+      } 
     };
 
   return (

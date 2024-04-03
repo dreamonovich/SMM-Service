@@ -1,15 +1,28 @@
 import { cn } from "@/shared/lib";
+import { API_URL, TOKEN_HEADER } from "@/shared/lib/constants";
 import { buttonVariants } from "@/shared/ui/button";
 import { useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export const LoginPage = () => {
   const { t } = useTranslation();
-
+  const navigate = useNavigate()
   const scriptRef = useRef<HTMLDivElement>(null);
-
   useEffect(() => {
+    (async () => {
+      const res = await fetch(API_URL + "/me", {
+        headers: {
+          Authorization: TOKEN_HEADER,
+        },
+      });
+      if (res.ok) {
+        navigate("/");
+      }
+    })();
+  }, []);
+  useEffect(() => {
+    
     if (!scriptRef.current) return;
     const script = document.createElement("script");
     script.src = "https://telegram.org/js/telegram-widget.js?22";

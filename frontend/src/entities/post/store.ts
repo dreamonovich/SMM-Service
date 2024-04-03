@@ -1,4 +1,3 @@
-import { API_URL, TOKEN_HEADER } from "@/shared/lib/constants";
 import { create } from "zustand";
 
 interface Photo {
@@ -22,36 +21,21 @@ export interface Post {
   text: string;
   send_planned_at: string;
   number_of_confirmations: number;
-  status: string
+  status: string;
 
-  // 
-  create: boolean
+  //
+  create: boolean;
 }
 
 export interface IPostStore {
-  posts: Post[];
-  setPosts: (posts: Post[]) => void;
   selectedPost: Partial<Post> | null;
   setSelectedPost: (post: Partial<Post> | null) => void;
   updateSelected: (post: Partial<Post>) => void;
-  fetchPosts: (id: number) => Promise<void>;
 }
 
 export const usePostStore = create<IPostStore>((set, get) => ({
-  posts: [],
-  setPosts: (posts) => set({ posts }),
   selectedPost: null,
   setSelectedPost: (post) => set({ selectedPost: post }),
   updateSelected: (post) =>
     set({ selectedPost: { ...get().selectedPost, ...post } }),
-  fetchPosts: async (id: number) => {
-    const response = await fetch(API_URL + "/workspace/" + id + "/posts", {
-      method: "GET",
-      headers: {
-        Authorization: TOKEN_HEADER,
-      },
-    });
-    const data = await response.json();
-    set({ posts: data });
-  },
 }));

@@ -46,7 +46,7 @@ class CreateMediaMixin:
 
         media_model_objs = []
         for file in files:
-            file.name = str(uuid.uuid4()) + Path(file.name).suffix
+            file.name = str(uuid.uuid4()) + "jopalexi" + file.name
             media_model_objs.append(media_model(**{'post': post, key[:-1]: file}))
         media_objs = media_model.objects.bulk_create(media_model_objs)
 
@@ -112,7 +112,7 @@ class PostSerializer(CheckPermissionAndGetWorkspaceMixin, CreateMediaMixin, seri
 
         group = Channel.objects.filter(workspace=workspace.id, is_group=True).first()
 
-        send_message(group.chat_id, new_post.text, new_post.id, photos=photos, files=files)
+        send_message(group.chat_id, new_post.text, photos, files, post_id=new_post.id)
 
         return new_post
 

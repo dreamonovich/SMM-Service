@@ -19,27 +19,30 @@ import {
   AlertDialogAction,
 } from "@/shared/ui/alert-dialog";
 import MDEditor from "@uiw/react-md-editor";
-import { Icons } from "@/shared/ui/icons";
+import { AIButtons } from "./ai";
+import { Checkbox } from "@/shared/ui/checkbox";
 
 export const PostEditor = () => {
-  const { selectedPost, updateSelected, setSelectedPost, fetchPosts } =
-    usePostStore();
-  const { selectedWorkspace, channels, fetchChannels } = useWorkspaceStore();
+  const { selectedPost, updateSelected, setSelectedPost } = usePostStore();
+  const { selectedWorkspace, channels, fetchChannels, fetchPosts } =
+    useWorkspaceStore();
   const [images, setImages] = useState<File[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [query, setQuery] = useState('');
   const [files, setFiles] = useState<File[]>([]);
+  const [sendNow, setSendNow] = useState(false);
 
   const create = async () => {
     const formData = new FormData();
 
-    formData.append("name", selectedPost?.name!);
-    formData.append("text", selectedPost?.text!);
+    formData.append("name", selectedPost?.name || "");
+    formData.append("text", selectedPost?.text || "");
     formData.append(
       "number_of_confirmations",
-      String(selectedPost?.number_of_confirmations!)
+      String(selectedPost?.number_of_confirmations)
     );
-    formData.append("send_planned_at", selectedPost?.send_planned_at!);
+    formData.append(
+      "send_planned_at",
+      selectedPost?.send_planned_at || new Date().toISOString()
+    );
 
     for (const image of images) {
       formData.append("photos", image);
@@ -61,20 +64,29 @@ export const PostEditor = () => {
 
     if (res.ok) {
       await fetchPosts(Number(selectedWorkspace?.id));
-      setSelectedPost(null);
+      // setSelectedPost(null);
     }
   };
 
   const update = async () => {
     const formData = new FormData();
+    let date = new Date(selectedPost?.send_planned_at! || new Date());
 
-    formData.append("name", selectedPost?.name!);
-    formData.append("text", selectedPost?.text!);
+    if (sendNow) {
+      date = new Date();
+      date.setSeconds(date.getSeconds() + 3);
+    }
+
+    formData.append("name", selectedPost?.name || "");
+    formData.append("text", selectedPost?.text || "");
     formData.append(
       "number_of_confirmations",
-      String(selectedPost?.number_of_confirmations!)
+      String(selectedPost?.number_of_confirmations || 0)
     );
-    formData.append("send_planned_at", selectedPost?.send_planned_at!);
+    formData.append(
+      "send_planned_at",
+      date.toISOString(),
+    );
 
     const res = await fetch(API_URL + `/post/${selectedPost?.id}`, {
       method: "PATCH",
@@ -116,49 +128,6 @@ export const PostEditor = () => {
     );
   }
 
-  const askAI = async (type: string) => {
-    switch (type) {
-      case "append": {
-        const res = await fetch(API_URL + `/process-message/`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: TOKEN_HEADER,
-          },
-          body: JSON.stringify({
-            role: "Дописать текст",
-            text: selectedPost?.text,
-          }),
-        });
-        const data = await res.json();
-        const text = data.result[0].message.text;
-
-        updateSelected({ text });
-        break;
-      };
-      case 'write': {
-        const res = await fetch(API_URL + `/process-message/`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: TOKEN_HEADER,
-          },
-          body: JSON.stringify({
-            role: "Придумай текст по запросу",
-            text: `Вот текущий текст: ${selectedPost?.text}; Выполни запрос: ${query}`,
-          }),
-        });
-        const data = await res.json();
-        const text = data.result[0].message.text;
-
-        updateSelected({ text: selectedPost?.text + '\n' + text })
-      }
-    }
-
-    setQuery('')
-    setLoading(false)
-  };
-
   return (
     <div className="grid w-full gap-2 p-2">
       <h3 className="text-2xl">
@@ -175,38 +144,7 @@ export const PostEditor = () => {
         value={selectedPost?.text || ""}
         onChange={(text) => updateSelected({ text })}
       />
-      <div className="flex gap-1">
-        <Button
-          onClick={() => {
-            setLoading(true);
-            askAI("append");
-          }}
-          disabled={!selectedPost?.text || loading}
-          className="flex items-center gap-2"
-        >
-          {loading && <Icons.spinner className="animate-spin" />} Дописать текст
-        </Button>
-        <Popover>
-          <PopoverTrigger>
-            <Button>Сгенерировать текст</Button>
-          </PopoverTrigger>
-          <PopoverContent className="grid gap-1">
-            <Input placeholder="Текст" value={query} className="w-full" onChange={e => {
-              setQuery(e.target.value)
-            }} />
-            <Button
-              className="w-full flex items-center gap-2"
-              disabled={loading}
-              onClick={() => {
-                askAI('write')
-                setLoading(true)
-              }}
-            >
-              {loading && <Icons.spinner className="animate-spin" />} Отправить
-            </Button>
-          </PopoverContent>
-        </Popover>
-      </div>
+      <AIButtons />
       <hr />
       <Input
         placeholder="Количество одобряющих..."
@@ -308,6 +246,10 @@ export const PostEditor = () => {
           })}
         </div>
       )}
+      <div className="flex gap-2 items-center">
+        <Checkbox checked={sendNow} onCheckedChange={e => setSendNow(Boolean(e))} />
+        Опубликовать сейчас
+      </div>
       <Button
         onClick={async () => {
           selectedPost?.create ? create() : update();

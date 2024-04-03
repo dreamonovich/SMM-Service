@@ -3,8 +3,9 @@ from django.utils import timezone
 from celery import shared_task
 
 from telegram.models import TelegramPost
+from post.models import PostPhoto, PostFile
 
-from .utils import send_post
+from post.utils import send_message
 
 
 def is_all_telegram_posts_sended_to_channels(post):
@@ -23,7 +24,10 @@ def send_telegram_post(telegram_post_id: int):
         telegram_post.status = "r"
         telegram_post.save(update_fields=("status",))
 
-        message_id = send_post(telegram_post.telegram_channel.chat_id, text=telegram_post.post.text, photos=telegram_post.post.photos, files=telegram_post.post.files)
+        photos = PostPhoto.objects.filter(post=telegram_post.post)
+        files = PostFile.objects.filter(post=telegram_post.post)
+
+        message_id = send_message(telegram_post.telegram_channel.chat_id, telegram_post.post.text, photos, files, is_send_confirmation=False)
 
         telegram_post.status = "s"
         telegram_post.message_id = message_id

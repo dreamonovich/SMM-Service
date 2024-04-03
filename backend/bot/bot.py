@@ -33,7 +33,7 @@ def callback(call: CallbackQuery):
                 change_status(post_id, "APPROVED")
                 bot.delete_message(call.message.chat.id, call.message.message_id)
                 bot.send_message(call.message.chat.id, "*Пост принят*", parse_mode="Markdown")
-                requests.post(f"prodanocontest.ru/api/post/{post_id}/telegram_approve", data={"telegram_secret_key": telegram_secret_key})
+                requests.post(f"https://prodanocontest.ru/api/post/{post_id}/telegram_approve", data={"telegram_secret_key": telegram_secret_key})
                 return
 
             keyboard = InlineKeyboardMarkup()

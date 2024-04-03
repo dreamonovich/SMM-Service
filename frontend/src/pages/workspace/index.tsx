@@ -2,28 +2,33 @@ import { PostList, usePostStore } from "@/entities/post";
 import { useWorkspaceStore } from "@/entities/workspace";
 import { PostEditor } from "@/features/post/editor";
 import { Button } from "@/shared/ui/button";
+import { Icons } from "@/shared/ui/icons";
 import {
   ResizablePanelGroup,
   ResizablePanel,
   ResizableHandle,
 } from "@/shared/ui/resizable";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
 export const WorkspacePage = () => {
   const { id } = useParams();
-
+  const [isLoading, setIsLoading] = useState(true);
   const { selectedPost, setSelectedPost } = usePostStore();
-  const { selectedWorkspace, fetchChannels, posts, fetchPosts } = useWorkspaceStore();
+  const { selectedWorkspace, fetchChannels, fetchPosts } = useWorkspaceStore();
 
   useEffect(() => {
-    if (!id) return
-    fetchChannels(Number(id));
-    fetchPosts(Number(id))
+    if (!id) return;
+    
+    (async () => {
+      await fetchChannels(Number(id));
+      await fetchPosts(+id);
+      setIsLoading(false);
+    })();
 
     return () => {
-      setSelectedPost(null)
-    }
+      setSelectedPost(null);
+    };
   }, [id]);
 
   return (
@@ -48,7 +53,13 @@ export const WorkspacePage = () => {
         <ResizablePanelGroup direction="horizontal" className="h-full">
           <ResizablePanel>
             <div className="p-2">
-              <PostList items={posts || []} />
+              {isLoading && (
+                <div className="flex items-center">
+                  <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+                  <span>загрузка...</span>
+                </div>
+              )}
+              <PostList />
             </div>
           </ResizablePanel>
           {selectedPost && (
