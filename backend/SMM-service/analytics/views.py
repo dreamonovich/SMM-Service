@@ -12,7 +12,7 @@ from drf_yasg import openapi
 
 
 # @permission_classes([IsAuthenticated])
-class WorkspaceChannels(APIView):
+class AnalyticsWorkspaceChannels(APIView):
     @swagger_auto_schema(
         manual_parameters=[
             openapi.Parameter(
@@ -25,7 +25,7 @@ class WorkspaceChannels(APIView):
     )
     def get(self, request, workspace_id):
 
-        channels = Channel.objects.filter(workspace_id=workspace_id)
+        channels = Channel.objects.filter(workspace_id=workspace_id).all()
         workspace_data = {}
         print(channels)
         for channel in channels:
