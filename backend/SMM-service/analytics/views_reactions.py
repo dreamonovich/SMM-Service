@@ -1,36 +1,50 @@
-from pyrogram import Client
+import bs4
+import requests
+from bs4 import BeautifulSoup
+request_header = {
+    'User-Agent': '1'
+}
+def count_views(channel, id):
+    # try:
+        response = requests.get(f'https://t.me/{channel}/{id}?embed=1', headers=request_header)
+        bs = bs4.BeautifulSoup(response.text, 'html.parser')
+        print(bs)
+        views_element = bs.find(class_='tgme_widget_message_views')
 
-
-
-def count_emojis(app, channel_name, message_id):
-    with app:
-        message = app.get_messages(channel_name, message_id)
-        views = message.views if hasattr(message, "views") else 0
-
-        total_emojis = 0
-        if hasattr(message, "reactions") and message.reactions is not None:
-            for reaction in message.reactions.reactions:
-                total_emojis += reaction.count
-
-        return views, total_emojis
-
+        if views_element:
+            views = views_element.text
+            if 'K' in views:
+                views = float(views[:-1]) * 1000 // 1
+            elif 'M' in views:
+                views = float(views[:-1]) * 1000 * 1000 // 1
+            else:
+                views = int(views)
+            return views
+        else:
+            return 0
+    # except Exception as e:
+    #     print("Error counting views:", e)
+    #     return 0
 
 def update_workspace_data(workspace_data):
-    try:
-        app = Client("my_account")
+    # try:
         for channel_name, posts in workspace_data.items():
             for post in posts:
-                current_channel_name = post["channel_name"]
                 message_id = post["message_id"]
+                message_name = post["channel_name"]
+                views = count_views(message_name, int(message_id))
 
-                # Получаем данные о просмотрах и смайликах для текущего поста
-                views, emojis = count_emojis(app, current_channel_name, message_id)
-
-                # Добавляем данные о просмотрах и смайликах к текущему посту
+                # Добавляем данные о просмотрах к текущему посту
                 post["views"] = views
-                post["emojis_count"] = emojis
 
         return workspace_data
-    except Exception as e:
-        print("Error:", e)
-        return None
+    # except Exception as e:
+    #     print("Error:", e)
+    #     return None
+
+def update_workspace_data_list(workspace_data):
+    updated_workspace_data = []
+    for channel_name, posts in workspace_data.items():
+        channel_data = {channel_name: posts}
+        updated_workspace_data.append(channel_data)
+    return updated_workspace_data
