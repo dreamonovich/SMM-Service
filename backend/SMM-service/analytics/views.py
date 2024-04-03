@@ -3,6 +3,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import permission_classes
+from django.db.models import Q
 from channel.models import Channel
 from telegram.models import TelegramPost
 from analytics.serializers import TelegramPostSerializer
@@ -28,15 +29,17 @@ class AnalyticsWorkspaceChannels(APIView):
             )
         ]
     )
+
     def get(self, request, workspace_id):
         logging.info("analytic")
-        channels = Channel.objects.filter(workspace_id=workspace_id).all()
+        channels = Channel.objects.filter(Q(workspace_id=workspace_id) & Q(is_group=False)).all()
         workspace_data = {}
         print(channels)
         logging.info(channels)
         for channel in channels:
             telegram_posts = TelegramPost.objects.filter(telegram_channel=channel).all()
             telegram_post_serializer = TelegramPostSerializer(telegram_posts, many=True)
+            logging.info(telegram_posts)
 
             posts_with_channel_username = []
             for post_data in telegram_post_serializer.data:
