@@ -31,7 +31,6 @@ class AnalyticsWorkspaceChannels(APIView):
     )
 
     def get(self, request, workspace_id):
-        logging.info("analytic")
         channels = Channel.objects.filter(Q(workspace_id=workspace_id) & Q(is_group=False)).all()
         workspace_data = {}
         print(channels)
