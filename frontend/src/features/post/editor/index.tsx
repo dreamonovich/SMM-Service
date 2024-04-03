@@ -21,6 +21,7 @@ import {
 import MDEditor from "@uiw/react-md-editor";
 import { AIButtons } from "./ai";
 import { Checkbox } from "@/shared/ui/checkbox";
+import { useToast } from "@/shared/ui/use-toast";
 
 export const PostEditor = () => {
   const { selectedPost, updateSelected, setSelectedPost } = usePostStore();
@@ -30,8 +31,17 @@ export const PostEditor = () => {
   const [files, setFiles] = useState<File[]>([]);
   const [sendNow, setSendNow] = useState(false);
 
+  const {toast} = useToast();
+
   const create = async () => {
     const formData = new FormData();
+    let date = new Date(selectedPost?.send_planned_at! || new Date());
+    date.setSeconds(0)
+
+    if (sendNow) {
+      date = new Date();
+      date.setSeconds(date.getSeconds() + 3);
+    }
 
     formData.append("name", selectedPost?.name || "");
     formData.append("text", selectedPost?.text || "");
@@ -41,7 +51,7 @@ export const PostEditor = () => {
     );
     formData.append(
       "send_planned_at",
-      selectedPost?.send_planned_at || new Date().toISOString()
+      date.toISOString(),
     );
 
     for (const image of images) {
@@ -64,13 +74,19 @@ export const PostEditor = () => {
 
     if (res.ok) {
       await fetchPosts(Number(selectedWorkspace?.id));
-      // setSelectedPost(null);
+      toast({
+        title: 'Пост добавлен',
+        description: 'Пост будет опубликован в ' + date.toLocaleString(),
+        duration: 3000,
+      })
+      setSelectedPost(null);
     }
   };
 
   const update = async () => {
     const formData = new FormData();
     let date = new Date(selectedPost?.send_planned_at! || new Date());
+    date.setSeconds(0)
 
     if (sendNow) {
       date = new Date();
