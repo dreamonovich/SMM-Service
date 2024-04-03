@@ -6,7 +6,7 @@ from rest_framework.decorators import permission_classes
 from channel.models import Channel
 from telegram.models import TelegramPost
 from analytics.serializers import TelegramPostSerializer
-from analytics.views_reactions import update_workspace_data,update_workspace_data_list
+from analytics.views_reactions import update_workspace_data, update_workspace_data_list
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
 
@@ -24,14 +24,21 @@ class WorkspaceChannels(APIView):
         ]
     )
     def get(self, request, workspace_id):
-        # try:
+        try:
             channels = Channel.objects.filter(workspace_id=workspace_id)
             workspace_data = {}
             for channel in channels:
                 telegram_posts = TelegramPost.objects.filter(telegram_channel=channel).all()
                 telegram_post_serializer = TelegramPostSerializer(telegram_posts, many=True)
-                workspace_data[channel.name] = telegram_post_serializer.data
-            print(workspace_data)
+
+                posts_with_channel_username = []
+                for post_data in telegram_post_serializer.data:
+                    post_data['channel_name'] = channel.channel_username
+                    posts_with_channel_username.append(post_data)
+
+                workspace_data[channel.name] = posts_with_channel_username
+
+
             updated_workspace_data = update_workspace_data(workspace_data)
             updated_workspace_data = update_workspace_data_list(updated_workspace_data)
             if updated_workspace_data:
@@ -39,5 +46,5 @@ class WorkspaceChannels(APIView):
             else:
                 return Response({"error": "Failed to update workspace data"},
                                 status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-        # except Exception as e:
-        #     return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
