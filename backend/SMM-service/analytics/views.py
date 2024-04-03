@@ -33,8 +33,9 @@ class WorkspaceChannels(APIView):
 
                 posts_with_channel_username = []
                 for post_data in telegram_post_serializer.data:
-                    post_data['channel_name'] = channel.channel_username
-                    posts_with_channel_username.append(post_data)
+                    if not channel.is_group:
+                        post_data['channel_name'] = channel.channel_username
+                        posts_with_channel_username.append(post_data)
 
                 workspace_data[channel.name] = posts_with_channel_username
 
