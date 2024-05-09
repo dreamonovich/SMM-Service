@@ -17,7 +17,6 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(
 logging.info("started")
 
 
-# @permission_classes([IsAuthenticated])
 class AnalyticsWorkspaceChannels(APIView):
     @swagger_auto_schema(
         manual_parameters=[
@@ -33,7 +32,6 @@ class AnalyticsWorkspaceChannels(APIView):
     def get(self, request, workspace_id):
         channels = Channel.objects.filter(Q(workspace_id=workspace_id) & Q(is_group=False)).all()
         workspace_data = {}
-        print(channels)
         logging.info(channels)
         for channel in channels:
             telegram_posts = TelegramPost.objects.filter(telegram_channel=channel).all()
@@ -47,7 +45,6 @@ class AnalyticsWorkspaceChannels(APIView):
                     posts_with_channel_username.append(post_data)
 
             workspace_data[channel.name] = posts_with_channel_username
-        print(workspace_data)
         updated_workspace_data = update_workspace_data(workspace_data)
         updated_workspace_data = update_workspace_data_list(updated_workspace_data)
 

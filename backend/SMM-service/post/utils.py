@@ -3,7 +3,7 @@ from telebot import TeleBot
 from telebot.types import InputMediaPhoto, InputFile, InlineKeyboardMarkup, InlineKeyboardButton
 from telegramify_markdown import convert
 
-TOKEN = "6755435757:AAEdJcrtEuEmYz2feDl0I0bG5fbf5MpFGoA"
+TOKEN = os.getenv('TELEGRAM_BOT_TOKEN')
 
 bot = TeleBot(TOKEN)
 

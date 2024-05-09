@@ -1,7 +1,8 @@
 import hashlib
 import hmac
+import os
 
-bot_token = "6755435757:AAEdJcrtEuEmYz2feDl0I0bG5fbf5MpFGoA"
+bot_token = os.getenv('TELEGRAM_BOT_TOKEN')
 
 
 def check_telegram_authorization(auth_data):

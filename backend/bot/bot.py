@@ -1,4 +1,5 @@
 import logging
+import os
 from random import randint
 from telebot import TeleBot
 from telebot.types import CallbackQuery, Message, InlineKeyboardMarkup, InlineKeyboardButton
@@ -7,7 +8,7 @@ import requests
 
 telegram_secret_key = "telegram_secret_key"
 
-TOKEN = "6755435757:AAEdJcrtEuEmYz2feDl0I0bG5fbf5MpFGoA"
+TOKEN = os.getenv('TELEGRAM_BOT_TOKEN')
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
